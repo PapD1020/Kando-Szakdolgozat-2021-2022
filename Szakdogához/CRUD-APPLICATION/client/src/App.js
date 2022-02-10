@@ -11,6 +11,17 @@ const [PostMDescr, setPostMDescr] = useState('');
 const [PostImg, setPostImg] = useState('');
 const [PostStatus, setPostStatus] = useState('');
 
+//Request the subbmit button
+const submitReview = () => {
+
+  //postName - backend variable name
+  Axios.post('http://localhost:3001/api/insert', { //URL for our api (node.js backend)
+    postName: PostName, postDate: PostDate, postSmDescr: PostSmDescr, postMDescr: PostMDescr, postImg: PostImg, postStatus: PostStatus
+  }).then(() => {
+    alert("Successful insert");
+  });
+};
+
   return (
     <div className="App">
       <h1>CRUD-APPLICATION</h1>
@@ -47,7 +58,7 @@ const [PostStatus, setPostStatus] = useState('');
           setPostStatus(e.target.value);
         }}></input>
 
-        <button>Submit</button>
+        <button onClick={submitReview}>Submit</button>
       </div>
 
     </div>
