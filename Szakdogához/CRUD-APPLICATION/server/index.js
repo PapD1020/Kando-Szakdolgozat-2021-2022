@@ -17,11 +17,14 @@ app.get('/', (req, res)=>{      //req is used to get information from the fronte
 
 app.get("/", (req, res) => {
 
+    //Test to see if the database connection works
+    /*
     const sqlInsert = "INSERT INTO `post`(`PostName`, `PostDate`, `PostSmDescr`, `PostMDescr`, `PostImg`, `PostStatus`) VALUES ('Első Poszt neve','2022-02-10','kicsi leírás','nagy lerás','kép','1')";
     db.query(sqlInsert, (err, result) => {
 
         res.send("Hello");
     });
+    */
 });
 
 app.listen(3001, () => {
