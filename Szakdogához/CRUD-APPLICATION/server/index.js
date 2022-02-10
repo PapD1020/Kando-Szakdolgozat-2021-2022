@@ -36,7 +36,15 @@ app.get("/", (req, res) => {
 */
 
 //GET - SELECT*
+app.get('/api/get', (req, res) => {
 
+    const sqlSelect = "SELECT * FROM post";
+    db.query(sqlSelect, (err, result) => {
+
+        console.log("Result:" + result); //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
 
 //POST - INSERT
 app.post('/api/insert', (req, res) => {
@@ -53,6 +61,7 @@ app.post('/api/insert', (req, res) => {
 
         console.log(err);
         console.log("Result:" + result);
+        res.send(result);
     });
 });
 
