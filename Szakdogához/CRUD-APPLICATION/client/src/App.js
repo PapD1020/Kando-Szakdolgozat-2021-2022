@@ -11,6 +11,17 @@ const [PostMDescr, setPostMDescr] = useState('');
 const [PostImg, setPostImg] = useState('');
 const [PostStatus, setPostStatus] = useState('');
 
+const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
+
+useEffect(() => {
+
+  Axios.get('http://localhost:3001/api/get').then((response) => {
+
+    setPostNameList(response.data);
+    //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
+  });
+}, [])
+
 //Request the subbmit button
 const submitReview = () => {
 
@@ -59,6 +70,13 @@ const submitReview = () => {
         }}></input>
 
         <button onClick={submitReview}>Submit</button>
+
+        <div>
+          {PostNameList.map((val) => {
+              return <h1>Post name: {val.PostName} | Post status: {val.PostStatus}</h1>
+          })}
+        </div>
+        
       </div>
 
     </div>
