@@ -13,6 +13,7 @@ const [PostStatus, setPostStatus] = useState('');
 
 const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
 
+
 useEffect(() => {
 
   Axios.get('http://localhost:3001/api/get').then((response) => {
@@ -22,6 +23,15 @@ useEffect(() => {
   });
 }, []);
 
+const RefreshData = () => {
+
+    Axios.get('http://localhost:3001/api/get').then((response) => {
+  
+      setPostNameList(response.data);
+      //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
+    });
+};
+
 //Request the subbmit button
 const submitReview = () => {
 
@@ -30,11 +40,12 @@ const submitReview = () => {
     postName: PostName, postDate: PostDate, postSmDescr: PostSmDescr, postMDescr: PostMDescr, postImg: PostImg, postStatus: PostStatus
   }).then((response) => {
     console.log("response.data: " + JSON.stringify(response.data));
-
+    /*
     setPostNameList([...PostNameList, {postName: PostName, postStatus: PostStatus}]);
     console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
   }).catch((err) => {
     console.log("catch error: " + err);
+    */
   });
 
   //setPostNameList([...PostNameList, {postName: PostName, postStatus: PostStatus}]);
@@ -77,6 +88,8 @@ const submitReview = () => {
         }}></input>
 
         <button onClick={submitReview}>Submit</button>
+
+        <button onClick={RefreshData}>Refresh data</button>
 
         <div>
           {PostNameList.map((val) => {
