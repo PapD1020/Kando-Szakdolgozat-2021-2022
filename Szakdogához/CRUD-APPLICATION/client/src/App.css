@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  /*font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;*/
 }
 
 .form{
@@ -19,4 +20,11 @@
 .btn{
   margin: 10px;
   padding: 10px;
+}
+
+.card{
+  width: 700px;
+  height: 600px;
+  border: 2px solid black;
+  border-radius: 15px;
 }
