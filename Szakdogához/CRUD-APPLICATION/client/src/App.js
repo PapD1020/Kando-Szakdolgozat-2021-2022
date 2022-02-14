@@ -38,17 +38,13 @@ const submitPostData = () => {
   //postName - backend variable name
   Axios.post('http://localhost:3001/api/insert', { //URL for our api (node.js backend)
     postName: PostName, postDate: PostDate, postSmDescr: PostSmDescr, postMDescr: PostMDescr, postImg: PostImg, postStatus: PostStatus
-  }).then((response) => {
-    console.log("response.data: " + JSON.stringify(response.data));
-    /*
-    setPostNameList([...PostNameList, {postName: PostName, postStatus: PostStatus}]);
-    console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
-  }).catch((err) => {
-    console.log("catch error: " + err);
-    */
   });
-
-  //setPostNameList([...PostNameList, {postName: PostName, postStatus: PostStatus}]);
+    
+  setPostNameList([
+    ...PostNameList,
+    {PostName: PostName, PostStatus: PostStatus}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+  ]);
+  //console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
 };
 
   return (
@@ -87,8 +83,7 @@ const submitPostData = () => {
           setPostStatus(e.target.value);
         }}></input>
 
-        <button className="btn" onClick={() => {submitPostData(); refreshData();}}>Submit</button> {/*refreshData does not work here*/}
-
+        <button className="btn" onClick={submitPostData}>Submit</button>
         <button className="btn" onClick={refreshData}>Refresh data</button>
 
         <div>
