@@ -87,9 +87,9 @@ const submitReview = () => {
           setPostStatus(e.target.value);
         }}></input>
 
-        <button onClick={submitReview}>Submit</button>
+        <button className="btn" onClick={submitReview}>Submit</button>
 
-        <button onClick={RefreshData}>Refresh data</button>
+        <button className="btn" onClick={RefreshData}>Refresh data</button>
 
         <div>
           {PostNameList.map((val) => {
