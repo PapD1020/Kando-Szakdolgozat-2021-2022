@@ -27,4 +27,11 @@
   height: 600px;
   border: 2px solid black;
   border-radius: 15px;
+  margin: 15px;
+}
+
+#updateInput{
+  width: 120px;
+  height: 30px;
+  margin-bottom: 10px;
 }

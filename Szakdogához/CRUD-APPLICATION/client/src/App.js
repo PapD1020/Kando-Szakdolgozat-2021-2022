@@ -96,6 +96,10 @@ const submitPostData = () => {
                   <p>Post main description: {val.PostMDescr}</p>
                   <p>Post image: {val.PostImg}</p>
                   <p>Post status: {val.PostStatus}</p>
+
+                  <button>Delete</button>
+                  <input type="text" id="updateInput"></input>
+                  <button>Update</button>
                 </div>
               );
           })}
