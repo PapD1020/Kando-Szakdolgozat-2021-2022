@@ -47,6 +47,10 @@ const submitPostData = () => {
   //console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
 };
 
+const deletePost = (postName) =>{
+  Axios.delete(`http://localhost:3001/api/delete/${postName}`); // with altgr+7 you can add variables to it
+}
+
   return (
     <div className="App">
       <h1>CRUD-APPLICATION</h1>
@@ -97,7 +101,7 @@ const submitPostData = () => {
                   <p>Post image: {val.PostImg}</p>
                   <p>Post status: {val.PostStatus}</p>
 
-                  <button>Delete</button>
+                  <button onClick={() => {deletePost(val.PostName)}}>Delete</button>
                   <input type="text" id="updateInput"></input>
                   <button>Update</button>
                 </div>

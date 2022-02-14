@@ -65,6 +65,16 @@ app.post('/api/insert', (req, res) => {
     });
 });
 
+//DELETE
+app.delete('/api/delete/:postName', (req, res) => {
+    const name = req.params.postName;
+    const sqlDelete = "DELETE FROM post WHERE PostName = ?";
+    db.query(sqlDelete, name, (err, result) => {
+        if(err){
+            console.log(err);
+        }
+    });
+});
 
 app.listen(3001, () => {
     console.log("Running on port 3001");
