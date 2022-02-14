@@ -88,7 +88,16 @@ const submitPostData = () => {
 
         <div>
           {PostNameList.map((val) => {
-              return <h1>Post name: {val.PostName} | Post status: {val.PostStatus}</h1>
+              return(
+                <div className="card">
+                  <h1>Post name: {val.PostName}</h1>
+                  <p>Post date: {val.PostDate}</p>
+                  <h2>Post small description: {val.PostSmDescr}</h2>
+                  <p>Post main description: {val.PostMDescr}</p>
+                  <p>Post image: {val.PostImg}</p>
+                  <p>Post status: {val.PostStatus}</p>
+                </div>
+              );
           })}
         </div>
         
