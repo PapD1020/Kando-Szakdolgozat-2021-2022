@@ -23,7 +23,7 @@ useEffect(() => {
   });
 }, []);
 
-const RefreshData = () => {
+const refreshData = () => {
 
     Axios.get('http://localhost:3001/api/get').then((response) => {
   
@@ -33,7 +33,7 @@ const RefreshData = () => {
 };
 
 //Request the subbmit button
-const submitReview = () => {
+const submitPostData = () => {
 
   //postName - backend variable name
   Axios.post('http://localhost:3001/api/insert', { //URL for our api (node.js backend)
@@ -87,9 +87,9 @@ const submitReview = () => {
           setPostStatus(e.target.value);
         }}></input>
 
-        <button className="btn" onClick={submitReview}>Submit</button>
+        <button className="btn" onClick={() => {submitPostData(); refreshData();}}>Submit</button> {/*refreshData does not work here*/}
 
-        <button className="btn" onClick={RefreshData}>Refresh data</button>
+        <button className="btn" onClick={refreshData}>Refresh data</button>
 
         <div>
           {PostNameList.map((val) => {
