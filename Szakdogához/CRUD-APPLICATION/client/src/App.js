@@ -14,7 +14,6 @@ const [PostStatus, setPostStatus] = useState('');
 const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
 
 const [NewPostStatus, setNewPostStatus] = useState('');
-//Post
 
 //Admin
 const [AdminUn, setAdminUn] = useState('');
@@ -27,6 +26,9 @@ const [AdminEmail, setAdminEmail] = useState('');
 const [AdminNameList, setAdminNameList] = useState([]);
 
 const [NewAdminPermL, setNewAdminPermL] = useState('');
+
+//USERS
+const [UsersNameList, setUsersNameList] = useState([]);
 
 //On page load get posts
 useEffect(() => {
@@ -44,6 +46,15 @@ useEffect(() => {
   Axios.get('http://localhost:3001/api/get/admin').then((response) => {
 
     setAdminNameList(response.data);
+  });
+}, []);
+
+//On page load get users
+useEffect(() => {
+
+  Axios.get('http://localhost:3001/api/get/users').then((response) => {
+
+    setUsersNameList(response.data);
   });
 }, []);
 
@@ -134,6 +145,19 @@ const updateAdminPermL = (admin) =>{
   setNewAdminPermL("");
   alert("Successfuly changed! Please click on the refresh button.");
 };
+
+/*
+* USERS
+*/
+
+//GET - USERS
+const refreshUsersData = () => {
+  Axios.get('http://localhost:3001/api/get/users').then((response) => {
+
+    setUsersNameList(response.data);
+  });
+};
+
 
 
   return (
@@ -299,10 +323,10 @@ const updateAdminPermL = (admin) =>{
                 }}></input>
 
                 <button className="btn" onClick={submitPostData}>Add User</button>
-                <button className="btn" onClick={refreshPostData}>Refresh User data</button>
+                <button className="btn" onClick={refreshUsersData}>Refresh User data</button>
 
                 <div className="cardContainer">
-                  {PostNameList.map((val) => {
+                  {UsersNameList.map((val) => {
                       return(
                         <div className="card">
                           <h1>User username: {val.PostName}</h1>

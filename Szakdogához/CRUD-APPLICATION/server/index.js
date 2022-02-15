@@ -156,6 +156,20 @@ app.put('/api/update/admin', (req, res) => {
     });
 });
 
+/*
+* USERS CRUD
+*/
+
+//GET - USERS
+app.get('api/get/users', (req, res) => {
+    
+    const sqlSelect = "SELECT * FROM users";
+
+    db.query(sqlSelect, (err, result) => {
+        res.send(result.data);
+    });
+});
+
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });
