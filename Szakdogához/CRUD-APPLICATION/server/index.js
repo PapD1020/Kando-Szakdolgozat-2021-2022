@@ -35,8 +35,12 @@ app.get("/", (req, res) => {
 });
 */
 
-//GET - SELECT*
-app.get('/api/get', (req, res) => {
+/*
+* POST CRUD
+*/
+
+//GET - Post
+app.get('/api/get/post', (req, res) => {
 
     const sqlSelect = "SELECT * FROM post";
     db.query(sqlSelect, (err, result) => {
@@ -46,8 +50,8 @@ app.get('/api/get', (req, res) => {
     });
 });
 
-//POST - INSERT
-app.post('/api/insert', (req, res) => {
+//POST - Post
+app.post('/api/insert/post', (req, res) => {
 
     const postName = req.body.postName;
     const postDate = req.body.postDate;
@@ -65,8 +69,8 @@ app.post('/api/insert', (req, res) => {
     });
 });
 
-//DELETE
-app.delete('/api/delete/:postName', (req, res) => {
+//DELETE - Post
+app.delete('/api/delete/post/:postName', (req, res) => {
     const name = req.params.postName;
     const sqlDelete = "DELETE FROM post WHERE PostName = ?";
     db.query(sqlDelete, name, (err, result) => {
@@ -76,8 +80,8 @@ app.delete('/api/delete/:postName', (req, res) => {
     });
 });
 
-//PUT-UPDATE
-app.put('/api/update', (req, res) => {
+//PUT-UPDATE - Post
+app.put('/api/update/post', (req, res) => {
 
     const name = req.body.postName;
     const status = req.body.postStatus;
@@ -90,7 +94,44 @@ app.put('/api/update', (req, res) => {
     });
 });
 
+/*
+* Admin CRUD
+*/
 
+//GET - ADMIN
+app.get('/api/get/admin', (req, res) => {
+
+    const sqlSelect = "SELECT * FROM admin";
+    db.query(sqlSelect, (err, result) => {
+        if(err){
+            console.log("Admin GET error: " + err);
+        }
+
+        console.log(result.data); //still not working properly
+        res.send(result);
+    });
+});
+
+//POST - ADMIN
+app.post('/api/insert/admin', (req, res) => {
+
+    const adminUn = req.body.adminUn;
+    const adminPw = req.body.adminPw;
+    const adminFN = req.body.adminFN;
+    const adminSN = req.body.adminSN;
+    const adminPermL = req.body.adminPermL;
+    const adminEmail = req.body.adminEmail;
+
+    const sqlInsert = "INSERT INTO `admin`(`AdminUn`, `AdminPw`, `AdminFN`, `AdminSN`, `AdminPermL`, `AdminEmail`) VALUES (?,?,?,?,?,?)"
+    db.query(sqlInsert, [adminUn, adminPw, adminFN, adminSN, adminPermL, adminEmail], (err, result) => {
+
+        console.log(err);
+        console.log("Result:" + result);
+        res.send(result);
+    });
+});
+
+//DELETE - ADMIN
 
 app.listen(3001, () => {
     console.log("Running on port 3001");
