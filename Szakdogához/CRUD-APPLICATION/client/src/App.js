@@ -67,65 +67,186 @@ const updatePostStatus = (post) =>{
     <div className="App">
       <h1>CRUD-APPLICATION</h1>
 
-      <div className='form'>
 
-        <label>PostName</label>
-        <input type="text" name="postName" onChange={(e) => {
-          setPostName(e.target.value);
-        }}></input>
+        <div className="smallContainer">
+          <div className='form'>
+                <label>PostName</label>
+                <input type="text" name="postName" onChange={(e) => {
+                  setPostName(e.target.value);
+                }}></input>
 
-        <label>PostDate</label>
-        <input type="text" name="postDate" onChange={(e) => {
-          setPostDate(e.target.value);
-        }}></input>
+                <label>PostDate</label>
+                <input type="text" name="postDate" onChange={(e) => {
+                  setPostDate(e.target.value);
+                }}></input>
 
-        <label>PostSmDescr</label>
-        <input type="text" name="postSmDescr" onChange={(e) => {
-          setPostSmDescr(e.target.value);
-        }}></input>
+                <label>PostSmDescr</label>
+                <input type="text" name="postSmDescr" onChange={(e) => {
+                  setPostSmDescr(e.target.value);
+                }}></input>
 
-        <label>PostMDescr</label>
-        <input type="text" name="postMDescr" onChange={(e) => {
-          setPostMDescr(e.target.value);
-        }}></input>
+                <label>PostMDescr</label>
+                <input type="text" name="postMDescr" onChange={(e) => {
+                  setPostMDescr(e.target.value);
+                }}></input>
 
-        <label>PostImg</label>
-        <input type="text" name="postImg" onChange={(e) => {
-          setPostImg(e.target.value);
-        }}></input>
+                <label>PostImg</label>
+                <input type="text" name="postImg" onChange={(e) => {
+                  setPostImg(e.target.value);
+                }}></input>
 
-        <label>PostStatus</label>
-        <input type="text" name="postStatus" onChange={(e) => {
-          setPostStatus(e.target.value);
-        }}></input>
+                <label>PostStatus</label>
+                <input type="text" name="postStatus" onChange={(e) => {
+                  setPostStatus(e.target.value);
+                }}></input>
 
-        <button className="btn" onClick={submitPostData}>Submit</button>
-        <button className="btn" onClick={refreshData}>Refresh data</button>
+                <button className="btn" onClick={submitPostData}>Add post</button>
+                <button className="btn" onClick={refreshData}>Refresh post data</button>
 
-        <div>
-          {PostNameList.map((val) => {
-              return(
-                <div className="card">
-                  <h1>Post name: {val.PostName}</h1>
-                  <p>Post date: {val.PostDate}</p>
-                  <h2>Post small description: {val.PostSmDescr}</h2>
-                  <p>Post main description: {val.PostMDescr}</p>
-                  <p>Post image: {val.PostImg}</p>
-                  <p>Post status: {val.PostStatus}</p>
+                <div>
+                  {PostNameList.map((val) => {
+                      return(
+                        <div className="card">
+                          <h1>Post name: {val.PostName}</h1>
+                          <p>Post date: {val.PostDate}</p>
+                          <h2>Post small description: {val.PostSmDescr}</h2>
+                          <p>Post main description: {val.PostMDescr}</p>
+                          <p>Post image: {val.PostImg}</p>
+                          <p>Post status: {val.PostStatus}</p>
 
-                  <button onClick={() => {deletePost(val.PostName)}}>Delete</button>
+                          <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
 
-                  <input type="text" id="updateInput" onChange={(e) => {
-                    setNewPostStatus(e.target.value);
-                  }}></input>
+                          <input type="text" id="updateInput" onChange={(e) => {
+                            setNewPostStatus(e.target.value);
+                          }}></input>
 
-                  <button onClick={() => {updatePostStatus(val.PostName)}}>Update</button>
+                          <button onClick={() => {updatePostStatus(val.PostName)}}>Update Post</button>
+                        </div>
+                      )
+                  })}
                 </div>
-              );
-          })}
+          </div>
         </div>
-        
-      </div>
+
+        <div className="smallContainer">
+          <div className='form'>
+                <label>PostName</label>
+                <input type="text" name="postName" onChange={(e) => {
+                  setPostName(e.target.value);
+                }}></input>
+
+                <label>PostDate</label>
+                <input type="text" name="postDate" onChange={(e) => {
+                  setPostDate(e.target.value);
+                }}></input>
+
+                <label>PostSmDescr</label>
+                <input type="text" name="postSmDescr" onChange={(e) => {
+                  setPostSmDescr(e.target.value);
+                }}></input>
+
+                <label>PostMDescr</label>
+                <input type="text" name="postMDescr" onChange={(e) => {
+                  setPostMDescr(e.target.value);
+                }}></input>
+
+                <label>PostImg</label>
+                <input type="text" name="postImg" onChange={(e) => {
+                  setPostImg(e.target.value);
+                }}></input>
+
+                <label>PostStatus</label>
+                <input type="text" name="postStatus" onChange={(e) => {
+                  setPostStatus(e.target.value);
+                }}></input>
+
+                <button className="btn" onClick={submitPostData}>Add post</button>
+                <button className="btn" onClick={refreshData}>Refresh post data</button>
+
+                <div>
+                  {PostNameList.map((val) => {
+                      return(
+                        <div className="card">
+                          <h1>Post name: {val.PostName}</h1>
+                          <p>Post date: {val.PostDate}</p>
+                          <h2>Post small description: {val.PostSmDescr}</h2>
+                          <p>Post main description: {val.PostMDescr}</p>
+                          <p>Post image: {val.PostImg}</p>
+                          <p>Post status: {val.PostStatus}</p>
+
+                          <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
+
+                          <input type="text" id="updateInput" onChange={(e) => {
+                            setNewPostStatus(e.target.value);
+                          }}></input>
+
+                          <button onClick={() => {updatePostStatus(val.PostName)}}>Update Post</button>
+                        </div>
+                      )
+                  })}
+                </div>
+          </div>
+        </div>
+
+        <div className="smallContainer">
+          <div className='form'>
+                <label>PostName</label>
+                <input type="text" name="postName" onChange={(e) => {
+                  setPostName(e.target.value);
+                }}></input>
+
+                <label>PostDate</label>
+                <input type="text" name="postDate" onChange={(e) => {
+                  setPostDate(e.target.value);
+                }}></input>
+
+                <label>PostSmDescr</label>
+                <input type="text" name="postSmDescr" onChange={(e) => {
+                  setPostSmDescr(e.target.value);
+                }}></input>
+
+                <label>PostMDescr</label>
+                <input type="text" name="postMDescr" onChange={(e) => {
+                  setPostMDescr(e.target.value);
+                }}></input>
+
+                <label>PostImg</label>
+                <input type="text" name="postImg" onChange={(e) => {
+                  setPostImg(e.target.value);
+                }}></input>
+
+                <label>PostStatus</label>
+                <input type="text" name="postStatus" onChange={(e) => {
+                  setPostStatus(e.target.value);
+                }}></input>
+
+                <button className="btn" onClick={submitPostData}>Add post</button>
+                <button className="btn" onClick={refreshData}>Refresh post data</button>
+
+                <div>
+                  {PostNameList.map((val) => {
+                      return(
+                        <div className="card">
+                          <h1>Post name: {val.PostName}</h1>
+                          <p>Post date: {val.PostDate}</p>
+                          <h2>Post small description: {val.PostSmDescr}</h2>
+                          <p>Post main description: {val.PostMDescr}</p>
+                          <p>Post image: {val.PostImg}</p>
+                          <p>Post status: {val.PostStatus}</p>
+
+                          <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
+
+                          <input type="text" id="updateInput" onChange={(e) => {
+                            setNewPostStatus(e.target.value);
+                          }}></input>
+
+                          <button onClick={() => {updatePostStatus(val.PostName)}}>Update Post</button>
+                        </div>
+                      )
+                  })}
+                </div>
+          </div>
+        </div>
 
     </div>
   );
