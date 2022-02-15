@@ -130,32 +130,32 @@ const updatePostStatus = (post) =>{
 
         <div className="smallContainer">
           <div className='form'>
-                <label>PostName</label>
+                <label>AdminUn</label>
                 <input type="text" name="postName" onChange={(e) => {
                   setPostName(e.target.value);
                 }}></input>
 
-                <label>PostDate</label>
+                <label>AdminPw</label>
                 <input type="text" name="postDate" onChange={(e) => {
                   setPostDate(e.target.value);
                 }}></input>
 
-                <label>PostSmDescr</label>
+                <label>AdminFN</label>
                 <input type="text" name="postSmDescr" onChange={(e) => {
                   setPostSmDescr(e.target.value);
                 }}></input>
 
-                <label>PostMDescr</label>
+                <label>AdminSN</label>
                 <input type="text" name="postMDescr" onChange={(e) => {
                   setPostMDescr(e.target.value);
                 }}></input>
 
-                <label>PostImg</label>
+                <label>AdminPermL</label>
                 <input type="text" name="postImg" onChange={(e) => {
                   setPostImg(e.target.value);
                 }}></input>
 
-                <label>PostStatus</label>
+                <label>AdminEmail</label>
                 <input type="text" name="postStatus" onChange={(e) => {
                   setPostStatus(e.target.value);
                 }}></input>
@@ -167,20 +167,20 @@ const updatePostStatus = (post) =>{
                   {PostNameList.map((val) => {
                       return(
                         <div className="card">
-                          <h1>Post name: {val.PostName}</h1>
-                          <p>Post date: {val.PostDate}</p>
-                          <h2>Post small description: {val.PostSmDescr}</h2>
-                          <p>Post main description: {val.PostMDescr}</p>
-                          <p>Post image: {val.PostImg}</p>
-                          <p>Post status: {val.PostStatus}</p>
+                          <h1>Admin username: {val.PostName}</h1>
+                          <p>Admin password: {val.PostDate}</p>
+                          <h2>Admin first name: {val.PostSmDescr}</h2>
+                          <p>Admin second name: {val.PostMDescr}</p>
+                          <p>Admin permission level: {val.PostImg}</p>
+                          <p>Admin email: {val.PostStatus}</p>
 
-                          <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
+                          <button onClick={() => {deletePost(val.PostName)}}>Delete Admin</button>
 
                           <input type="text" id="updateInput" onChange={(e) => {
                             setNewPostStatus(e.target.value);
                           }}></input>
 
-                          <button onClick={() => {updatePostStatus(val.PostName)}}>Update Post</button>
+                          <button onClick={() => {updatePostStatus(val.PostName)}}>Update Admin</button>
                         </div>
                       )
                   })}
@@ -190,32 +190,32 @@ const updatePostStatus = (post) =>{
 
         <div className="smallContainer">
           <div className='form'>
-                <label>PostName</label>
+                <label>UserUn</label>
                 <input type="text" name="postName" onChange={(e) => {
                   setPostName(e.target.value);
                 }}></input>
 
-                <label>PostDate</label>
+                <label>UserPw</label>
                 <input type="text" name="postDate" onChange={(e) => {
                   setPostDate(e.target.value);
                 }}></input>
 
-                <label>PostSmDescr</label>
+                <label>UserFN</label>
                 <input type="text" name="postSmDescr" onChange={(e) => {
                   setPostSmDescr(e.target.value);
                 }}></input>
 
-                <label>PostMDescr</label>
+                <label>UserSN</label>
                 <input type="text" name="postMDescr" onChange={(e) => {
                   setPostMDescr(e.target.value);
                 }}></input>
 
-                <label>PostImg</label>
+                <label>UserDOB</label>
                 <input type="text" name="postImg" onChange={(e) => {
                   setPostImg(e.target.value);
                 }}></input>
 
-                <label>PostStatus</label>
+                <label>UserEmail</label>
                 <input type="text" name="postStatus" onChange={(e) => {
                   setPostStatus(e.target.value);
                 }}></input>
@@ -227,12 +227,12 @@ const updatePostStatus = (post) =>{
                   {PostNameList.map((val) => {
                       return(
                         <div className="card">
-                          <h1>Post name: {val.PostName}</h1>
-                          <p>Post date: {val.PostDate}</p>
-                          <h2>Post small description: {val.PostSmDescr}</h2>
-                          <p>Post main description: {val.PostMDescr}</p>
-                          <p>Post image: {val.PostImg}</p>
-                          <p>Post status: {val.PostStatus}</p>
+                          <h1>User username: {val.PostName}</h1>
+                          <p>User password: {val.PostDate}</p>
+                          <h2>User first name: {val.PostSmDescr}</h2>
+                          <p>User second name: {val.PostMDescr}</p>
+                          <p>User date of birth: {val.PostImg}</p>
+                          <p>User email: {val.PostStatus}</p>
 
                           <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
 
