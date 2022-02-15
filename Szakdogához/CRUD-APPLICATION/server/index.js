@@ -76,6 +76,20 @@ app.delete('/api/delete/:postName', (req, res) => {
     });
 });
 
+//PUT-UPDATE
+app.put('/api/update', (req, res) => {
+
+    const name = req.body.postName;
+    const status = req.body.postStatus;
+    const sqlUpdate = "UPDATE post SET PostStatus = ? WHERE PostName = ?";
+
+    db.query(sqlUpdate, [status, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+        if(err){
+            console.log(err);
+        }
+    });
+});
+
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });

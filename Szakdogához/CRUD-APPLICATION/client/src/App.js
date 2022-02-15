@@ -13,6 +13,7 @@ const [PostStatus, setPostStatus] = useState('');
 
 const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
 
+const [NewPostStatus, setNewPostStatus] = useState('');
 
 useEffect(() => {
 
@@ -47,9 +48,20 @@ const submitPostData = () => {
   //console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
 };
 
-const deletePost = (postName) =>{
-  Axios.delete(`http://localhost:3001/api/delete/${postName}`); // with altgr+7 you can add variables to it
-}
+const deletePost = (post) =>{
+  Axios.delete(`http://localhost:3001/api/delete/${post}`); // with altgr+7 you can add variables to it
+
+  //kell frissítés, hogy eltünjön a törölt, submitos nem működik
+};
+
+const updatePostStatus = (post) =>{
+  Axios.put('http://localhost:3001/api/update', {
+    postName: post,
+    postStatus: NewPostStatus,
+  });
+  setNewPostStatus("");
+  alert("ASD");
+};
 
   return (
     <div className="App">
@@ -102,8 +114,12 @@ const deletePost = (postName) =>{
                   <p>Post status: {val.PostStatus}</p>
 
                   <button onClick={() => {deletePost(val.PostName)}}>Delete</button>
-                  <input type="text" id="updateInput"></input>
-                  <button>Update</button>
+
+                  <input type="text" id="updateInput" onChange={(e) => {
+                    setNewPostStatus(e.target.value);
+                  }}></input>
+
+                  <button onClick={() => {updatePostStatus(val.PostName)}}>Update</button>
                 </div>
               );
           })}
