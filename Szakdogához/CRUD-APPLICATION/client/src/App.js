@@ -60,7 +60,7 @@ const updatePostStatus = (post) =>{
     postStatus: NewPostStatus,
   });
   setNewPostStatus("");
-  alert("ASD");
+  alert("Successfuly changed!");
 };
 
   return (
