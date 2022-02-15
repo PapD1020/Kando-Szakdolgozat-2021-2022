@@ -22,6 +22,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 10px;
 }
 
 .form input{
@@ -36,6 +37,10 @@
   padding: 10px;
 }
 
+.cardContainer{
+  display: contents;
+}
+
 .card{
   width: 75%;
   height: 600px;
@@ -45,7 +50,7 @@
 }
 
 #updateInput{
-  width: 70%;
+  width: 35%;
   height: 30px;
   margin-bottom: 10px;
 }

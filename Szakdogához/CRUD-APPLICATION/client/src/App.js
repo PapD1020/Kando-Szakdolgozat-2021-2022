@@ -152,7 +152,7 @@ const submitAdminData = () => {
                 <button className="btn" onClick={submitPostData}>Add post</button>
                 <button className="btn" onClick={refreshPostData}>Refresh post data</button>
 
-                <div>
+                <div className="cardContainer">
                   {PostNameList.map((val) => {
                       return(
                         <div className="card">
@@ -212,7 +212,7 @@ const submitAdminData = () => {
                 <button className="btn" onClick={submitAdminData}>Add Admin</button>
                 <button className="btn" onClick={refreshAdminData}>Refresh Admin data</button>
 
-                <div>
+                <div className="cardContainer">
                   {AdminNameList.map((val) => {
                       return(
                         <div className="card">
@@ -272,7 +272,7 @@ const submitAdminData = () => {
                 <button className="btn" onClick={submitPostData}>Add User</button>
                 <button className="btn" onClick={refreshPostData}>Refresh User data</button>
 
-                <div>
+                <div className="cardContainer">
                   {PostNameList.map((val) => {
                       return(
                         <div className="card">
