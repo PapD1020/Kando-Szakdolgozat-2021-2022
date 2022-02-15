@@ -26,6 +26,8 @@ const [AdminEmail, setAdminEmail] = useState('');
 
 const [AdminNameList, setAdminNameList] = useState([]);
 
+const [NewAdminPermL, setNewAdminPermL] = useState('');
+
 //On page load get posts
 useEffect(() => {
 
@@ -121,6 +123,16 @@ const deleteAdmin = (admin) =>{
 
   alert("Successfuly deleted. Please click on the refresh button.")
   //kell frissítés, hogy eltünjön a törölt, submitos nem működik
+};
+
+//PUT - ADMIN
+const updateAdminPermL = (admin) =>{
+  Axios.put('http://localhost:3001/api/update/admin', {
+    adminUn: admin,
+    adminPermL: NewAdminPermL,
+  });
+  setNewAdminPermL("");
+  alert("Successfuly changed! Please click on the refresh button.");
 };
 
 
@@ -240,11 +252,11 @@ const deleteAdmin = (admin) =>{
 
                           <button onClick={() => {deleteAdmin(val.AdminUn)}}>Delete Admin</button>
 
-                          <input type="text" id="updateInput" onChange={(e) => {
-                            setNewPostStatus(e.target.value);
+                          <input type="number" id="updateInput" onChange={(e) => {
+                            setNewAdminPermL(e.target.value);
                           }}></input>
 
-                          <button onClick={() => {updatePostStatus(val.PostName)}}>Update Admin</button>
+                          <button onClick={() => {updateAdminPermL(val.AdminUn)}}>Update Admin</button>
                         </div>
                       )
                   })}

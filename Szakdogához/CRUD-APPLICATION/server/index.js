@@ -142,6 +142,20 @@ app.delete('/api/delete/admin/:adminUn', (req, res) => {
     });
 });
 
+//PUT - POST - ADMIN
+app.put('/api/update/admin', (req, res) => {
+
+    const name = req.body.adminUn;
+    const permL = req.body.adminPermL;
+    const sqlUpdate = "UPDATE admin SET AdminPermL = ? WHERE AdminUn = ?";
+
+    db.query(sqlUpdate, [permL, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+        if(err){
+            console.log("Admin UPDATE error: " + err);
+        }
+    });
+});
+
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });
