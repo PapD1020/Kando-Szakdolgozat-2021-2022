@@ -132,6 +132,15 @@ app.post('/api/insert/admin', (req, res) => {
 });
 
 //DELETE - ADMIN
+app.delete('/api/delete/admin/:adminUn', (req, res) => {
+    const name = req.params.adminUn;
+    const sqlDelete = "DELETE FROM admin WHERE AdminUn = ?";
+    db.query(sqlDelete, name, (err, result) => {
+        if(err){
+            console.log("Admin DELETE error: " + err);
+        }
+    });
+});
 
 app.listen(3001, () => {
     console.log("Running on port 3001");

@@ -26,6 +26,7 @@ const [AdminEmail, setAdminEmail] = useState('');
 
 const [AdminNameList, setAdminNameList] = useState([]);
 
+//On page load get posts
 useEffect(() => {
 
   Axios.get('http://localhost:3001/api/get/post').then((response) => {
@@ -35,6 +36,7 @@ useEffect(() => {
   });
 }, []);
 
+//On page load get admins
 useEffect(() => {
 
   Axios.get('http://localhost:3001/api/get/admin').then((response) => {
@@ -43,6 +45,7 @@ useEffect(() => {
   });
 }, []);
 
+//Refresh Post data
 const refreshPostData = () => {
 
     Axios.get('http://localhost:3001/api/get/post').then((response) => {
@@ -52,6 +55,7 @@ const refreshPostData = () => {
     });
 };
 
+//POST - POST
 //Request the subbmit button
 const submitPostData = () => {
 
@@ -67,6 +71,7 @@ const submitPostData = () => {
   //console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
 };
 
+//DELETE - POST
 const deletePost = (post) =>{
   Axios.delete(`http://localhost:3001/api/delete/post/${post}`); // with altgr+7 you can add variables to it
 
@@ -74,6 +79,7 @@ const deletePost = (post) =>{
   //kell frissítés, hogy eltünjön a törölt, submitos nem működik
 };
 
+//PUT - POST
 const updatePostStatus = (post) =>{
   Axios.put('http://localhost:3001/api/update/post', {
     postName: post,
@@ -110,22 +116,29 @@ const submitAdminData = () => {
 };
 
 //DELETE - ADMIN
+const deleteAdmin = (admin) =>{
+  Axios.delete(`http://localhost:3001/api/delete/admin/${admin}`); // with altgr+7 you can add variables to it
+
+  alert("Successfuly deleted. Please click on the refresh button.")
+  //kell frissítés, hogy eltünjön a törölt, submitos nem működik
+};
 
 
   return (
     <div className="App">
       <h1>CRUD-APPLICATION</h1>
 
-
+        {/*POST*/}
         <div className="smallContainer">
           <div className='form'>
+            <h3>POST</h3>
                 <label>PostName</label>
                 <input type="text" name="postName" onChange={(e) => {
                   setPostName(e.target.value);
                 }}></input>
 
                 <label>PostDate</label>
-                <input type="text" name="postDate" onChange={(e) => {
+                <input type="date" name="postDate" onChange={(e) => {
                   setPostDate(e.target.value);
                 }}></input>
 
@@ -145,7 +158,7 @@ const submitAdminData = () => {
                 }}></input>
 
                 <label>PostStatus</label>
-                <input type="text" name="postStatus" onChange={(e) => {
+                <input type="number" name="postStatus" onChange={(e) => {
                   setPostStatus(e.target.value);
                 }}></input>
 
@@ -165,7 +178,7 @@ const submitAdminData = () => {
 
                           <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
 
-                          <input type="text" id="updateInput" onChange={(e) => {
+                          <input type="number" id="updateInput" onChange={(e) => {
                             setNewPostStatus(e.target.value);
                           }}></input>
 
@@ -177,15 +190,17 @@ const submitAdminData = () => {
           </div>
         </div>
 
+        {/*ADMIN*/}
         <div className="smallContainer">
           <div className='form'>
+            <h3>ADMIN</h3>
                 <label>AdminUn</label>
                 <input type="text" name="adminUn" onChange={(e) => {
                   setAdminUn(e.target.value);
                 }}></input>
 
                 <label>AdminPw</label>
-                <input type="text" name="adminPw" onChange={(e) => {
+                <input type="password" name="adminPw" onChange={(e) => {
                   setAdminPw(e.target.value);
                 }}></input>
 
@@ -200,7 +215,7 @@ const submitAdminData = () => {
                 }}></input>
 
                 <label>AdminPermL</label>
-                <input type="text" name="adminPermL" onChange={(e) => {
+                <input type="number" name="adminPermL" onChange={(e) => {
                   setAdminPermL(e.target.value);
                 }}></input>
 
@@ -223,7 +238,7 @@ const submitAdminData = () => {
                           <p>Admin permission level: {val.AdminPermL}</p>
                           <p>Admin email: {val.AdminEmail}</p>
 
-                          <button onClick={() => {deletePost(val.PostName)}}>Delete Admin</button>
+                          <button onClick={() => {deleteAdmin(val.AdminUn)}}>Delete Admin</button>
 
                           <input type="text" id="updateInput" onChange={(e) => {
                             setNewPostStatus(e.target.value);
@@ -237,15 +252,17 @@ const submitAdminData = () => {
           </div>
         </div>
 
+        {/*USERS*/}
         <div className="smallContainer">
           <div className='form'>
+            <h3>USERS</h3>
                 <label>UserUn</label>
                 <input type="text" name="postName" onChange={(e) => {
                   setPostName(e.target.value);
                 }}></input>
 
                 <label>UserPw</label>
-                <input type="text" name="postDate" onChange={(e) => {
+                <input type="password" name="postDate" onChange={(e) => {
                   setPostDate(e.target.value);
                 }}></input>
 
@@ -260,12 +277,12 @@ const submitAdminData = () => {
                 }}></input>
 
                 <label>UserDOB</label>
-                <input type="text" name="postImg" onChange={(e) => {
+                <input type="date" name="postImg" onChange={(e) => {
                   setPostImg(e.target.value);
                 }}></input>
 
                 <label>UserEmail</label>
-                <input type="text" name="postStatus" onChange={(e) => {
+                <input type="email" name="postStatus" onChange={(e) => {
                   setPostStatus(e.target.value);
                 }}></input>
 
