@@ -170,6 +170,25 @@ app.get('api/get/users', (req, res) => {
     });
 });
 
+//POST - USERS
+app.post('/api/insert/users', (req, res) => {
+
+    const userUn = req.body.userUn;
+    const userPw = req.body.userPw;
+    const userFN = req.body.userFN;
+    const userSN = req.body.userSN;
+    const userDob = req.body.userDob;
+    const userEmail = req.body.userEmail;
+
+    const sqlInsert = "INSERT INTO `users`(`UserUn`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`) VALUES (?,?,?,?,?,?)"
+    db.query(sqlInsert, [userUn, userPw, userFN, userSN, userDob, userEmail], (err, result) => {
+
+        console.log(err);
+        console.log("User INSERT INTO result: " + result);
+        res.send(result);
+    });
+});
+
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });

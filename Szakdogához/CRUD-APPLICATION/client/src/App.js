@@ -28,6 +28,13 @@ const [AdminNameList, setAdminNameList] = useState([]);
 const [NewAdminPermL, setNewAdminPermL] = useState('');
 
 //USERS
+const [UserUn, setUserUn] = useState('');
+const [UserPw, setUserPw] = useState('');
+const [UserFN, setUserFN] = useState('');
+const [UserSN, setUserSN] = useState('');
+const [UserDob, setUserDob] = useState('');
+const [UserEmail, setUserEmail] = useState('');
+
 const [UsersNameList, setUsersNameList] = useState([]);
 
 //On page load get posts
@@ -158,7 +165,19 @@ const refreshUsersData = () => {
   });
 };
 
+//POST - USERS
+const submitUsersData = () => {
 
+  //postName - backend variable name
+  Axios.post('http://localhost:3001/api/insert/users', { //URL for our api (node.js backend)
+  userUn: UserUn, userPw: UserPw, userFN: UserFN, userSN: UserSN, userDob: UserDob, userEmail: UserEmail
+  });
+    
+  setUsersNameList([
+    ...UsersNameList,
+    {UserUn: UserUn, UserPw: UserPw, UserFN: UserFN, UserSN: UserSN, UserDob: UserDob, UserEmail: UserEmail}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+  ]);
+};
 
   return (
     <div className="App">
@@ -293,50 +312,50 @@ const refreshUsersData = () => {
           <div className='form'>
             <h3>USERS</h3>
                 <label>UserUn</label>
-                <input type="text" name="postName" onChange={(e) => {
-                  setPostName(e.target.value);
+                <input type="text" name="userUn" onChange={(e) => {
+                  setUserUn(e.target.value);
                 }}></input>
 
                 <label>UserPw</label>
-                <input type="password" name="postDate" onChange={(e) => {
-                  setPostDate(e.target.value);
+                <input type="password" name="userPw" onChange={(e) => {
+                  setUserPw(e.target.value);
                 }}></input>
 
                 <label>UserFN</label>
-                <input type="text" name="postSmDescr" onChange={(e) => {
-                  setPostSmDescr(e.target.value);
+                <input type="text" name="userFN" onChange={(e) => {
+                  setUserFN(e.target.value);
                 }}></input>
 
                 <label>UserSN</label>
-                <input type="text" name="postMDescr" onChange={(e) => {
-                  setPostMDescr(e.target.value);
+                <input type="text" name="userSN" onChange={(e) => {
+                  setUserSN(e.target.value);
                 }}></input>
 
                 <label>UserDOB</label>
-                <input type="date" name="postImg" onChange={(e) => {
-                  setPostImg(e.target.value);
+                <input type="date" name="userDob" onChange={(e) => {
+                  setUserDob(e.target.value);
                 }}></input>
 
                 <label>UserEmail</label>
-                <input type="email" name="postStatus" onChange={(e) => {
-                  setPostStatus(e.target.value);
+                <input type="email" name="userEmail" onChange={(e) => {
+                  setUserEmail(e.target.value);
                 }}></input>
 
-                <button className="btn" onClick={submitPostData}>Add User</button>
+                <button className="btn" onClick={submitUsersData}>Add User</button>
                 <button className="btn" onClick={refreshUsersData}>Refresh User data</button>
 
                 <div className="cardContainer">
                   {UsersNameList.map((val) => {
                       return(
                         <div className="card">
-                          <h1>User username: {val.PostName}</h1>
-                          <p>User password: {val.PostDate}</p>
-                          <h2>User first name: {val.PostSmDescr}</h2>
-                          <p>User second name: {val.PostMDescr}</p>
-                          <p>User date of birth: {val.PostImg}</p>
-                          <p>User email: {val.PostStatus}</p>
+                          <h1>User username: {val.UserUn}</h1>
+                          <p>User password: {val.UserPw}</p>
+                          <h2>User first name: {val.UserFN}</h2>
+                          <p>User second name: {val.UserSN}</p>
+                          <p>User date of birth: {val.UserDob}</p>
+                          <p>User email: {val.UserEmail}</p>
 
-                          <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
+                          <button onClick={() => {deletePost(val.UserUn)}}>Delete Post</button>
 
                           <input type="text" id="updateInput" onChange={(e) => {
                             setNewPostStatus(e.target.value);
