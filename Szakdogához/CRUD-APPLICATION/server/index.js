@@ -44,6 +44,9 @@ app.get('/api/get/post', (req, res) => {
 
     const sqlSelect = "SELECT * FROM post";
     db.query(sqlSelect, (err, result) => {
+        if(err){
+            console.log("Post GET error: " + err);
+        }
 
         console.log("Result:" + result); //valamiért Object-et kapok terminálban
         res.send(result);
@@ -166,7 +169,12 @@ app.get('/api/get/users', (req, res) => {
     const sqlSelect = "SELECT * FROM users";
 
     db.query(sqlSelect, (err, result) => {
-        res.send(result.data);
+        if(err){
+            console.log("Users GET error: " + err);
+        }
+
+        console.log(result.data); //still not working properly
+        res.send(result);
     });
 });
 
