@@ -142,7 +142,7 @@ app.delete('/api/delete/admin/:adminUn', (req, res) => {
     });
 });
 
-//PUT - POST - ADMIN
+//PUT - ADMIN
 app.put('/api/update/admin', (req, res) => {
 
     const name = req.body.adminUn;
@@ -161,7 +161,7 @@ app.put('/api/update/admin', (req, res) => {
 */
 
 //GET - USERS
-app.get('api/get/users', (req, res) => {
+app.get('/api/get/users', (req, res) => {
     
     const sqlSelect = "SELECT * FROM users";
 
@@ -180,12 +180,37 @@ app.post('/api/insert/users', (req, res) => {
     const userDob = req.body.userDob;
     const userEmail = req.body.userEmail;
 
-    const sqlInsert = "INSERT INTO `users`(`UserUn`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`) VALUES (?,?,?,?,?,?)"
+    const sqlInsert = "INSERT INTO `users` (`UserUn`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`) VALUES (?,?,?,?,?,?)"
     db.query(sqlInsert, [userUn, userPw, userFN, userSN, userDob, userEmail], (err, result) => {
 
-        console.log(err);
-        console.log("User INSERT INTO result: " + result);
+        console.log("Users INSERT INTO error: " + err);
+        console.log("Users INSERT INTO result: " + result);
         res.send(result);
+    });
+});
+
+//DELETE - USERS
+app.delete('/api/delete/users/:userUn', (req, res) => {
+    const name = req.params.userUn;
+    const sqlDelete = "DELETE FROM users WHERE UserUn = ?";
+    db.query(sqlDelete, name, (err, result) => {
+        if(err){
+            console.log("Users DELETE error: " + err);
+        }
+    });
+});
+
+//PUT - USERS
+app.put('/api/update/users', (req, res) => {
+
+    const name = req.body.userUn;
+    const userE = req.body.userEmail;
+    const sqlUpdate = "UPDATE users SET UserEmail = ? WHERE UserUn = ?";
+
+    db.query(sqlUpdate, [userE, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+        if(err){
+            console.log("Users UPDATE error: " + err);
+        }
     });
 });
 

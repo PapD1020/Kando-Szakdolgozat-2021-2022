@@ -37,6 +37,8 @@ const [UserEmail, setUserEmail] = useState('');
 
 const [UsersNameList, setUsersNameList] = useState([]);
 
+const [NewUserEmail, setNewUserEmail] = useState('');
+
 //On page load get posts
 useEffect(() => {
 
@@ -65,6 +67,7 @@ useEffect(() => {
   });
 }, []);
 
+//GET - POST
 //Refresh Post data
 const refreshPostData = () => {
 
@@ -158,25 +161,44 @@ const updateAdminPermL = (admin) =>{
 */
 
 //GET - USERS
-const refreshUsersData = () => {
+const refreshUserData = () => {
   Axios.get('http://localhost:3001/api/get/users').then((response) => {
 
-    setUsersNameList(response.data);
+    //setUserNameList(response.data);
   });
 };
 
 //POST - USERS
-const submitUsersData = () => {
+const submitUserData = () => {
 
   //postName - backend variable name
   Axios.post('http://localhost:3001/api/insert/users', { //URL for our api (node.js backend)
   userUn: UserUn, userPw: UserPw, userFN: UserFN, userSN: UserSN, userDob: UserDob, userEmail: UserEmail
   });
-    
+  
+
   setUsersNameList([
     ...UsersNameList,
     {UserUn: UserUn, UserPw: UserPw, UserFN: UserFN, UserSN: UserSN, UserDob: UserDob, UserEmail: UserEmail}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
   ]);
+};
+
+//DELETE - USERS
+const deleteUser = (user) =>{
+  Axios.delete(`http://localhost:3001/api/delete/users/${user}`); // with altgr+7 you can add variables to it
+
+  alert("Successfuly deleted. Please click on the refresh button.")
+  //kell frissítés, hogy eltünjön a törölt, submitos nem működik
+};
+
+//PUT - USERS
+const updateUserEmail = (user) =>{
+  Axios.put('http://localhost:3001/api/update/users', {
+    userUn: user,
+    userEmail: NewUserEmail,
+  });
+  setNewUserEmail("");
+  alert("Successfuly changed! Please click on the refresh button.");
 };
 
   return (
@@ -341,8 +363,8 @@ const submitUsersData = () => {
                   setUserEmail(e.target.value);
                 }}></input>
 
-                <button className="btn" onClick={submitUsersData}>Add User</button>
-                <button className="btn" onClick={refreshUsersData}>Refresh User data</button>
+                <button className="btn" onClick={submitUserData}>Add User</button>
+                <button className="btn" onClick={refreshUserData}>Refresh User data</button>
 
                 <div className="cardContainer">
                   {UsersNameList.map((val) => {
@@ -355,13 +377,13 @@ const submitUsersData = () => {
                           <p>User date of birth: {val.UserDob}</p>
                           <p>User email: {val.UserEmail}</p>
 
-                          <button onClick={() => {deletePost(val.UserUn)}}>Delete Post</button>
+                          <button onClick={() => {deleteUser(val.UserUn)}}>Delete User</button>
 
                           <input type="text" id="updateInput" onChange={(e) => {
-                            setNewPostStatus(e.target.value);
+                            setNewUserEmail(e.target.value);
                           }}></input>
 
-                          <button onClick={() => {updatePostStatus(val.PostName)}}>Update Post</button>
+                          <button onClick={() => {updateUserEmail(val.UserUn)}}>Update User</button>
                         </div>
                       )
                   })}
