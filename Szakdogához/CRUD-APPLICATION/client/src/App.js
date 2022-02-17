@@ -164,7 +164,7 @@ const updateAdminPermL = (admin) =>{
 const refreshUserData = () => {
   Axios.get('http://localhost:3001/api/get/users').then((response) => {
 
-    //setUserNameList(response.data);
+    setUsersNameList(response.data);
   });
 };
 

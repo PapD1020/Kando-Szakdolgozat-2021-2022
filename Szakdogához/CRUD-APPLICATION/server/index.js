@@ -173,7 +173,7 @@ app.get('/api/get/users', (req, res) => {
             console.log("Users GET error: " + err);
         }
 
-        console.log(result.data); //still not working properly
+        console.log("Users GET result: " + result.data); //still not working properly
         res.send(result);
     });
 });
@@ -205,6 +205,7 @@ app.delete('/api/delete/users/:userUn', (req, res) => {
         if(err){
             console.log("Users DELETE error: " + err);
         }
+        console.log("Users DELETE result: " + result);
     });
 });
 
