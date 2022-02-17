@@ -48,7 +48,7 @@ app.get('/api/get/post', (req, res) => {
             console.log("Post GET error: " + err);
         }
 
-        console.log("Result:" + result); //valamiért Object-et kapok terminálban
+        console.log("Result:" + result);                //valamiért Object-et kapok terminálban
         res.send(result);
     });
 });
@@ -215,7 +215,7 @@ app.put('/api/update/users', (req, res) => {
     const userE = req.body.userEmail;
     const sqlUpdate = "UPDATE users SET UserEmail = ? WHERE UserUn = ?";
 
-    db.query(sqlUpdate, [userE, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [userE, name], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
         if(err){
             console.log("Users UPDATE error: " + err);
         }
