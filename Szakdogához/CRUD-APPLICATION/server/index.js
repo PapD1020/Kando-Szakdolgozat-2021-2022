@@ -66,7 +66,10 @@ app.post('/api/insert/post', (req, res) => {
     const sqlInsert = "INSERT INTO `post`(`PostName`, `PostDate`, `PostSmDescr`, `PostMDescr`, `PostImg`, `PostStatus`) VALUES (?,?,?,?,?,?)"
     db.query(sqlInsert, [postName, postDate, postSmDescr, postMDescr, postImg, postStatus], (err, result) => {
 
-        console.log(err);
+        if(err){
+            console.log("Post POST error: " + err);
+        }
+
         console.log("Result:" + result);
         res.send(result);
     });
@@ -119,17 +122,30 @@ app.get('/api/get/admin', (req, res) => {
 app.post('/api/insert/admin', (req, res) => {
 
     const adminUn = req.body.adminUn;
+
+    console.log("AdminUn értékadás után: " + JSON.parse(adminUn));
+
     const adminPw = req.body.adminPw;
     const adminFN = req.body.adminFN;
     const adminSN = req.body.adminSN;
     const adminPermL = req.body.adminPermL;
     const adminEmail = req.body.adminEmail;
 
-    const sqlInsert = "INSERT INTO `admin`(`AdminUn`, `AdminPw`, `AdminFN`, `AdminSN`, `AdminPermL`, `AdminEmail`) VALUES (?,?,?,?,?,?)"
+    const sqlInsert = "INSERT INTO `admin`(`AdminUn`, `AdminPw`, `AdminFN`, `AdminSN`, `AdminPermL`, `AdminEmail`) VALUES (?,?,?,?,?,?)";
     db.query(sqlInsert, [adminUn, adminPw, adminFN, adminSN, adminPermL, adminEmail], (err, result) => {
 
-        console.log(err);
-        console.log("Result:" + result);
+        if(err){
+            console.log("Admin POST error: " + err);
+        }
+
+        setTimeout(function(){
+            console.log("AdminUn: " + JSON.stringify(adminUn));
+            console.log("AdminPw: " + adminPw);
+
+            var x = JSON.parse(JSON.stringify(result));
+            console.log("Result Admin POST: " + x);
+        }, 100);
+        
         res.send(result);
     });
 });
