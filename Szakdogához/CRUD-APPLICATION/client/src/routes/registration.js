@@ -3,6 +3,12 @@ import '../App.css';
 
 export default function Registration(){
 
+    const [UsernameReg, setUsernameReg] = useState('');
+    const [UserPwReg, setUserPwReg] = useState('');
+    const [UserFNReg, setUserFNReg] = useState('');
+    const [UserSNReg, setUserSNReg] = useState('');
+    const [UserDOBReg, setUserDOBReg] = useState('');
+    const [UserEmailReg, setUserEmailReg] = useState('');
 
     return(
         <div className="smallContainer">
