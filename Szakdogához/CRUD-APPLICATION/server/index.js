@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const mysql = require('mysql');
+const { json } = require('body-parser');
 
 const db = mysql.createPool({
     host: 'localhost',
@@ -121,9 +122,8 @@ app.get('/api/get/admin', (req, res) => {
 //POST - ADMIN
 app.post('/api/insert/admin', (req, res) => {
 
+    console.log(JSON.stringify(req.body)); //ez jó
     const adminUn = req.body.adminUn;
-
-    console.log("AdminUn értékadás után: " + JSON.parse(adminUn));
 
     const adminPw = req.body.adminPw;
     const adminFN = req.body.adminFN;
@@ -142,8 +142,10 @@ app.post('/api/insert/admin', (req, res) => {
             console.log("AdminUn: " + JSON.stringify(adminUn));
             console.log("AdminPw: " + adminPw);
 
+            /*
             var x = JSON.parse(JSON.stringify(result));
             console.log("Result Admin POST: " + x);
+            */
         }, 100);
         
         res.send(result);
