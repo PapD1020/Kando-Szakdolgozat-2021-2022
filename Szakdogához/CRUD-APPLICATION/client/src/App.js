@@ -6,6 +6,8 @@ export default function App(){
     <div className='App'>
       <h1>CRUD-APPLICATION WITH ROUTER V6</h1>
       <nav>
+        <Link to="/login">Login</Link> | {" "}
+        <Link to="/registration">Registration</Link> | {" "}
         <Link to="/post">Post</Link> | {" "}
         <Link to="/admin">Admin</Link> | {" "}
         <Link to="/users">Users</Link> | {" "}
