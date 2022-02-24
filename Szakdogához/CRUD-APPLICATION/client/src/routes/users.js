@@ -24,8 +24,8 @@ export default function Users(){
     }, []);
 
     //GET - USERS
-const refreshUserData = () => {
-    Axios.get('http://localhost:3001/api/get/users').then((response) => {
+    const refreshUserData = () => {
+      Axios.get('http://localhost:3001/api/get/users').then((response) => {
   
       setUsersNameList(response.data);
     });
@@ -37,10 +37,10 @@ const refreshUserData = () => {
     //postName - backend variable name
     Axios.post('http://localhost:3001/api/insert/users', { //URL for our api (node.js backend)
     userUn: UserUn, userPw: UserPw, userFN: UserFN, userSN: UserSN, userDob: UserDob, userEmail: UserEmail
-    });
+  });
     
   
-    setUsersNameList([
+  setUsersNameList([
       ...UsersNameList,
       {UserUn: UserUn, UserPw: UserPw, UserFN: UserFN, UserSN: UserSN, UserDob: UserDob, UserEmail: UserEmail}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
     ]);
