@@ -16,8 +16,11 @@ export default function Registration(){
   
     //postName - backend variable name
         Axios.post('http://localhost:3001/api/register/users', { //URL for our api (node.js backend)
+        //userUn must be the same as in back-end index.js req.body.userUn !!!
         userUn: UserUnReg, userPw: UserPwReg, userFN: UserFNReg, userSN: UserSNReg, userDob: UserDobReg, userEmail: UserEmailReg
-        });
+        }).then((response) => 
+            console.log("Response error: " + response)
+        );
 
         alert("Successfully registered as: " + UserUnReg);
     };
