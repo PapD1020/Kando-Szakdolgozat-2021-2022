@@ -19,7 +19,7 @@ export default function Registration(){
         //userUn must be the same as in back-end index.js req.body.userUn !!!
         userUn: UserUnReg, userPw: UserPwReg, userFN: UserFNReg, userSN: UserSNReg, userDob: UserDobReg, userEmail: UserEmailReg
         }).then((response) => 
-            console.log("Response error: " + response)
+            console.log("Register user response: " + JSON.stringify(response))
         );
 
         alert("Successfully registered as: " + UserUnReg);

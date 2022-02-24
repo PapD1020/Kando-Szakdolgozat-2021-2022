@@ -244,7 +244,7 @@ app.put('/api/update/users', (req, res) => {
 //REGISTER - USERS
 app.post('/api/register/users', (req, res) => {
 
-    console.log(JSON.stringify(req.body)); //ez jó
+    console.log("Register users req.body: "+ JSON.stringify(req.body)); //ez jó
     const userUn = req.body.userUn;
     const userPw = req.body.userPw;
     const userFN = req.body.userFN;
@@ -260,8 +260,35 @@ app.post('/api/register/users', (req, res) => {
         if(err){
             console.log("Users REGISTER INTO error: " + err);
         }
+
         //console.log("Users REGISTER INTO result: " + result);
         res.send(result);
+    });
+});
+
+//LOGIN - CHECK IF USER EXISTS - USERS
+app.post('/api/login/users', (req, res) => {
+
+    console.log("Login users req.body: " + JSON.stringify(req.body)); //ez jó
+    const userUn = req.body.userUn;
+    const userPw = req.body.userPw;
+
+    const sqlInsert = "SELECT UserUn, UserPw FROM users WHERE UserUn = ? AND UserPw = ?";
+    db.query(sqlInsert, [userUn, userPw], (err, result) => {
+
+        if(err){
+            //Front-end is expecting an object that is why:
+            res.send({err: err}); //sending error to front-end
+            console.log("Users LOGIN SELECT * error: " + err);
+        }
+
+        if(result.length > 0){ //checks if there is a user and password with the sent UserUn and UserPw
+            console.log("result.length: " + result.length);
+            res.send(result);
+        }
+        else{
+            res.send({message: "Wrong username or password!"});
+        }
     });
 });
 
