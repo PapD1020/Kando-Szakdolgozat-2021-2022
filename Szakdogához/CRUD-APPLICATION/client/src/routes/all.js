@@ -146,12 +146,28 @@ const submitAdminData = () => {
 
   //postName - backend variable name
   Axios.post('http://localhost:3001/api/insert/admin', { //URL for our api (node.js backend)
-  adminUn: AdminUn, adminPw: AdminPw, adminFN: AdminFN, adminSN: AdminSN, adminPermL: AdminPermL, adminEmail: AdminEmail
+  adminUn: AdminUn,
+  adminPw: AdminPw,
+  adminFN: AdminFN,
+  adminSN: AdminSN,
+  adminPermL: AdminPermL,
+  adminEmail: AdminEmail,
+  adminCreatedAt: date,
+  adminUpdatedAt: date
   });
     
   setAdminNameList([
     ...AdminNameList,
-    {AdminUn: AdminUn, AdminPw: AdminPw, AdminFN: AdminFN, AdminSN: AdminSN, AdminPermL: AdminPermL, AdminEmail: AdminEmail}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+    {
+      AdminUn: AdminUn,
+      AdminPw: AdminPw,
+      AdminFN: AdminFN,
+      AdminSN: AdminSN,
+      AdminPermL: AdminPermL,
+      AdminEmail: AdminEmail,
+      AdminCreatedAt: date,
+      AdminUpdatedAt: date
+    }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
   ]);
 };
 
@@ -265,6 +281,8 @@ const updateUserEmail = (user) =>{
                           <p>Post status: {val.PostStatus}</p>
                           <p>Post created at: {val.PostCreatedAt}</p>
                           <p>Post updated at: {val.PostUpdatedAt}</p>
+                          <p>Admin created at: {val.AdminCreatedAt}</p>
+                          <p>Admin updated at: {val.AdminUpdatedAt}</p>
 
                           <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
 

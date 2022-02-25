@@ -14,6 +14,9 @@ export default function Admin(){
 
     const [NewAdminPermL, setNewAdminPermL] = useState('');
 
+    const current = new Date();
+    const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+
     //On page load get admins
     useEffect(() => {
 
@@ -36,12 +39,28 @@ export default function Admin(){
   
     //postName - backend variable name
     Axios.post('http://localhost:3001/api/insert/admin', { //URL for our api (node.js backend)
-        adminUn: AdminUn, adminPw: AdminPw, adminFN: AdminFN, adminSN: AdminSN, adminPermL: AdminPermL, adminEmail: AdminEmail
+        adminUn: AdminUn,
+        adminPw: AdminPw,
+        adminFN: AdminFN,
+        adminSN: AdminSN,
+        adminPermL: AdminPermL,
+        adminEmail: AdminEmail,
+        adminCreatedAt: date,
+        adminUpdatedAt: date
     });
       
     setAdminNameList([
       ...AdminNameList,
-      {AdminUn: AdminUn, AdminPw: AdminPw, AdminFN: AdminFN, AdminSN: AdminSN, AdminPermL: AdminPermL, AdminEmail: AdminEmail}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+      {
+        AdminUn: AdminUn,
+        AdminPw: AdminPw,
+        AdminFN: AdminFN,
+        AdminSN: AdminSN,
+        AdminPermL: AdminPermL,
+        AdminEmail: AdminEmail,
+        AdminCreatedAt: date,
+        AdminUpdatedAt: date
+      }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
     ]);
   };
   
@@ -110,6 +129,8 @@ export default function Admin(){
                           <p>Admin second name: {val.AdminSN}</p>
                           <p>Admin permission level: {val.AdminPermL}</p>
                           <p>Admin email: {val.AdminEmail}</p>
+                          <p>Admin created at: {val.AdminCreatedAt}</p>
+                          <p>Admin updated at: {val.AdminUpdatedAt}</p>
 
                           <button onClick={() => {deleteAdmin(val.AdminUn)}}>Delete Admin</button>
 

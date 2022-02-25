@@ -127,16 +127,18 @@ app.get('/api/get/admin', (req, res) => {
 app.post('/api/insert/admin', (req, res) => {
 
     console.log(JSON.stringify(req.body)); //ez jó
+    const adminId = Nanoid.nanoid();
     const adminUn = req.body.adminUn;
-
     const adminPw = req.body.adminPw;
     const adminFN = req.body.adminFN;
     const adminSN = req.body.adminSN;
     const adminPermL = req.body.adminPermL;
     const adminEmail = req.body.adminEmail;
+    const adminCreatedAt = req.body.adminCreatedAt;
+    const adminUpdatedAt = req.body.adminUpdatedAt;
 
-    const sqlInsert = "INSERT INTO `admin`(`AdminUn`, `AdminPw`, `AdminFN`, `AdminSN`, `AdminPermL`, `AdminEmail`) VALUES (?,?,?,?,?,?)";
-    db.query(sqlInsert, [adminUn, adminPw, adminFN, adminSN, adminPermL, adminEmail], (err, result) => {
+    const sqlInsert = "INSERT INTO `admin`(`AdminId`, `AdminUn`, `AdminPw`, `AdminFN`, `AdminSN`, `AdminPermL`, `AdminEmail`, `AdminCreatedAt`, `AdminUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)";
+    db.query(sqlInsert, [adminId, adminUn, adminPw, adminFN, adminSN, adminPermL, adminEmail, adminCreatedAt, adminUpdatedAt], (err, result) => {
 
         if(err){
             console.log("Admin POST error: " + err);
