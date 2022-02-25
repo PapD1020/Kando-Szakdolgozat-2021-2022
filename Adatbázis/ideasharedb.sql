@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2022. Feb 25. 10:29
--- Kiszolgáló verziója: 10.4.20-MariaDB
--- PHP verzió: 7.3.29
+-- Létrehozás ideje: 2022. Feb 25. 15:10
+-- Kiszolgáló verziója: 10.4.17-MariaDB
+-- PHP verzió: 8.0.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,8 +35,8 @@ CREATE TABLE `admin` (
   `AdminSN` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `AdminPermL` int(1) NOT NULL,
   `AdminEmail` varchar(40) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `AdminCreatedAt` date NOT NULL,
-  `AdminUpdatedAt` date NOT NULL
+  `AdminCreatedAt` datetime NOT NULL,
+  `AdminUpdatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 -- --------------------------------------------------------
@@ -48,7 +48,7 @@ CREATE TABLE `admin` (
 CREATE TABLE `deletedpost` (
   `DeletedPostId` varchar(255) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `DeletedBy` varchar(255) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `DeletedAt` date DEFAULT NULL
+  `DeletedAt` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 -- --------------------------------------------------------
@@ -60,7 +60,7 @@ CREATE TABLE `deletedpost` (
 CREATE TABLE `deletedusers` (
   `DeletedUserId` varchar(255) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `DeletedBy` varchar(255) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `DeletedAt` date DEFAULT NULL
+  `DeletedAt` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 -- --------------------------------------------------------
@@ -76,9 +76,16 @@ CREATE TABLE `post` (
   `PostMDescr` varchar(500) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `PostImg` varchar(50) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `PostStatus` int(1) NOT NULL,
-  `PostCreatedAt` date NOT NULL,
-  `PostUpdatedAt` date NOT NULL
+  `PostCreatedAt` datetime NOT NULL,
+  `PostUpdatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `post`
+--
+
+INSERT INTO `post` (`PostId`, `PostName`, `PostSmDescr`, `PostMDescr`, `PostImg`, `PostStatus`, `PostCreatedAt`, `PostUpdatedAt`) VALUES
+('urLnJg6Pgzsh8UjHjhlnb', 'asd', 'asd', 'asd', 'asd', 1, '2022-02-25 00:00:00', '2022-02-25 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -88,7 +95,7 @@ CREATE TABLE `post` (
 
 CREATE TABLE `postuser` (
   `UId` varchar(255) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `PId` varchar(255) COLLATE utf8mb4_hungarian_ci NOT NULL
+  `Pid` varchar(255) COLLATE utf8mb4_hungarian_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 -- --------------------------------------------------------
@@ -105,8 +112,8 @@ CREATE TABLE `users` (
   `UserSN` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `UserDob` date NOT NULL,
   `UserEmail` varchar(40) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `UserCreatedAt` date NOT NULL,
-  `UserUpdatedAt` date NOT NULL
+  `UserCreatedAt` datetime NOT NULL,
+  `UserUpdatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
@@ -146,7 +153,7 @@ ALTER TABLE `post`
 --
 ALTER TABLE `postuser`
   ADD KEY `UId` (`UId`),
-  ADD KEY `PId` (`PId`);
+  ADD KEY `Pid` (`Pid`);
 
 --
 -- A tábla indexei `users`
@@ -165,7 +172,7 @@ ALTER TABLE `users`
 --
 ALTER TABLE `postuser`
   ADD CONSTRAINT `postuser_ibfk_1` FOREIGN KEY (`UId`) REFERENCES `users` (`UserId`),
-  ADD CONSTRAINT `postuser_ibfk_2` FOREIGN KEY (`PId`) REFERENCES `post` (`PostId`);
+  ADD CONSTRAINT `postuser_ibfk_2` FOREIGN KEY (`Pid`) REFERENCES `post` (`PostId`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
