@@ -42,12 +42,24 @@ export default function Post(){
 
     //postName - backend variable name
     Axios.post('http://localhost:3001/api/insert/post', { //URL for our api (node.js backend)
-        postName: PostName, postSmDescr: PostSmDescr, postMDescr: PostMDescr, postImg: PostImg, postStatus: PostStatus, postCreatedAt: PostCreatedAt, postUpdatedAt: PostUpdatedAt
+        postName: PostName,
+        postSmDescr: PostSmDescr,
+        postMDescr: PostMDescr,
+        postImg: PostImg,
+        postStatus: PostStatus,
     });
         
     setPostNameList([
         ...PostNameList,
-        {PostName: PostName, PostSmDescr: PostSmDescr, PostMDescr: PostMDescr, PostImg: PostImg, PostStatus: PostStatus, PostCreatedAt: PostCreatedAt, PostUpdatedAt: PostUpdatedAt}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+        {
+          PostName: PostName,
+          PostSmDescr: PostSmDescr,
+          PostMDescr: PostMDescr,
+          PostImg: PostImg,
+          PostStatus: PostStatus,
+          PostCreatedAt: PostCreatedAt,
+          PostUpdatedAt: PostUpdatedAt
+        }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
     ]);
     //console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
     };
