@@ -207,13 +207,29 @@ const submitUserData = () => {
 
   //postName - backend variable name
   Axios.post('http://localhost:3001/api/insert/users', { //URL for our api (node.js backend)
-  userUn: UserUn, userPw: UserPw, userFN: UserFN, userSN: UserSN, userDob: UserDob, userEmail: UserEmail
+    userUn: UserUn,
+    userPw: UserPw,
+    userFN: UserFN,
+    userSN: UserSN,
+    userDob: UserDob,
+    userEmail: UserEmail,
+    userCreatedAt: date,
+    userUpdatedAt: date
   });
   
 
   setUsersNameList([
     ...UsersNameList,
-    {UserUn: UserUn, UserPw: UserPw, UserFN: UserFN, UserSN: UserSN, UserDob: UserDob, UserEmail: UserEmail}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+    {
+      UserUn: UserUn,
+      UserPw: UserPw,
+      UserFN: UserFN,
+      UserSN: UserSN,
+      UserDob: UserDob,
+      UserEmail: UserEmail,
+      UserCreatedAt: date,
+      UserUpdatedAt: date
+    }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
   ]);
 };
 

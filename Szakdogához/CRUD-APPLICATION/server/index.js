@@ -75,6 +75,7 @@ app.post('/api/insert/post', (req, res) => {
         }
 
         console.log("Nanoid: " + postId);
+        console.log("Post createdAt: " + postCreatedAt);
         res.send(result);
     });
 });
@@ -206,18 +207,23 @@ app.get('/api/get/users', (req, res) => {
 //POST - USERS
 app.post('/api/insert/users', (req, res) => {
 
+    const userId = Nanoid.nanoid();
     const userUn = req.body.userUn;
     const userPw = req.body.userPw;
     const userFN = req.body.userFN;
     const userSN = req.body.userSN;
     const userDob = req.body.userDob;
     const userEmail = req.body.userEmail;
+    const userCreatedAt = req.body.userCreatedAt;
+    const userUpdatedAt = req.body.userUpdatedAt;
 
-    const sqlInsert = "INSERT INTO `users` (`UserUn`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`) VALUES (?,?,?,?,?,?)"
-    db.query(sqlInsert, [userUn, userPw, userFN, userSN, userDob, userEmail], (err, result) => {
+    const sqlInsert = "INSERT INTO `users` (`UserId`, `UserUn`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
+    db.query(sqlInsert, [userId, userUn, userPw, userFN, userSN, userDob, userEmail, userCreatedAt, userUpdatedAt], (err, result) => {
 
         console.log("Users INSERT INTO error: " + err);
         console.log("Users INSERT INTO result: " + result);
+        console.log("userCreatedAt: " + userCreatedAt);
+        console.log(JSON.stringify(req.body));
         res.send(result);
     });
 });
@@ -239,9 +245,10 @@ app.put('/api/update/users', (req, res) => {
 
     const name = req.body.userUn;
     const userE = req.body.userEmail;
-    const sqlUpdate = "UPDATE users SET UserEmail = ? WHERE UserUn = ?";
+    const updated = req.body.userUpdatedAt;
+    const sqlUpdate = "UPDATE users SET UserEmail = ?, UserUpdatedAt = ? WHERE UserUn = ?";
 
-    db.query(sqlUpdate, [userE, name], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [userE, updated, name], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
         if(err){
             console.log("Users UPDATE error: " + err);
         }

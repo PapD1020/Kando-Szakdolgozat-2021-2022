@@ -14,6 +14,9 @@ export default function Users(){
 
     const [NewUserEmail, setNewUserEmail] = useState('');
 
+    const current = new Date();
+    const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+
     //On page load get users
     useEffect(() => {
 
@@ -36,13 +39,29 @@ export default function Users(){
   
     //postName - backend variable name
     Axios.post('http://localhost:3001/api/insert/users', { //URL for our api (node.js backend)
-    userUn: UserUn, userPw: UserPw, userFN: UserFN, userSN: UserSN, userDob: UserDob, userEmail: UserEmail
+    userUn: UserUn,
+    userPw: UserPw,
+    userFN: UserFN,
+    userSN: UserSN,
+    userDob: UserDob,
+    userEmail: UserEmail,
+    userCreatedAt: date,
+    userUpdatedAt: date
   });
     
   
   setUsersNameList([
       ...UsersNameList,
-      {UserUn: UserUn, UserPw: UserPw, UserFN: UserFN, UserSN: UserSN, UserDob: UserDob, UserEmail: UserEmail}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+      {
+        UserUn: UserUn,
+        UserPw: UserPw,
+        UserFN: UserFN,
+        UserSN: UserSN,
+        UserDob: UserDob,
+        UserEmail: UserEmail,
+        UserCreatedAt: date,
+        UserUpdatedAt: date
+      }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
     ]);
   };
   
@@ -59,6 +78,7 @@ export default function Users(){
     Axios.put('http://localhost:3001/api/update/users', {
       userUn: user,
       userEmail: NewUserEmail,
+      userUpdatedAt: date
     });
     setNewUserEmail("");
     alert("Successfuly changed! Please click on the refresh button.");
@@ -111,6 +131,8 @@ export default function Users(){
                           <p>User second name: {val.UserSN}</p>
                           <p>User date of birth: {val.UserDob}</p>
                           <p>User email: {val.UserEmail}</p>
+                          <p>User created at: {val.UserCreatedAt}</p>
+                          <p>User updated at: {val.UserUpdatedAt}</p>
 
                           <button onClick={() => {deleteUser(val.UserUn)}}>Delete User</button>
 
