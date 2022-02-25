@@ -95,9 +95,10 @@ app.put('/api/update/post', (req, res) => {
 
     const name = req.body.postName;
     const status = req.body.postStatus;
-    const sqlUpdate = "UPDATE post SET PostStatus = ? WHERE PostName = ?";
+    const updated = req.body.postUpdatedAt;
+    const sqlUpdate = "UPDATE post SET PostStatus = ?, PostUpdatedAt = ? WHERE PostName = ?";
 
-    db.query(sqlUpdate, [status, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [status, updated, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
         if(err){
             console.log(err);
         }

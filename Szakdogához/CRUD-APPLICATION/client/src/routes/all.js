@@ -38,62 +38,61 @@ export default function All(){
 
   const [NewUserEmail, setNewUserEmail] = useState('');
 
-//On page load get posts
-useEffect(() => {
+  const current = new Date();
+  const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
-  Axios.get('http://localhost:3001/api/get/post').then((response) => {
-
-    setPostNameList(response.data);
-    //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
-  });
-}, []);
-
-//On page load get admins
-useEffect(() => {
-
-  Axios.get('http://localhost:3001/api/get/admin').then((response) => {
-
-    setAdminNameList(response.data);
-  });
-}, []);
-
-//On page load get users
-useEffect(() => {
-
-  Axios.get('http://localhost:3001/api/get/users').then((response) => {
-
-    setUsersNameList(response.data);
-  });
-}, []);
-
-//GET - POST
-//Refresh Post data
-const refreshPostData = () => {
+  //On page load get posts
+  useEffect(() => {
 
     Axios.get('http://localhost:3001/api/get/post').then((response) => {
-  
+
       setPostNameList(response.data);
       //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
     });
-};
+  }, []);
 
-//POST - POST
-//Request the subbmit button
-const submitPostData = () => {
+  //On page load get admins
+  useEffect(() => {
 
-  const current = new Date();
-  const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
-  console.log(date);
+    Axios.get('http://localhost:3001/api/get/admin').then((response) => {
 
-  //postName - backend variable name
-  Axios.post('http://localhost:3001/api/insert/post', { //URL for our api (node.js backend)
-    postName: PostName,
-    postSmDescr: PostSmDescr,
-    postMDescr: PostMDescr,
-    postImg: PostImg,
-    postStatus: PostStatus,
-    postCreatedAt: date,
-    postUpdatedAt: date
+      setAdminNameList(response.data);
+    });
+  }, []);
+
+  //On page load get users
+  useEffect(() => {
+
+    Axios.get('http://localhost:3001/api/get/users').then((response) => {
+
+      setUsersNameList(response.data);
+    });
+  }, []);
+
+  //GET - POST
+  //Refresh Post data
+  const refreshPostData = () => {
+
+      Axios.get('http://localhost:3001/api/get/post').then((response) => {
+    
+        setPostNameList(response.data);
+        //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
+      });
+  };
+
+  //POST - POST
+  //Request the subbmit button
+  const submitPostData = () => {
+
+    //postName - backend variable name
+    Axios.post('http://localhost:3001/api/insert/post', { //URL for our api (node.js backend)
+      postName: PostName,
+      postSmDescr: PostSmDescr,
+      postMDescr: PostMDescr,
+      postImg: PostImg,
+      postStatus: PostStatus,
+      postCreatedAt: date,
+      postUpdatedAt: date
   });
     
   setPostNameList([
@@ -124,6 +123,7 @@ const updatePostStatus = (post) =>{
   Axios.put('http://localhost:3001/api/update/post', {
     postName: post,
     postStatus: NewPostStatus,
+    postUpdatedAt: date
   });
   setNewPostStatus("");
   alert("Successfuly changed! Please click on the refresh button.");

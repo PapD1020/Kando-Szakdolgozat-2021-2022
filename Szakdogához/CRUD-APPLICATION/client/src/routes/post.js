@@ -13,6 +13,9 @@ export default function Post(){
 
     const [NewPostStatus, setNewPostStatus] = useState('');
 
+    const current = new Date();
+    const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+
     //On page load get posts
     useEffect(() => {
 
@@ -37,19 +40,16 @@ export default function Post(){
     //POST - POST
     //Request the submit button
     const submitPostData = () => {
-      const current = new Date();
-      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
-      console.log(date);
-    //postName - backend variable name
-    Axios.post('http://localhost:3001/api/insert/post', { //URL for our api (node.js backend)
-        postName: PostName,
-        postSmDescr: PostSmDescr,
-        postMDescr: PostMDescr,
-        postImg: PostImg,
-        postStatus: PostStatus,
-        postCreatedAt: date,
-        postUpdatedAt: date
-    });
+      //postName - backend variable name
+      Axios.post('http://localhost:3001/api/insert/post', { //URL for our api (node.js backend)
+          postName: PostName,
+          postSmDescr: PostSmDescr,
+          postMDescr: PostMDescr,
+          postImg: PostImg,
+          postStatus: PostStatus,
+          postCreatedAt: date,
+          postUpdatedAt: date
+      });
         
     setPostNameList([
         ...PostNameList,
@@ -63,33 +63,30 @@ export default function Post(){
           PostUpdatedAt: date
         }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
     ]);
-    //console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
+    
     };
 
     //DELETE - POST
     const deletePost = (post) =>{
-    Axios.delete(`http://localhost:3001/api/delete/post/${post}`); // with altgr+7 you can add variables to it
+      Axios.delete(`http://localhost:3001/api/delete/post/${post}`); // with altgr+7 you can add variables to it
 
-    alert("Successfuly deleted. Please click on the refresh button.")
-    //kell frissítés, hogy eltünjön a törölt, submitos nem működik
+      alert("Successfuly deleted. Please click on the refresh button.")
+      //kell frissítés, hogy eltünjön a törölt, submitos nem működik
     };
 
     //PUT - POST
     const updatePostStatus = (post) =>{
-    Axios.put('http://localhost:3001/api/update/post', {
-        postName: post,
-        postStatus: NewPostStatus,
-    });
-    const current = new Date();
-      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
-    // setPostNameList([
-    //   ...PostNameList,
-    //   {
-    //     PostUpdatedAt: date
-    //   }, Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
-  // ]);
-    setNewPostStatus("");
-    alert("Successfuly changed! Please click on the refresh button.");
+
+      Axios.put('http://localhost:3001/api/update/post', {
+          postName: post,
+          postStatus: NewPostStatus,
+          postUpdatedAt: date
+      });
+
+      console.log("Post PostUpdatedAt: " + date);
+
+      setNewPostStatus("");
+      alert("Successfuly changed! Please click on the refresh button.");
     };
 
     return(
