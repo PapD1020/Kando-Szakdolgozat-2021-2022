@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2022. Feb 25. 09:54
+-- Létrehozás ideje: 2022. Feb 25. 10:29
 -- Kiszolgáló verziója: 10.4.20-MariaDB
 -- PHP verzió: 7.3.29
 
@@ -72,7 +72,6 @@ CREATE TABLE `deletedusers` (
 CREATE TABLE `post` (
   `PostId` varchar(255) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `PostName` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `PostDate` date NOT NULL,
   `PostSmDescr` varchar(100) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `PostMDescr` varchar(500) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `PostImg` varchar(50) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,

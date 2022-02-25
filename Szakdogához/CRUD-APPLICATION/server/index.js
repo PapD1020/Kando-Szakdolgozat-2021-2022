@@ -36,6 +36,7 @@ app.get("/", (req, res) => {
     });
 });
 */
+let date_ob = new Date();
 
 /*
 * POST CRUD
@@ -58,21 +59,26 @@ app.get('/api/get/post', (req, res) => {
 //POST - Post
 app.post('/api/insert/post', (req, res) => {
 
-    
+    let date = ("0" + date_ob.getDate()).slice(-2);
+
+    const postId = Nanoid.nanoid();
     const postName = req.body.postName;
-    const postDate = req.body.postDate;
     const postSmDescr = req.body.postSmDescr;
     const postMDescr = req.body.postMDescr;
     const postImg = req.body.postImg;
     const postStatus = req.body.postStatus;
+    const postCreatedAt = date;
+    const postUpdatedAt = date;
 
-    const sqlInsert = "INSERT INTO `post`(`PostName`, `PostDate`, `PostSmDescr`, `PostMDescr`, `PostImg`, `PostStatus`) VALUES (?,?,?,?,?,?)"
-    db.query(sqlInsert, [postName, postDate, postSmDescr, postMDescr, postImg, postStatus], (err, result) => {
+    const sqlInsert = "INSERT INTO `post`(`PostId`, `PostName`, `PostSmDescr`, `PostMDescr`, `PostImg`, `PostStatus`, `PostCreatedAt`, `PostUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
+    db.query(sqlInsert, [postId, postName, postSmDescr, postMDescr, postImg, postStatus, postCreatedAt, postUpdatedAt], (err, result) => {
 
         if(err){
             console.log("Post POST error: " + err);
         }
 
+        console.log("Nanoid: " + postId);
+        console.log("Date: " + date);
         console.log("Result:" + result);
         res.send(result);
     });

@@ -4,11 +4,12 @@ import Axios from 'axios';
 
 export default function Post(){
     const [PostName, setPostName] = useState('');
-    const [PostDate, setPostDate] = useState('');
     const [PostSmDescr, setPostSmDescr] = useState('');
     const [PostMDescr, setPostMDescr] = useState('');
     const [PostImg, setPostImg] = useState('');
     const [PostStatus, setPostStatus] = useState('');
+    let PostCreatedAt;
+    let PostUpdatedAt;
 
     const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
 
@@ -41,12 +42,12 @@ export default function Post(){
 
     //postName - backend variable name
     Axios.post('http://localhost:3001/api/insert/post', { //URL for our api (node.js backend)
-        postName: PostName, postDate: PostDate, postSmDescr: PostSmDescr, postMDescr: PostMDescr, postImg: PostImg, postStatus: PostStatus
+        postName: PostName, postSmDescr: PostSmDescr, postMDescr: PostMDescr, postImg: PostImg, postStatus: PostStatus, postCreatedAt: PostCreatedAt, postUpdatedAt: PostUpdatedAt
     });
         
     setPostNameList([
         ...PostNameList,
-        {PostName: PostName, PostDate: PostDate, PostSmDescr: PostSmDescr, PostMDescr: PostMDescr, PostImg: PostImg, PostStatus: PostStatus}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+        {PostName: PostName, PostSmDescr: PostSmDescr, PostMDescr: PostMDescr, PostImg: PostImg, PostStatus: PostStatus, PostCreatedAt: PostCreatedAt, PostUpdatedAt: PostUpdatedAt}, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
     ]);
     //console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
     };
@@ -78,11 +79,6 @@ export default function Post(){
                   setPostName(e.target.value);
                 }}></input>
 
-                <label>PostDate</label>
-                <input type="date" name="postDate" onChange={(e) => {
-                  setPostDate(e.target.value);
-                }}></input>
-
                 <label>PostSmDescr</label>
                 <input type="text" name="postSmDescr" onChange={(e) => {
                   setPostSmDescr(e.target.value);
@@ -111,11 +107,12 @@ export default function Post(){
                       return(
                         <div className="card">
                           <h1>Post name: {val.PostName}</h1>
-                          <p>Post date: {val.PostDate}</p>
                           <h2>Post small description: {val.PostSmDescr}</h2>
                           <p>Post main description: {val.PostMDescr}</p>
                           <p>Post image: {val.PostImg}</p>
                           <p>Post status: {val.PostStatus}</p>
+                          <p>Post created at: {val.PostCreatedAt}</p>
+                          <p>Post updated at: {val.PostUpdatedAt}</p>
 
                           <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
 
