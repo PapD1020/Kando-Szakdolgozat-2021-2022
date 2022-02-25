@@ -4,6 +4,7 @@ const cors = require('cors');
 const app = express();
 const mysql = require('mysql');
 const { json } = require('body-parser');
+const Nanoid = require('nanoid');
 
 const db = mysql.createPool({
     host: 'localhost',
@@ -57,6 +58,7 @@ app.get('/api/get/post', (req, res) => {
 //POST - Post
 app.post('/api/insert/post', (req, res) => {
 
+    
     const postName = req.body.postName;
     const postDate = req.body.postDate;
     const postSmDescr = req.body.postSmDescr;
