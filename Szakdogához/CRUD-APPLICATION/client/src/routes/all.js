@@ -144,7 +144,7 @@ const refreshAdminData = () => {
 //POST - ADMIN
 const submitAdminData = () => {
 
-  //postName - backend variable name
+  //adminUn - backend variable name
   Axios.post('http://localhost:3001/api/insert/admin', { //URL for our api (node.js backend)
   adminUn: AdminUn,
   adminPw: AdminPw,

@@ -11,13 +11,23 @@ export default function Registration(){
     const [UserDobReg, setUserDobReg] = useState('');
     const [UserEmailReg, setUserEmailReg] = useState('');
 
+    const current = new Date();
+    const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+
     //POST - USERS
     const submitUserDataReg = () => {
   
     //postName - backend variable name
         Axios.post('http://localhost:3001/api/register/users', { //URL for our api (node.js backend)
         //userUn must be the same as in back-end index.js req.body.userUn !!!
-        userUn: UserUnReg, userPw: UserPwReg, userFN: UserFNReg, userSN: UserSNReg, userDob: UserDobReg, userEmail: UserEmailReg
+        userUn: UserUnReg,
+        userPw: UserPwReg,
+        userFN: UserFNReg,
+        userSN: UserSNReg,
+        userDob: UserDobReg,
+        userEmail: UserEmailReg,
+        userCreatedAt: date,
+        userUpdatedAt: date
         }).then((response) => 
             console.log("Register user response: " + JSON.stringify(response))
         );

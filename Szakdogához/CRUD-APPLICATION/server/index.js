@@ -259,15 +259,18 @@ app.put('/api/update/users', (req, res) => {
 app.post('/api/register/users', (req, res) => {
 
     console.log("Register users req.body: "+ JSON.stringify(req.body)); //ez jó
+    const userId = Nanoid.nanoid();
     const userUn = req.body.userUn;
     const userPw = req.body.userPw;
     const userFN = req.body.userFN;
     const userSN = req.body.userSN;
     const userDob = req.body.userDob;
     const userEmail = req.body.userEmail;
+    const userCreatedAt = req.body.userCreatedAt;
+    const userUpdatedAt = req.body.userUpdatedAt;
 
-    const sqlInsert = "INSERT INTO `users` (`UserUn`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`) VALUES (?,?,?,?,?,?)"
-    db.query(sqlInsert, [userUn, userPw, userFN, userSN, userDob, userEmail], (err, result) => {
+    const sqlInsert = "INSERT INTO `users` (`UserId`, `UserUn`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
+    db.query(sqlInsert, [userId, userUn, userPw, userFN, userSN, userDob, userEmail, userCreatedAt, userUpdatedAt], (err, result) => {
 
         console.log("UserUn: " + JSON.stringify(req.body.UserUn));
 
