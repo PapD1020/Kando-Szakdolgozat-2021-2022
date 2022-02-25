@@ -174,9 +174,10 @@ app.put('/api/update/admin', (req, res) => {
 
     const name = req.body.adminUn;
     const permL = req.body.adminPermL;
-    const sqlUpdate = "UPDATE admin SET AdminPermL = ? WHERE AdminUn = ?";
+    const updated = req.body.adminUpdatedAt;
+    const sqlUpdate = "UPDATE admin SET AdminPermL = ?, AdminUpdatedAt = ? WHERE AdminUn = ?";
 
-    db.query(sqlUpdate, [permL, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [permL, updated, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
         if(err){
             console.log("Admin UPDATE error: " + err);
         }

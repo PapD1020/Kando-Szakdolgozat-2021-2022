@@ -77,6 +77,7 @@ export default function Admin(){
     Axios.put('http://localhost:3001/api/update/admin', {
       adminUn: admin,
       adminPermL: NewAdminPermL,
+      adminUpdatedAt: date
     });
     setNewAdminPermL("");
     alert("Successfuly changed! Please click on the refresh button.");

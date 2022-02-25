@@ -184,6 +184,7 @@ const updateAdminPermL = (admin) =>{
   Axios.put('http://localhost:3001/api/update/admin', {
     adminUn: admin,
     adminPermL: NewAdminPermL,
+    adminUpdatedAt: date
   });
   setNewAdminPermL("");
   alert("Successfuly changed! Please click on the refresh button.");
@@ -345,6 +346,8 @@ const updateUserEmail = (user) =>{
                           <p>Admin second name: {val.AdminSN}</p>
                           <p>Admin permission level: {val.AdminPermL}</p>
                           <p>Admin email: {val.AdminEmail}</p>
+                          <p>Admin created at: {val.AdminCreatedAt}</p>
+                          <p>Admin updated at: {val.AdminUpdatedAt}</p>
 
                           <button onClick={() => {deleteAdmin(val.AdminUn)}}>Delete Admin</button>
 
