@@ -8,8 +8,6 @@ export default function Post(){
     const [PostMDescr, setPostMDescr] = useState('');
     const [PostImg, setPostImg] = useState('');
     const [PostStatus, setPostStatus] = useState('');
-    let PostCreatedAt;
-    let PostUpdatedAt;
 
     const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
 
@@ -37,9 +35,11 @@ export default function Post(){
     };
 
     //POST - POST
-    //Request the subbmit button
+    //Request the submit button
     const submitPostData = () => {
-
+      const current = new Date();
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+      console.log(date);
     //postName - backend variable name
     Axios.post('http://localhost:3001/api/insert/post', { //URL for our api (node.js backend)
         postName: PostName,
@@ -47,6 +47,8 @@ export default function Post(){
         postMDescr: PostMDescr,
         postImg: PostImg,
         postStatus: PostStatus,
+        postCreatedAt: date,
+        postUpdatedAt: date
     });
         
     setPostNameList([
@@ -57,8 +59,8 @@ export default function Post(){
           PostMDescr: PostMDescr,
           PostImg: PostImg,
           PostStatus: PostStatus,
-          PostCreatedAt: PostCreatedAt,
-          PostUpdatedAt: PostUpdatedAt
+          PostCreatedAt: date,
+          PostUpdatedAt: date
         }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
     ]);
     //console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
@@ -78,6 +80,14 @@ export default function Post(){
         postName: post,
         postStatus: NewPostStatus,
     });
+    const current = new Date();
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+    // setPostNameList([
+    //   ...PostNameList,
+    //   {
+    //     PostUpdatedAt: date
+    //   }, Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+  // ]);
     setNewPostStatus("");
     alert("Successfuly changed! Please click on the refresh button.");
     };

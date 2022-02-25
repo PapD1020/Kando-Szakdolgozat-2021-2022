@@ -36,14 +36,6 @@ app.get("/", (req, res) => {
     });
 });
 */
-let date = new Date();
-
-let year = date.getFullYear();
-let month = date.getMonth();
-let day = date.getDay();
-let hour = date.getHours();
-let minute = date.getMinutes();
-let currentDate = date.getFullYear() + ":" + date.getMonth() + ":" + date.getDay() + ":" + date.getHours() + ":" + date.getMinutes();
 
 /*
 * POST CRUD
@@ -72,8 +64,8 @@ app.post('/api/insert/post', (req, res) => {
     const postMDescr = req.body.postMDescr;
     const postImg = req.body.postImg;
     const postStatus = req.body.postStatus;
-    const postCreatedAt = date;
-    const postUpdatedAt = date;
+    const postCreatedAt = req.body.postCreatedAt;
+    const postUpdatedAt = req.body.postUpdatedAt;
 
     const sqlInsert = "INSERT INTO `post`(`PostId`, `PostName`, `PostSmDescr`, `PostMDescr`, `PostImg`, `PostStatus`, `PostCreatedAt`, `PostUpdatedAt`) VALUES (?,?,?,?,?,?,?,?)"
     db.query(sqlInsert, [postId, postName, postSmDescr, postMDescr, postImg, postStatus, postCreatedAt, postUpdatedAt], (err, result) => {
@@ -83,14 +75,6 @@ app.post('/api/insert/post', (req, res) => {
         }
 
         console.log("Nanoid: " + postId);
-        console.log(date);
-        console.log("year: " + year);
-        console.log("month: " + month);
-        console.log("day: " + day);
-        console.log("hour: " + hour);
-        console.log("minute: " + minute);
-        console.log("Date: " + currentDate);
-        console.log("Result:" + result);
         res.send(result);
     });
 });
