@@ -3,42 +3,40 @@ import '../App.css';
 import Axios from 'axios';
 
 export default function All(){
-//Post
-const [PostName, setPostName] = useState('');
-const [PostSmDescr, setPostSmDescr] = useState('');
-const [PostMDescr, setPostMDescr] = useState('');
-const [PostImg, setPostImg] = useState('');
-const [PostStatus, setPostStatus] = useState('');
-let PostCreatedAt;
-let PostUpdatedAt;
+  //Post
+  const [PostName, setPostName] = useState('');
+  const [PostSmDescr, setPostSmDescr] = useState('');
+  const [PostMDescr, setPostMDescr] = useState('');
+  const [PostImg, setPostImg] = useState('');
+  const [PostStatus, setPostStatus] = useState('');
 
-const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
+  const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
 
-const [NewPostStatus, setNewPostStatus] = useState('');
+  const [NewPostStatus, setNewPostStatus] = useState('');
 
-//Admin
-const [AdminUn, setAdminUn] = useState('');
-const [AdminPw, setAdminPw] = useState('');
-const [AdminFN, setAdminFN] = useState('');
-const [AdminSN, setAdminSN] = useState('');
-const [AdminPermL, setAdminPermL] = useState('');
-const [AdminEmail, setAdminEmail] = useState('');
+  //Admin
+  const [AdminUn, setAdminUn] = useState('');
+  const [AdminPw, setAdminPw] = useState('');
+  const [AdminFN, setAdminFN] = useState('');
+  const [AdminSN, setAdminSN] = useState('');
+  const [AdminPermL, setAdminPermL] = useState('');
+  const [AdminEmail, setAdminEmail] = useState('');
 
-const [AdminNameList, setAdminNameList] = useState([]);
+  const [AdminNameList, setAdminNameList] = useState([]);
 
-const [NewAdminPermL, setNewAdminPermL] = useState('');
+  const [NewAdminPermL, setNewAdminPermL] = useState('');
 
-//USERS
-const [UserUn, setUserUn] = useState('');
-const [UserPw, setUserPw] = useState('');
-const [UserFN, setUserFN] = useState('');
-const [UserSN, setUserSN] = useState('');
-const [UserDob, setUserDob] = useState('');
-const [UserEmail, setUserEmail] = useState('');
+  //USERS
+  const [UserUn, setUserUn] = useState('');
+  const [UserPw, setUserPw] = useState('');
+  const [UserFN, setUserFN] = useState('');
+  const [UserSN, setUserSN] = useState('');
+  const [UserDob, setUserDob] = useState('');
+  const [UserEmail, setUserEmail] = useState('');
 
-const [UsersNameList, setUsersNameList] = useState([]);
+  const [UsersNameList, setUsersNameList] = useState([]);
 
-const [NewUserEmail, setNewUserEmail] = useState('');
+  const [NewUserEmail, setNewUserEmail] = useState('');
 
 //On page load get posts
 useEffect(() => {
@@ -83,13 +81,19 @@ const refreshPostData = () => {
 //Request the subbmit button
 const submitPostData = () => {
 
+  const current = new Date();
+  const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+  console.log(date);
+
   //postName - backend variable name
   Axios.post('http://localhost:3001/api/insert/post', { //URL for our api (node.js backend)
     postName: PostName,
     postSmDescr: PostSmDescr,
     postMDescr: PostMDescr,
     postImg: PostImg,
-    postStatus: PostStatus
+    postStatus: PostStatus,
+    postCreatedAt: date,
+    postUpdatedAt: date
   });
     
   setPostNameList([
@@ -100,8 +104,8 @@ const submitPostData = () => {
       PostMDescr: PostMDescr,
       PostImg: PostImg,
       PostStatus: PostStatus,
-      PostCreatedAt: PostCreatedAt,
-      PostUpdatedAt: PostUpdatedAt
+      PostCreatedAt: date,
+      PostUpdatedAt: date
     }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
   ]);
   //console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
