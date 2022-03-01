@@ -3,6 +3,7 @@ import '../App.css';
 import Axios from 'axios';
 
 import '../css/userlist.css';
+import { Row, Table } from "react-bootstrap";
 
 export default function UsersList(){
     const [UserUn, setUserUn] = useState('');
@@ -77,26 +78,38 @@ export default function UsersList(){
   };
 
   return(
-    <div className="lista">
-          <div className='form'>
-            <h3>USERSList</h3>
-
-                
+    <div className="userList">
+                        
+                        <thead>
+                                <tr>
+                                    <th>User username</th>
+                                    <th>User password</th>
+                                    <th>User first name</th>
+                                    <th>User second name</th>
+                                    <th>User date of birth</th>
+                                    <th>User email</th>
+                                    <th>User created at</th>
+                                    <th>User updated at</th>
+                                </tr>
+                          </thead>
+                         
                   {UsersNameList.map((val) => {
                       return(
-                        
- 
-                        <div className="table">
-                          
-                          <h1>User username: {val.UserUn}</h1>
-                          <p>User password: {val.UserPw}</p>
-                          <h2>User first name: {val.UserFN}</h2>
-                          <p>User second name: {val.UserSN}</p>
-                          <p>User date of birth: {val.UserDob}</p>
-                          <p>User email: {val.UserEmail}</p>
-                          <p>User created at: {val.UserCreatedAt}</p>
-                          <p>User updated at: {val.UserUpdatedAt}</p>
 
+                            <Table responsive>
+                           
+                          <tbody>
+                            <tr>
+                              <td>{val.UserUn}</td>    
+                              <td>{val.UserPw}</td>  
+                              <td>{val.UserFN}</td>  
+                              <td>{val.UserSN}</td>  
+                              <td>{val.UserDob}</td>  
+                              <td>{val.UserEmail}</td>  
+                              <td>{val.UserCreatedAt}</td>  
+                              <td>{val.UserUpdatedAt}</td> 
+                            
+                           <td>
                           <button onClick={() => {deleteUser(val.UserUn)}}>Delete User</button>
 
                           <input type="text" className="updateInput" onChange={(e) => {
@@ -104,11 +117,15 @@ export default function UsersList(){
                           }}></input>
 
                           <button onClick={() => {updateUserEmail(val.UserUn)}}>Update User</button>
-                        </div>
+                          </td>
+                          </tr> 
+                          </tbody>
+                          </Table>
+                      
                       )
                   })}
                 
-          </div>
+          
         </div>
   );
 }
