@@ -1,5 +1,7 @@
 import './App.css';
 import {Outlet, Link} from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App(){
   return(
@@ -11,7 +13,8 @@ export default function App(){
         <Link to="/post">Post</Link> | {" "}
         <Link to="/admin">Admin</Link> | {" "}
         <Link to="/users">Users</Link> | {" "}
-        <Link to="/all">All</Link>
+        <Link to="/all">All</Link> | {" "}
+        <Link to="/userlist">userlist</Link>
       </nav>
       <Outlet />
     </div>

@@ -1,3 +1,4 @@
+
 import React, {useState} from "react";
 import '../App.css';
 import Axios from 'axios';
@@ -29,23 +30,26 @@ export default function Login(){
     };
 
     return(
+           
         <div className="smallContainer">
           <div className='form'>
             <h3>Login</h3>
-                <label>UserUn</label>
+                <label>Felhasználó</label>
                 <input type="text" name="userUn" onChange={(e) => {
                     setUserUnLogin(e.target.value);
                 }}></input>
 
-                <label>UserPw</label>
+                <label>Jelszó</label>
                 <input type="password" name="userPw" onChange={(e) => {
                     setUserPwLogin(e.target.value);
                 }}></input>
 
-                <button className="btn" onClick={submitUserDataLogin}>Login</button>
+                <button className="btn" onClick={submitUserDataLogin}>Bejelentkezés</button>
             </div>
 
             <h1>{LoginStatus}</h1>
-        </div>
+        </div> 
+
+        
     );
 }
