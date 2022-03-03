@@ -1,0 +1,3 @@
+//Post kép
+//Adatbázis véglegesítése
+//telefonszám
