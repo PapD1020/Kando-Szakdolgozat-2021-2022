@@ -1,7 +1,7 @@
 import {render} from "react-dom";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import App from "./App";
-import Post from "./routes/post";
+import Post from "./routes/createPost";
 import Admin from "./routes/admin";
 import Users from "./routes/users";
 import All from "./routes/all";
@@ -15,7 +15,7 @@ render(
       <Route path="/" element={<App />}>
         <Route path="login" element={<Login />}></Route>
         <Route path="registration" element={<Registration />}></Route>
-        <Route path="post" element={<Post />}></Route>
+        <Route path="createPost" element={<Post />}></Route>
         <Route path="admin" element={<Admin />}></Route>
         <Route path="users" element={<Users />}></Route>
         <Route path="all" element={<All />}></Route>

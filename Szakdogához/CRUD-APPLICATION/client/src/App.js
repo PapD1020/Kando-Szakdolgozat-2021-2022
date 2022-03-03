@@ -1,4 +1,5 @@
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {Outlet, Link} from 'react-router-dom';
 
 export default function App(){
@@ -8,7 +9,7 @@ export default function App(){
       <nav>
         <Link to="/login">Login</Link> | {" "}
         <Link to="/registration">Registration</Link> | {" "}
-        <Link to="/post">Post</Link> | {" "}
+        <Link to="/createPost">Create Post</Link> | {" "}
         <Link to="/admin">Admin</Link> | {" "}
         <Link to="/users">Users</Link> | {" "}
         <Link to="/all">All</Link>
