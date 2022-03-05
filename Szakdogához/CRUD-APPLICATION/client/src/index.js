@@ -8,6 +8,7 @@ import All from "./routes/all";
 import Registration from "./routes/registration";
 import Login from "./routes/login";
 import UsersList from "./routes/userlist";
+import PostList from "./routes/postlist";
 
 const rootElement = document.getElementById("root");
 render(
@@ -17,6 +18,7 @@ render(
         <Route path="login" element={<Login />}></Route>
         <Route path="registration" element={<Registration />}></Route>
         <Route path="post" element={<Post />}></Route>
+        <Route path="postlist" element={<PostList />}></Route>
         <Route path="admin" element={<Admin />}></Route>
         <Route path="users" element={<Users />}></Route>
         <Route path="userlist" element={<UsersList />}></Route>

@@ -37,26 +37,7 @@ export default function UsersList(){
     });
   };
   
-  //POST - USERS
-  const submitUserData = () => {
   
-    
-    
-  
-  setUsersNameList([
-      ...UsersNameList,
-      {
-        UserUn: UserUn,
-        UserPw: UserPw,
-        UserFN: UserFN,
-        UserSN: UserSN,
-        UserDob: UserDob,
-        UserEmail: UserEmail,
-        UserCreatedAt: date,
-        UserUpdatedAt: date
-      }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
-    ]);
-  };
   
   //DELETE - USERS
   const deleteUser = (user) =>{

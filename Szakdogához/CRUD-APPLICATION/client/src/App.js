@@ -11,6 +11,7 @@ export default function App(){
         <Link to="/login">Login</Link> | {" "}
         <Link to="/registration">Registration</Link> | {" "}
         <Link to="/post">Post</Link> | {" "}
+        <Link to="/postlist">PostList</Link> | {" "}
         <Link to="/admin">Admin</Link> | {" "}
         <Link to="/users">Users</Link> | {" "}
         <Link to="/all">All</Link> | {" "}
