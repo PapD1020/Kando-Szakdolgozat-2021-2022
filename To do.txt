@@ -1,3 +1,4 @@
 //Post kép
 //Adatbázis véglegesítése - postType
 //telefonszám
+//Post image kötelező legyen? - Mennyi legyen a min-max lengthje?
