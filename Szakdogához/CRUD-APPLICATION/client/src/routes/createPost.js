@@ -62,10 +62,10 @@ export default function CreatePost(){
                         })
                     }/>
 
-                    {errors?.postSmDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your post must have a main description of your post.</p></div>}
-                    {errors?.postSmDescr?.type === "minLength" && <div><h5>Your post's main description is too short.</h5><p>Your post's main description length must be between 150 and 500 characters.</p></div>}
-                    {errors?.postSmDescr?.type === "maxLength" && <div><h5>Your post's main description is too long.</h5><p>Your post's main description length must be between 150 and 500 characters.</p></div>}
-                    {errors?.postSmDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                    {errors?.postMDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your post must have a main description of your post.</p></div>}
+                    {errors?.postMDescr?.type === "minLength" && <div><h5>Your post's main description is too short.</h5><p>Your post's main description length must be between 150 and 500 characters.</p></div>}
+                    {errors?.postMDescr?.type === "maxLength" && <div><h5>Your post's main description is too long.</h5><p>Your post's main description length must be between 150 and 500 characters.</p></div>}
+                    {errors?.postMDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
                 </div>
 
                 <div className="form-group">
@@ -79,10 +79,10 @@ export default function CreatePost(){
                         })
                     }/>
 
-                    {errors?.postSmDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your post must have a picture</p></div>}
-                    {errors?.postSmDescr?.type === "minLength" && <div><h5>Your post's picture URL is too short.</h5><p>Your post's picture URL length must be between 150 and 500 characters.</p></div>}
-                    {errors?.postSmDescr?.type === "maxLength" && <div><h5>Your post's picture URL is too long.</h5><p>Your post's picture URL length must be between 150 and 500 characters.</p></div>}
-                    {errors?.postSmDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                    {errors?.postImg?.type === "required" && <div><h5>This field is required!</h5><p>Your post must have a picture</p></div>}
+                    {errors?.postImg?.type === "minLength" && <div><h5>Your post's picture URL is too short.</h5><p>Your post's picture URL length must be between 150 and 500 characters.</p></div>}
+                    {errors?.postImg?.type === "maxLength" && <div><h5>Your post's picture URL is too long.</h5><p>Your post's picture URL length must be between 150 and 500 characters.</p></div>}
+                    {errors?.postImg?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
                 </div>
 
                 <div className="form-group">
