@@ -1,17 +1,12 @@
 import React, {useState, useEffect} from "react";
 import '../App.css';
 import Axios from 'axios';
-
+import {Outlet, Link} from 'react-router-dom';
 import '../css/userlist.css';
-import { Row, Table } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 
 export default function UsersList(){
-    const [UserUn, setUserUn] = useState('');
-    const [UserPw, setUserPw] = useState('');
-    const [UserFN, setUserFN] = useState('');
-    const [UserSN, setUserSN] = useState('');
-    const [UserDob, setUserDob] = useState('');
-    const [UserEmail, setUserEmail] = useState('');
+ 
 
     const [UsersNameList, setUsersNameList] = useState([]);
 
@@ -46,6 +41,11 @@ export default function UsersList(){
     alert("Successfuly deleted. Please click on the refresh button.")
     //kell frissítés, hogy eltünjön a törölt, submitos nem működik
   };
+  //
+  const users = (user) =>{
+    Axios.patch(`http://localhost:3000/users/${user}`); // with altgr+7 you can add variables to it
+  
+  };
   
   //PUT - USERS
   const updateUserEmail = (user) =>{
@@ -59,26 +59,25 @@ export default function UsersList(){
   };
 
   return(
-    <div className="userList">
-                        
+            <div >
+                    <ReactBootStrap.Table> 
                         <thead>
                                 <tr>
-                                    <th>User username</th>
-                                    <th>User password</th>
-                                    <th>User first name</th>
-                                    <th>User second name</th>
-                                    <th>User date of birth</th>
-                                    <th>User email</th>
-                                    <th>User created at</th>
-                                    <th>User updated at</th>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>First name</th>
+                                    <th>Second name</th>
+                                    <th>Date of birth</th>
+                                    <th>Email</th>
+                                    <th>Created at</th>
+                                    <th>Updated at</th>
                                 </tr>
                           </thead>
                          
                   {UsersNameList.map((val) => {
+                   
                       return(
-
-                            <Table responsive>
-                           
+                              
                           <tbody>
                             <tr>
                               <td>{val.UserUn}</td>    
@@ -91,21 +90,20 @@ export default function UsersList(){
                               <td>{val.UserUpdatedAt}</td> 
                             
                            <td>
+                          
+
+                          <button onClick={() => {users(val.UserUn)}}>Settings</button>
                           <button onClick={() => {deleteUser(val.UserUn)}}>Delete User</button>
-
-                          <input type="text" className="updateInput" onChange={(e) => {
-                            setNewUserEmail(e.target.value);
-                          }}></input>
-
-                          <button onClick={() => {updateUserEmail(val.UserUn)}}>Update User</button>
+                          
+                          
                           </td>
                           </tr> 
                           </tbody>
-                          </Table>
+                         
                       
                       )
                   })}
-                
+               </ReactBootStrap.Table>    
           
         </div>
   );

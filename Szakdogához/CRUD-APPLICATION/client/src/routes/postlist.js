@@ -1,14 +1,10 @@
 import React, {useState, useEffect} from "react";
 import '../App.css';
 import Axios from 'axios';
-import { Row, Table } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 
 export default function Post(){
-    const [PostName, setPostName] = useState('');
-    const [PostSmDescr, setPostSmDescr] = useState('');
-    const [PostMDescr, setPostMDescr] = useState('');
-    const [PostImg, setPostImg] = useState('');
-    const [PostStatus, setPostStatus] = useState('');
+    
 
     const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
 
@@ -64,8 +60,8 @@ export default function Post(){
     };
 
     return(
-        <div className="userList">
-                        
+        <div >
+            <ReactBootStrap.Table>
                         <thead>
                                 <tr>
                                     <th>Name</th>
@@ -77,12 +73,10 @@ export default function Post(){
                                     <th>updated at</th>
                                 </tr>
                           </thead>
-                         
+          
                   {PostNameList.map((val) => {
                       return(
 
-                            <Table responsive>
-                           
                           <tbody>
                             <tr>
                               <td>{val.PostName}</td>    
@@ -96,22 +90,16 @@ export default function Post(){
                             
                            <td>
 
+                           <button onClick={() => {}}>Settings</button>
                           <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
-
-                          <input type="number" className="updateInput" onChange={(e) => {
-                            setNewPostStatus(e.target.value);
-                          }}></input>
-
-                          <button onClick={() => {updatePostStatus(val.PostName)}}>Update Post</button>
-                       
 
                             </td>
                             </tr> 
                             </tbody>
-                            </Table>
+                        
                       )
                   })}
-                
+                </ReactBootStrap.Table>
           
         </div>
     );

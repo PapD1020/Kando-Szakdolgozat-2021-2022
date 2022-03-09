@@ -85,62 +85,37 @@ export default function Users(){
   };
 
   return(
-    <div className="smallContainer">
+    <div >
           <div className='form'>
-            <h3>USERS</h3>
-                <label>UserUn</label>
-                <input type="text" name="userUn" onChange={(e) => {
-                  setUserUn(e.target.value);
-                }}></input>
-
-                <label>UserPw</label>
-                <input type="password" name="userPw" onChange={(e) => {
-                  setUserPw(e.target.value);
-                }}></input>
-
-                <label>UserFN</label>
-                <input type="text" name="userFN" onChange={(e) => {
-                  setUserFN(e.target.value);
-                }}></input>
-
-                <label>UserSN</label>
-                <input type="text" name="userSN" onChange={(e) => {
-                  setUserSN(e.target.value);
-                }}></input>
-
-                <label>UserDOB</label>
-                <input type="date" name="userDob" onChange={(e) => {
-                  setUserDob(e.target.value);
-                }}></input>
-
-                <label>UserEmail</label>
-                <input type="email" name="userEmail" onChange={(e) => {
-                  setUserEmail(e.target.value);
-                }}></input>
-
-                <button className="btn" onClick={submitUserData}>Add User</button>
-                <button className="btn" onClick={refreshUserData}>Refresh User data</button>
 
                 <div className="cardContainer">
                   {UsersNameList.map((val) => {
                       return(
                         <div className="card">
-                          <h1>User username: {val.UserUn}</h1>
-                          <p>User password: {val.UserPw}</p>
-                          <h2>User first name: {val.UserFN}</h2>
-                          <p>User second name: {val.UserSN}</p>
-                          <p>User date of birth: {val.UserDob}</p>
-                          <p>User email: {val.UserEmail}</p>
-                          <p>User created at: {val.UserCreatedAt}</p>
-                          <p>User updated at: {val.UserUpdatedAt}</p>
+                          
+                          <p>Username:<input type="text" name="userUn" value={val.UserUn} onChange={(e) => {
+                                setUserUn(e.target.value); }}></input> </p>
+
+                          <p>Password:<input type="password" name="userPw" value={val.UserPw} onChange={(e) => {
+                                setUserUn(e.target.value); }}></input></p>
+                         
+                          <p>First name: <input type="text" name="userFN" value={val.UserFN} onChange={(e) => {
+                            setUserFN(e.target.value)}}></input></p>
+                          
+                          <p>second name: <input type="text" name="userSN" value={val.UserSN} onChange={(e) => { 
+                            setUserSN(e.target.value) }}></input> </p>
+
+                          <p>Date of birth:  <input type="date" name="userDob" value={val.UserDob} onChange={(e) => {
+                            setUserDob(e.target.value)}}></input></p>
+                          <p>Email: <input type="email" name="userEmail" value={val.UserEmail} onChange={(e) => {
+                            setUserEmail(e.target.value); }}></input></p>
+                          <p>created at: {val.UserCreatedAt}</p>
+                          <p>updated at: {val.UserUpdatedAt}</p>
 
                           <button onClick={() => {deleteUser(val.UserUn)}}>Delete User</button>
-
-                          <input type="text" className="updateInput" onChange={(e) => {
-                            setNewUserEmail(e.target.value);
-                          }}></input>
-
                           <button onClick={() => {updateUserEmail(val.UserUn)}}>Update User</button>
+                          
+                          <button onClick={() => {refreshUserData(val.UserUn)}}>Refresh User data</button>
                         </div>
                       )
                   })}

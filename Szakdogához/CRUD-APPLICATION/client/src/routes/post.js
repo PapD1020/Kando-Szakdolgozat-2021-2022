@@ -90,48 +90,30 @@ export default function Post(){
     };
 
     return(
-        <div className="smallContainer">
+        <div >
           <div className='form'>
-            <h3>POST</h3>
-                <label>PostName</label>
-                <input type="text" name="postName" onChange={(e) => {
-                  setPostName(e.target.value);
-                }}></input>
 
-                <label>PostSmDescr</label>
-                <input type="text" name="postSmDescr" onChange={(e) => {
-                  setPostSmDescr(e.target.value);
-                }}></input>
-
-                <label>PostMDescr</label>
-                <input type="text" name="postMDescr" onChange={(e) => {
-                  setPostMDescr(e.target.value);
-                }}></input>
-
-                <label>PostImg</label>
-                <input type="text" name="postImg" onChange={(e) => {
-                  setPostImg(e.target.value);
-                }}></input>
-
-                <label>PostStatus</label>
-                <input type="number" name="postStatus" onChange={(e) => {
-                  setPostStatus(e.target.value);
-                }}></input>
-
-                <button className="btn" onClick={submitPostData}>Add post</button>
-                <button className="btn" onClick={refreshPostData}>Refresh post data</button>
 
                 <div className="cardContainer">
                   {PostNameList.map((val) => {
                       return(
                         <div className="card">
-                          <h1>Post name: {val.PostName}</h1>
-                          <h2>Post small description: {val.PostSmDescr}</h2>
-                          <p>Post main description: {val.PostMDescr}</p>
-                          <p>Post image: {val.PostImg}</p>
-                          <p>Post status: {val.PostStatus}</p>
-                          <p>Post created at: {val.PostCreatedAt}</p>
-                          <p>Post updated at: {val.PostUpdatedAt}</p>
+                          <p>Name:<input type="text" name="postName" value={val.PostName} onChange={(e) => {
+                            setPostName(e.target.value)}}></input> </p>
+
+                          <p>Small description:  <input type="text" name="postSmDescr" value={val.PostSmDescr} onChange={(e) => {
+                            setPostSmDescr(e.target.value)}}></input> </p>
+
+                          <p>Main description:  <input type="text" name="postMDescr" value={val.PostMDescr} onChange={(e) => {
+                              setPostMDescr(e.target.value)}}></input> </p>
+
+                          <p>Image: <input type="text" name="postImg" value={val.PostImg}onChange={(e) => {
+                            setPostImg(e.target.value)}}></input></p>
+
+                          <p>Status: <input type="number" name="postStatus" value={val.PostStatus} onChange={(e) => {
+                             setPostStatus(e.target.value)}}></input> </p>
+                          <p>Ceated at: {val.PostCreatedAt}</p>
+                          <p>Updated at: {val.PostUpdatedAt}</p>
 
                           <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
 
@@ -140,6 +122,7 @@ export default function Post(){
                           }}></input>
 
                           <button onClick={() => {updatePostStatus(val.PostName)}}>Update Post</button>
+                          <button className="btn" onClick={refreshPostData}>Refresh post data</button>
                         </div>
                       )
                   })}
