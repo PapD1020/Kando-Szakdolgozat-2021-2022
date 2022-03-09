@@ -99,7 +99,7 @@ export default function CreatePost(){
                     <div className="invalid-feedback">You must select a post type.</div>
                 </div>
 
-                <input type="submit" />
+                <input type="submit" /> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
             </form>
         </div>
     );
