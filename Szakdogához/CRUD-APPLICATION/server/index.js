@@ -7,10 +7,10 @@ const { json } = require('body-parser');
 const Nanoid = require('nanoid');
 
 const db = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'ideasharedb'
+    host: 'mysql.nethely.hu',
+    user: 'ideashare',
+    password: 'KozosAdatbazis1',
+    database: 'ideashare'
 });
 
 //Middleware
@@ -29,7 +29,7 @@ app.get('/', (req, res)=>{      //req is used to get information from the fronte
 app.get("/", (req, res) => {
     //Test to see if the database connection works
 
-    const sqlInsert = "INSERT INTO `post`(`PostName`, `PostDate`, `PostSmDescr`, `PostMDescr`, `PostImg`, `PostStatus`) VALUES ('Első Poszt neve','2022-02-10','kicsi leírás','nagy lerás','kép','1')";
+    const sqlInsert = "INSERT INTO `Articles`(`ArticleName`, `ArticleDate`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleStatus`) VALUES ('Első Poszt neve','2022-02-10','kicsi leírás','nagy lerás','kép','1')";
     db.query(sqlInsert, (err, result) => {
 
         res.send("Hello");
@@ -41,13 +41,13 @@ app.get("/", (req, res) => {
 * POST CRUD
 */
 
-//GET - Post
-app.get('/api/get/post', (req, res) => {
+//GET - Article
+app.get('/api/get/article', (req, res) => {
 
-    const sqlSelect = "SELECT * FROM post";
+    const sqlSelect = "SELECT * FROM Articles";
     db.query(sqlSelect, (err, result) => {
         if(err){
-            console.log("Post GET error: " + err);
+            console.log("Article GET error: " + err);
         }
 
         console.log("Result:" + result);                //valamiért Object-et kapok terminálban
@@ -55,35 +55,53 @@ app.get('/api/get/post', (req, res) => {
     });
 });
 
-//POST - Post
-app.post('/api/insert/post', (req, res) => {
+//kikommentelve, Danié, működik, minden Articlet lekér. Helyette: egyesével kérés header alapján
+//POST - Article
+/*app.post('/api/insert/article', (req, res) => {
 
-    const postId = Nanoid.nanoid();
-    const postName = req.body.postName;
-    const postSmDescr = req.body.postSmDescr;
-    const postMDescr = req.body.postMDescr;
-    const postImg = req.body.postImg;
-    const postStatus = req.body.postStatus;
-    const postCreatedAt = req.body.postCreatedAt;
-    const postUpdatedAt = req.body.postUpdatedAt;
+    const articleId = Nanoid.nanoid();
+    const articleName = req.body.articleName;
+    const articleSmDescr = req.body.articleSmDescr;
+    const articleMDescr = req.body.articleMDescr;
+    const articleImg = req.body.articleImg;
+    const articleStatus = req.body.articleStatus;
+    const articleCreatedAt = req.body.articleCreatedAt;
+    const articleUpdatedAt = req.body.articleUpdatedAt;
 
-    const sqlInsert = "INSERT INTO `post`(`PostId`, `PostName`, `PostSmDescr`, `PostMDescr`, `PostImg`, `PostStatus`, `PostCreatedAt`, `PostUpdatedAt`) VALUES (?,?,?,?,?,?,?,?)"
-    db.query(sqlInsert, [postId, postName, postSmDescr, postMDescr, postImg, postStatus, postCreatedAt, postUpdatedAt], (err, result) => {
+    const sqlInsert = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?)"
+    db.query(sqlInsert, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleStatus, articleCreatedAt, articleUpdatedAt], (err, result) => {
 
         if(err){
-            console.log("Post POST error: " + err);
+            console.log("Article POST error: " + err);
         }
 
-        console.log("Nanoid: " + postId);
-        console.log("Post createdAt: " + postCreatedAt);
+        console.log("Nanoid: " + articleId);
+        console.log("Article createdAt: " + articleCreatedAt);
         res.send(result);
     });
-});
+});*/
 
-//DELETE - Post
-app.delete('/api/delete/post/:postName', (req, res) => {
-    const name = req.params.postName;
-    const sqlDelete = "DELETE FROM post WHERE PostName = ?";
+//GET - Article
+app.get('/api/get/article', (req, res) => {
+
+        //const item = req.body.item-1; POST-hoz body kérés
+        const item = req.get("item")-1;
+        console.log(item);
+        const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 1 OFFSET " + item + "";
+        db.query(sqlSelect, (err, result) => {
+            if(err){
+                console.log("Article GET error: " + err);
+            }
+    
+            //console.log(result[0].ArticleId);                //valamiért Object-et kapok terminálban
+            res.send(result);
+        });
+    });
+
+//DELETE - Article
+app.delete('/api/delete/article/:articleName', (req, res) => {
+    const name = req.params.articleName;
+    const sqlDelete = "DELETE FROM Articles WHERE ArticleName = ?";
     db.query(sqlDelete, name, (err, result) => {
         if(err){
             console.log(err);
@@ -91,15 +109,15 @@ app.delete('/api/delete/post/:postName', (req, res) => {
     });
 });
 
-//PUT-UPDATE - Post
-app.put('/api/update/post', (req, res) => {
+//PUT-UPDATE - Article
+app.put('/api/update/article', (req, res) => {
 
-    const name = req.body.postName;
-    const status = req.body.postStatus;
-    const updated = req.body.postUpdatedAt;
-    const sqlUpdate = "UPDATE post SET PostStatus = ?, PostUpdatedAt = ? WHERE PostName = ?";
+    const name = req.body.articleName;
+    const status = req.body.articleStatus;
+    const updated = req.body.articleUpdatedAt;
+    const sqlUpdate = "UPDATE Articles SET ArticleStatus = ?, ArticleUpdatedAt = ? WHERE ArticleName = ?";
 
-    db.query(sqlUpdate, [status, updated, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [status, updated, name], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
         if(err){
             console.log(err);
         }
@@ -113,7 +131,7 @@ app.put('/api/update/post', (req, res) => {
 //GET - ADMIN
 app.get('/api/get/admin', (req, res) => {
 
-    const sqlSelect = "SELECT * FROM admin";
+    const sqlSelect = "SELECT * FROM Admins";
     db.query(sqlSelect, (err, result) => {
         if(err){
             console.log("Admin GET error: " + err);
@@ -138,7 +156,7 @@ app.post('/api/insert/admin', (req, res) => {
     const adminCreatedAt = req.body.adminCreatedAt;
     const adminUpdatedAt = req.body.adminUpdatedAt;
 
-    const sqlInsert = "INSERT INTO `admin`(`AdminId`, `AdminUn`, `AdminPw`, `AdminFN`, `AdminSN`, `AdminPermL`, `AdminEmail`, `AdminCreatedAt`, `AdminUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)";
+    const sqlInsert = "INSERT INTO `Admins`(`AdminId`, `AdminUn`, `AdminPw`, `AdminFN`, `AdminSN`, `AdminPermL`, `AdminEmail`, `AdminCreatedAt`, `AdminUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)";
     db.query(sqlInsert, [adminId, adminUn, adminPw, adminFN, adminSN, adminPermL, adminEmail, adminCreatedAt, adminUpdatedAt], (err, result) => {
 
         if(err){
@@ -162,7 +180,7 @@ app.post('/api/insert/admin', (req, res) => {
 //DELETE - ADMIN
 app.delete('/api/delete/admin/:adminUn', (req, res) => {
     const name = req.params.adminUn;
-    const sqlDelete = "DELETE FROM admin WHERE AdminUn = ?";
+    const sqlDelete = "DELETE FROM Admins WHERE AdminUn = ?";
     db.query(sqlDelete, name, (err, result) => {
         if(err){
             console.log("Admin DELETE error: " + err);
@@ -176,9 +194,9 @@ app.put('/api/update/admin', (req, res) => {
     const name = req.body.adminUn;
     const permL = req.body.adminPermL;
     const updated = req.body.adminUpdatedAt;
-    const sqlUpdate = "UPDATE admin SET AdminPermL = ?, AdminUpdatedAt = ? WHERE AdminUn = ?";
+    const sqlUpdate = "UPDATE Admins SET AdminPermL = ?, AdminUpdatedAt = ? WHERE AdminUn = ?";
 
-    db.query(sqlUpdate, [permL, updated, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [permL, updated, name], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
         if(err){
             console.log("Admin UPDATE error: " + err);
         }
@@ -190,9 +208,9 @@ app.put('/api/update/admin', (req, res) => {
 */
 
 //GET - USERS
-app.get('/api/get/users', (req, res) => {
+app.get('/api/get/user', (req, res) => {
     
-    const sqlSelect = "SELECT * FROM users";
+    const sqlSelect = "SELECT * FROM Users";
 
     db.query(sqlSelect, (err, result) => {
         if(err){
@@ -205,10 +223,11 @@ app.get('/api/get/users', (req, res) => {
 });
 
 //POST - USERS
-app.post('/api/insert/users', (req, res) => {
+app.post('/api/insert/user', (req, res) => {
 
     const userId = Nanoid.nanoid();
     const userUn = req.body.userUn;
+    const userPP = req.body.userPP;
     const userPw = req.body.userPw;
     const userFN = req.body.userFN;
     const userSN = req.body.userSN;
@@ -217,8 +236,8 @@ app.post('/api/insert/users', (req, res) => {
     const userCreatedAt = req.body.userCreatedAt;
     const userUpdatedAt = req.body.userUpdatedAt;
 
-    const sqlInsert = "INSERT INTO `users` (`UserId`, `UserUn`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
-    db.query(sqlInsert, [userId, userUn, userPw, userFN, userSN, userDob, userEmail, userCreatedAt, userUpdatedAt], (err, result) => {
+    const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
+    db.query(sqlInsert, [userId, userUn, userPP, userPw, userFN, userSN, userDob, userEmail, userCreatedAt, userUpdatedAt], (err, result) => {
 
         console.log("Users INSERT INTO error: " + err);
         console.log("Users INSERT INTO result: " + result);
@@ -229,7 +248,7 @@ app.post('/api/insert/users', (req, res) => {
 });
 
 //DELETE - USERS
-app.delete('/api/delete/users/:userUn', (req, res) => {
+app.delete('/api/delete/user/:userUn', (req, res) => {
     const name = req.params.userUn;
     const sqlDelete = "DELETE FROM users WHERE UserUn = ?";
     db.query(sqlDelete, name, (err, result) => {
@@ -241,14 +260,14 @@ app.delete('/api/delete/users/:userUn', (req, res) => {
 });
 
 //PUT - USERS
-app.put('/api/update/users', (req, res) => {
+app.put('/api/update/user', (req, res) => {
 
     const name = req.body.userUn;
     const userE = req.body.userEmail;
     const updated = req.body.userUpdatedAt;
     const sqlUpdate = "UPDATE users SET UserEmail = ?, UserUpdatedAt = ? WHERE UserUn = ?";
 
-    db.query(sqlUpdate, [userE, updated, name], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [userE, updated, name], (err, result) => {                       //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
         if(err){
             console.log("Users UPDATE error: " + err);
         }
@@ -256,11 +275,12 @@ app.put('/api/update/users', (req, res) => {
 });
 
 //REGISTER - USERS
-app.post('/api/register/users', (req, res) => {
+app.post('/api/register/user', (req, res) => {
 
     console.log("Register users req.body: "+ JSON.stringify(req.body)); //ez jó
     const userId = Nanoid.nanoid();
     const userUn = req.body.userUn;
+    const userPP = req.body.userPP;    
     const userPw = req.body.userPw;
     const userFN = req.body.userFN;
     const userSN = req.body.userSN;
@@ -269,8 +289,8 @@ app.post('/api/register/users', (req, res) => {
     const userCreatedAt = req.body.userCreatedAt;
     const userUpdatedAt = req.body.userUpdatedAt;
 
-    const sqlInsert = "INSERT INTO `users` (`UserId`, `UserUn`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
-    db.query(sqlInsert, [userId, userUn, userPw, userFN, userSN, userDob, userEmail, userCreatedAt, userUpdatedAt], (err, result) => {
+    const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
+    db.query(sqlInsert, [userId, userUn, userPP, userPw, userFN, userSN, userDob, userEmail, userCreatedAt, userUpdatedAt], (err, result) => {
 
         console.log("UserUn: " + JSON.stringify(req.body.UserUn));
 
@@ -284,13 +304,13 @@ app.post('/api/register/users', (req, res) => {
 });
 
 //LOGIN - CHECK IF USER EXISTS - USERS
-app.post('/api/login/users', (req, res) => {
+app.post('/api/login/user', (req, res) => {
 
     console.log("Login users req.body: " + JSON.stringify(req.body)); //ez jó
     const userUn = req.body.userUn;
     const userPw = req.body.userPw;
 
-    const sqlInsert = "SELECT UserUn, UserPw FROM users WHERE UserUn = ? AND UserPw = ?";
+    const sqlInsert = "SELECT UserUn, UserPw FROM Users WHERE UserUn = ? AND UserPw = ?";
     db.query(sqlInsert, [userUn, userPw], (err, result) => {
 
         if(err){
