@@ -41,8 +41,14 @@ app.get("/", (req, res) => {
 * POST CRUD
 */
 
+
+
+
+
 //GET - Article
-app.get('/api/get/article', (req, res) => {
+
+//kikommentelve, Danié, működik, minden Articlet lekér. Helyette: egyesével kérés header alapján
+/*app.get('/api/get/article', (req, res) => {
 
     const sqlSelect = "SELECT * FROM Articles";
     db.query(sqlSelect, (err, result) => {
@@ -53,11 +59,27 @@ app.get('/api/get/article', (req, res) => {
         console.log("Result:" + result);                //valamiért Object-et kapok terminálban
         res.send(result);
     });
+});*/
+
+//Egyenkénti lekérdezés
+app.get('/api/get/article', (req, res) => {
+
+    //const item = req.body.item-1; POST-hoz body kérés
+    const item = req.get("item")-1;
+    console.log(item);
+    const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 1 OFFSET " + item + "";
+    db.query(sqlSelect, (err, result) => {
+        if(err){
+            console.log("Article GET error: " + err);
+        }
+
+        //console.log(result[0].ArticleId);                //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
 });
 
-//kikommentelve, Danié, működik, minden Articlet lekér. Helyette: egyesével kérés header alapján
 //POST - Article
-/*app.post('/api/insert/article', (req, res) => {
+app.post('/api/insert/article', (req, res) => {
 
     const articleId = Nanoid.nanoid();
     const articleName = req.body.articleName;
@@ -79,24 +101,7 @@ app.get('/api/get/article', (req, res) => {
         console.log("Article createdAt: " + articleCreatedAt);
         res.send(result);
     });
-});*/
-
-//GET - Article
-app.get('/api/get/article', (req, res) => {
-
-        //const item = req.body.item-1; POST-hoz body kérés
-        const item = req.get("item")-1;
-        console.log(item);
-        const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 1 OFFSET " + item + "";
-        db.query(sqlSelect, (err, result) => {
-            if(err){
-                console.log("Article GET error: " + err);
-            }
-    
-            //console.log(result[0].ArticleId);                //valamiért Object-et kapok terminálban
-            res.send(result);
-        });
-    });
+});
 
 //DELETE - Article
 app.delete('/api/delete/article/:articleName', (req, res) => {
