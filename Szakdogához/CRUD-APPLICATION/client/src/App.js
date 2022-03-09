@@ -9,8 +9,8 @@ export default function App(){
       <nav>
         <Link to="/login">Login</Link> | {" "}
         <Link to="/registration">Registration</Link> | {" "}
-        <Link to="/createPost">Create Post</Link> | {" "}
-        <Link to="/admin">Admin</Link> | {" "}
+        <Link to="/createArticle">Create Article</Link> | {" "}
+        <Link to="/admins">Admin</Link> | {" "}
         <Link to="/users">Users</Link> | {" "}
         <Link to="/all">All</Link>
       </nav>

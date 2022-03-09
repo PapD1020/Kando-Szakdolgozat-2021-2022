@@ -4,6 +4,7 @@ import Axios from 'axios';
 
 export default function Users(){
     const [UserUn, setUserUn] = useState('');
+    const [UserPP, setUserPP] = useState('');
     const [UserPw, setUserPw] = useState('');
     const [UserFN, setUserFN] = useState('');
     const [UserSN, setUserSN] = useState('');
@@ -20,7 +21,7 @@ export default function Users(){
     //On page load get users
     useEffect(() => {
 
-    Axios.get('http://localhost:3001/api/get/users').then((response) => {
+    Axios.get('http://localhost:3001/api/get/user').then((response) => {
   
       setUsersNameList(response.data);
     });
@@ -28,7 +29,7 @@ export default function Users(){
 
     //GET - USERS
     const refreshUserData = () => {
-      Axios.get('http://localhost:3001/api/get/users').then((response) => {
+      Axios.get('http://localhost:3001/api/get/user').then((response) => {
   
       setUsersNameList(response.data);
     });
@@ -38,8 +39,9 @@ export default function Users(){
   const submitUserData = () => {
   
     //postName - backend variable name
-    Axios.post('http://localhost:3001/api/insert/users', { //URL for our api (node.js backend)
+    Axios.post('http://localhost:3001/api/insert/user', { //URL for our api (node.js backend)
     userUn: UserUn,
+    userPP: UserPP,
     userPw: UserPw,
     userFN: UserFN,
     userSN: UserSN,
@@ -54,6 +56,7 @@ export default function Users(){
       ...UsersNameList,
       {
         UserUn: UserUn,
+        userPP: UserPP,
         UserPw: UserPw,
         UserFN: UserFN,
         UserSN: UserSN,
@@ -67,7 +70,7 @@ export default function Users(){
   
   //DELETE - USERS
   const deleteUser = (user) =>{
-    Axios.delete(`http://localhost:3001/api/delete/users/${user}`); // with altgr+7 you can add variables to it
+    Axios.delete(`http://localhost:3001/api/delete/user/${user}`); // with altgr+7 you can add variables to it
   
     alert("Successfuly deleted. Please click on the refresh button.")
     //kell frissítés, hogy eltünjön a törölt, submitos nem működik
@@ -75,7 +78,7 @@ export default function Users(){
   
   //PUT - USERS
   const updateUserEmail = (user) =>{
-    Axios.put('http://localhost:3001/api/update/users', {
+    Axios.put('http://localhost:3001/api/update/user', {
       userUn: user,
       userEmail: NewUserEmail,
       userUpdatedAt: date
@@ -91,6 +94,11 @@ export default function Users(){
                 <label>UserUn</label>
                 <input type="text" name="userUn" onChange={(e) => {
                   setUserUn(e.target.value);
+                }}></input>
+
+                <label>UserPP</label>
+                <input type="text" name="userPP" onChange={(e) => {
+                  setUserPP(e.target.value);
                 }}></input>
 
                 <label>UserPw</label>
@@ -126,6 +134,7 @@ export default function Users(){
                       return(
                         <div className="card">
                           <h1>User username: {val.UserUn}</h1>
+                          <p>User profile picture: {val.UserPP}</p>
                           <p>User password: {val.UserPw}</p>
                           <h2>User first name: {val.UserFN}</h2>
                           <p>User second name: {val.UserSN}</p>
