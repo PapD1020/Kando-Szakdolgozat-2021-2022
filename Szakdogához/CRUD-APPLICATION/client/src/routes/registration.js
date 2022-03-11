@@ -5,6 +5,7 @@ import Axios from 'axios';
 export default function Registration(){
 
     const [UserUnReg, setUserUnReg] = useState('');
+    const [UserPP, setUserPP] = useState('');
     const [UserPwReg, setUserPwReg] = useState('');
     const [UserFNReg, setUserFNReg] = useState('');
     const [UserSNReg, setUserSNReg] = useState('');
@@ -18,9 +19,10 @@ export default function Registration(){
     const submitUserDataReg = () => {
   
     //postName - backend variable name
-        Axios.post('http://localhost:3001/api/register/users', { //URL for our api (node.js backend)
+        Axios.post('http://localhost:3001/api/register/user', { //URL for our api (node.js backend)
         //userUn must be the same as in back-end index.js req.body.userUn !!!
         userUn: UserUnReg,
+        userPP: UserPP,
         userPw: UserPwReg,
         userFN: UserFNReg,
         userSN: UserSNReg,
@@ -42,6 +44,11 @@ export default function Registration(){
                 <label>UserUn</label>
                 <input type="text" name="userUnReg" onChange={(e) => {
                     setUserUnReg(e.target.value);
+                }}></input>
+
+                <label>UserPP</label>
+                <input type="text" name="userUnReg" onChange={(e) => {
+                    setUserPP(e.target.value);
                 }}></input>
 
                 <label>UserPw</label>
