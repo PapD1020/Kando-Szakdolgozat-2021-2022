@@ -6,10 +6,21 @@ const mysql = require('mysql');
 const { json } = require('body-parser');
 const Nanoid = require('nanoid');
 
+/*
+//Nethelyes
 const db = mysql.createPool({
     host: 'mysql.nethely.hu',
     user: 'ideashare',
     password: 'KozosAdatbazis1',
+    database: 'ideashare'
+});
+*/
+
+//Xampos
+const db = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: '',
     database: 'ideashare'
 });
 

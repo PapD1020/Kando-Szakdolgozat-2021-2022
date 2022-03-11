@@ -12,7 +12,7 @@ export default function Login(){
     const submitUserDataLogin = () => {
   
         //postName - backend variable name
-        Axios.post('http://localhost:3001/api/login/users', { //URL for our api (node.js backend)
+        Axios.post('http://localhost:3001/api/login/user', { //URL for our api (node.js backend)
         //userUn must be the same as in back-end index.js req.body.userUn !!!
         userUn: UserUnLogin, userPw: UserPwLogin
         }).then((response) => {
