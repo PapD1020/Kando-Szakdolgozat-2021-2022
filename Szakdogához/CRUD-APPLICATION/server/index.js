@@ -5,6 +5,10 @@ const app = express();
 const mysql = require('mysql');
 const { json } = require('body-parser');
 const Nanoid = require('nanoid');
+const bcrypt = require('bcrypt');
+const { response } = require('express');
+
+const saltRounds = 10;
 
 /*
 //Nethelyes
@@ -290,6 +294,8 @@ app.put('/api/update/user', (req, res) => {
     });
 });
 
+/************************************************REGISTRATION - LOGIN**********************************************************/
+
 //REGISTER - USERS
 app.post('/api/register/user', (req, res) => {
 
@@ -305,17 +311,25 @@ app.post('/api/register/user', (req, res) => {
     const userCreatedAt = req.body.userCreatedAt;
     const userUpdatedAt = req.body.userUpdatedAt;
 
-    const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?,?)"
-    db.query(sqlInsert, [userId, userUn, userPP, userPw, userFN, userSN, userDob, userEmail, userCreatedAt, userUpdatedAt], (err, result) => {
+    bcrypt.hash(userPw, saltRounds, (err, hash) => {
 
-        console.log("UserUn: " + JSON.stringify(req.body.UserUn));
+        const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?,?)"
 
         if(err){
-            console.log("Users REGISTER INTO error: " + err);
+            console.log("Registration - bcrypt error: " + err);
         }
 
-        //console.log("Users REGISTER INTO result: " + result);
-        res.send(result);
+        db.query(sqlInsert, [userId, userUn, userPP, hash, userFN, userSN, userDob, userEmail, userCreatedAt, userUpdatedAt], (err, result) => {
+
+            console.log("UserUn: " + JSON.stringify(req.body.UserUn));
+
+            if(err){
+                console.log("Users REGISTER INTO error: " + err);
+            }
+
+            //console.log("Users REGISTER INTO result: " + result);
+            res.send(result);
+        });
     });
 });
 
@@ -326,8 +340,9 @@ app.post('/api/login/user', (req, res) => {
     const userUn = req.body.userUn;
     const userPw = req.body.userPw;
 
-    const sqlInsert = "SELECT UserUn, UserPw FROM Users WHERE UserUn = ? AND UserPw = ?";
-    db.query(sqlInsert, [userUn, userPw], (err, result) => {
+    //const sqlInsert = "SELECT UserUn, UserPw FROM Users WHERE UserUn = ? AND UserPw = ?"; - pw hash nélkül
+    const sqlInsert = "SELECT UserUn, UserPw FROM Users WHERE UserUn = ?";
+    db.query(sqlInsert, [userUn], (err, result) => {
 
         if(err){
             //Front-end is expecting an object that is why:
@@ -337,10 +352,19 @@ app.post('/api/login/user', (req, res) => {
 
         if(result.length > 0){ //checks if there is a user and password with the sent UserUn and UserPw
             console.log("result.length: " + result.length);
-            res.send(result);
+            console.log("pw hash: " + result[0].UserPw);
+            bcrypt.compare(userPw, result[0].UserPw, (err, response) => {
+                
+                if(response){
+                    res.send(result);
+                }
+                else{
+                    res.send({message: "Wrong username or password!"});
+                }
+            }) //pass the password the user inputed and comapre it with the one in the database
         }
         else{
-            res.send({message: "Wrong username or password!"});
+            res.send({message: "The user does not exists"});
         }
     });
 });
