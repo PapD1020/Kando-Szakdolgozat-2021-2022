@@ -6,7 +6,7 @@ import { useDimensions, useDeviceOrientation } from '@react-native-community/hoo
 import { Rating, AirbnbRating } from 'react-native-ratings';
 
 
-import Posts from '../components/Home/Posts';
+import Articles from '../components/Home/Articles';
 import Header from '../components/Home/Header';
 //import Comments from '../components/Home/Comments';
 
@@ -20,7 +20,7 @@ const HomeScreen = ({navigation, userName}) => {
       
       {/* <Comments isPanelActive={isPanelActive} setIsPanelActive={setIsPanelActive}/> */}
       <Header userName={/* route.params.paramKey*/userName} {...navigation} />
-      <Posts />
+      <Articles />
     
     </SafeAreaView>
   );

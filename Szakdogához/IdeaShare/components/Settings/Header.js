@@ -5,15 +5,24 @@ import { AuthContext } from '../../components/Context';
 
 function Header ({userName, ...navigation}) {
 const { signOut } = useContext(AuthContext);
-   const UName = ({userName}) => {
+    return(
+        <View style={styles.HeaderContainer}>
+            <UName userName={userName}/>
+            <LogoutButton  {...navigation}/>
+        </View>
+    )
+}
+
+
+const UName = ({userName}) => {
 
     return(
-
         <View style={styles.TextContainer}>
             <Text style={styles.Text}>{userName}</Text>
         </View>
     )
 }
+
 
 const LogoutButton = ({...navigation}) => {
 
@@ -37,17 +46,9 @@ const LogoutButton = ({...navigation}) => {
             </TouchableHighlight>
         </View>
     )
-} 
-    return(
-        <View style={styles.HeaderContainer}>
-            <UName userName={userName}/>
-            <LogoutButton  {...navigation}/>
-        </View>
-    )
-
-
-
 }
+
+
 const styles = StyleSheet.create({
     HeaderContainer: {
         flex:1,
