@@ -301,8 +301,6 @@ const updateUserEmail = (user) =>{
                           <p>Article status: {val.ArticleStatus}</p>
                           <p>Article created at: {val.ArticleCreatedAt}</p>
                           <p>Article updated at: {val.ArticleUpdatedAt}</p>
-                          <p>Admin created at: {val.AdminCreatedAt}</p>
-                          <p>Admin updated at: {val.AdminUpdatedAt}</p>
 
                           <button onClick={() => {deleteArticle(val.ArticleName)}}>Delete Article</button>
 
