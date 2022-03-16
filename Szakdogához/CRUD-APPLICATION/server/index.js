@@ -7,6 +7,8 @@ const { json } = require('body-parser');
 const Nanoid = require('nanoid');
 const bcrypt = require('bcrypt');
 const { response } = require('express');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 const saltRounds = 10;
 
@@ -29,9 +31,28 @@ const db = mysql.createPool({
 });
 
 //Middleware
-app.use(cors());
+//app.use(cors());  without express-session
+
+//for express-session
+app.use(cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true //enables cookies
+}));
+app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+//initialize session
+app.use(session({
+    key: "userId",
+    secret: "secret", //lehet meg kell változtatni
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: 60 * 60 * 24 //ez 24 óra 
+    },
+}));
 
 
 /*
@@ -341,7 +362,7 @@ app.post('/api/login/user', (req, res) => {
     const userPw = req.body.userPw;
 
     //const sqlInsert = "SELECT UserUn, UserPw FROM Users WHERE UserUn = ? AND UserPw = ?"; - pw hash nélkül
-    const sqlInsert = "SELECT UserUn, UserPw FROM Users WHERE UserUn = ?";
+    const sqlInsert = "SELECT UserId, UserUn, UserPw FROM Users WHERE UserUn = ?";
     db.query(sqlInsert, [userUn], (err, result) => {
 
         if(err){
@@ -356,6 +377,9 @@ app.post('/api/login/user', (req, res) => {
             bcrypt.compare(userPw, result[0].UserPw, (err, response) => {
                 
                 if(response){
+                    req.session.user = result;
+                    //ellenőrzés
+                    console.log("Session ellenőrzés: " + JSON.stringify(req.session.user));
                     res.send(result);
                 }
                 else{
