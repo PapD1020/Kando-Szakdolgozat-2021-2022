@@ -15,6 +15,7 @@ export default function App(){
         <Link to="/postlist">PostList</Link> | {" "}
         <Link to="/users">Users</Link> | {" "}
          <Link to="/userlist">userlist</Link>| {" "}
+         <Link to="/teszt">teszt</Link>| {" "}
          <Link to="/all">All</Link> 
        
       </nav>

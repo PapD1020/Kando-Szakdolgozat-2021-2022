@@ -1,24 +1,21 @@
 import React, {useState, useEffect} from "react";
 import '../App.css';
 import Axios from 'axios';
-import * as ReactBootStrap from "react-bootstrap";
 import { Button,Modal } from "react-bootstrap";
-
-export default function Post(){
-    
-  const [show, setShow] = useState(false);
+export default function Example() {
+    const [show, setShow] = useState(false);
   
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
-  const [PostName, setPostName] = useState('');
-  const [PostSmDescr, setPostSmDescr] = useState('');
-  const [PostMDescr, setPostMDescr] = useState('');
-  const [PostImg, setPostImg] = useState('');
-  const [PostStatus, setPostStatus] = useState('');
+    const [PostName, setPostName] = useState('');
+    const [PostSmDescr, setPostSmDescr] = useState('');
+    const [PostMDescr, setPostMDescr] = useState('');
+    const [PostImg, setPostImg] = useState('');
+    const [PostStatus, setPostStatus] = useState('');
 
     const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
-    const [PostNameSetting, setPostNameSetting] = useState([]);
+
     const [NewPostStatus, setNewPostStatus] = useState('');
 
     const current = new Date();
@@ -33,14 +30,7 @@ export default function Post(){
       //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
     });
     }, []);
-    useEffect(() => {
 
-      Axios.get(`http://localhost:3001/api/get/post`).then((response) => {
-    
-        setPostNameSetting(response.data);
-        //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
-      });
-      }, []);
     //GET - POST
     //Refresh Post data
     const refreshPostData = () => {
@@ -52,7 +42,34 @@ export default function Post(){
         });
     };
 
+    //POST - POST
+    //Request the submit button
+    const submitPostData = () => {
+      //postName - backend variable name
+      Axios.post('http://localhost:3001/api/insert/post', { //URL for our api (node.js backend)
+          postName: PostName,
+          postSmDescr: PostSmDescr,
+          postMDescr: PostMDescr,
+          postImg: PostImg,
+          postStatus: PostStatus,
+          postCreatedAt: date,
+          postUpdatedAt: date
+      });
+        
+    setPostNameList([
+        ...PostNameList,
+        {
+          PostName: PostName,
+          PostSmDescr: PostSmDescr,
+          PostMDescr: PostMDescr,
+          PostImg: PostImg,
+          PostStatus: PostStatus,
+          PostCreatedAt: date,
+          PostUpdatedAt: date
+        }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+    ]);
     
+    };
 
     //DELETE - POST
     const deletePost = (post) =>{
@@ -62,9 +79,6 @@ export default function Post(){
       //kell frissítés, hogy eltünjön a törölt, submitos nem működik
     };
 
-    const SettingPost = (post) =>{
-      Axios.get(`http://localhost:3001/api/get/post/${post}`);
-      };
     //PUT - POST
     const updatePostStatus = (post) =>{
 
@@ -79,15 +93,18 @@ export default function Post(){
       setNewPostStatus("");
       alert("Successfuly changed! Please click on the refresh button.");
     };
-
-    return(
-        <div >
-           <Modal show={show} onHide={handleClose} animation={false}>
+    return (
+      <>
+        <Button variant="primary" onClick={handleShow}>
+          Launch demo modal
+        </Button>
+  
+        <Modal show={show} onHide={handleClose} animation={false}>
           <Modal.Header closeButton>
             <Modal.Title>Modal heading</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-          {PostNameSetting.map((val) => {
+          {PostNameList.map((val) => {
                       return(
                         <div className="card">
                           <p>Name:<input type="text" name="postName" value={val.PostName} onChange={(e) => {
@@ -107,7 +124,7 @@ export default function Post(){
                           <p>Ceated at: {val.PostCreatedAt}</p>
                           <p>Updated at: {val.PostUpdatedAt}</p>
 
-                         
+                          <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
 
                           <input type="number" className="updateInput" onChange={(e) => {
                             setNewPostStatus(e.target.value);
@@ -117,7 +134,7 @@ export default function Post(){
                           <button className="btn" onClick={refreshPostData}>Refresh post data</button>
                         </div>
                       )
-                })} 
+                  })}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
@@ -126,51 +143,10 @@ export default function Post(){
             <Button variant="primary" onClick={handleClose}>
               Save Changes
             </Button>
-          </Modal.Footer> 
+          </Modal.Footer>
         </Modal>
-
-            <ReactBootStrap.Table>
-                        <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>small description</th>
-                                    <th>main description</th>
-                                    <th>image</th>
-                                    <th>status</th>
-                                    <th>created at</th>
-                                    <th>updated at</th>
-                                </tr>
-                          </thead>
-          
-                  {PostNameList.map((val) => {
-                      return(
-
-                          <tbody>
-                            <tr>
-                              <td>{val.PostName}</td>    
-                              <td>{val.PostSmDescr}</td>  
-                              <td>{val.PostMDescr}</td>  
-                              <td>{val.PostImg}</td>  
-                              <td>{val.PostStatus}</td>  
-                              <td>{val.PostCreatedAt}</td>  
-                              <td>{val.PostUpdatedAt}</td>  
-
-                            
-                           <td>
-
-                           <Button variant="primary" onClick={handleShow}>Setting</Button>
-                           <Button onClick={() => {SettingPost(val.PostName)}}>Setting Post</Button>
-                              
-                          <Button onClick={() => {deletePost(val.PostName)}}>Delete Post</Button>
-
-                            </td>
-                            </tr> 
-                            </tbody>
-                        
-                      )
-                  })}
-                </ReactBootStrap.Table>
-          
-        </div>
+      </>
     );
-}
+  }
+  
+  
