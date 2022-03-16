@@ -354,6 +354,16 @@ app.post('/api/register/user', (req, res) => {
     });
 });
 
+//Session check
+app.get('/api/login/user', (req, res) => {
+    if(req.session.user){ //megnézzük, hogy van-e már egy ilyen "user"-ünk
+        res.send({loggedIn: true, user: req.session.user});
+    }
+    else{
+        res.send({loggedIn: false});
+    }
+});
+
 //LOGIN - CHECK IF USER EXISTS - USERS
 app.post('/api/login/user', (req, res) => {
 

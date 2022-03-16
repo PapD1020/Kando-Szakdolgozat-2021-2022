@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import '../App.css';
 import Axios from 'axios';
 
@@ -8,6 +8,8 @@ export default function Login(){
     const [UserPwLogin, setUserPwLogin] = useState('');
 
     const [LoginStatus, setLoginStatus] = useState('');
+
+    Axios.defaults.withCredentials = true;
 
     const submitUserDataLogin = () => {
   
@@ -27,6 +29,17 @@ export default function Login(){
             }
         });
     };
+
+    //check every time we refresh the page if a user is logged in
+    useEffect(() => {
+        Axios.get('http://localhost:3001/api/login/user').then((response) => {
+            //ellenőrzésre
+            //console.log("Are we logged in: " + JSON.stringify(response));
+            if(response.data.loggedIn === true){
+                setLoginStatus(response.data.user[0].UserUn);
+            }
+        });
+    }, []);
 
     return(
         <div className="smallContainer">

@@ -15,6 +15,8 @@ export default function Registration(){
     const current = new Date();
     const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
+    Axios.defaults.withCredentials = true;
+
     //POST - USERS
     const submitUserDataReg = () => {
   
