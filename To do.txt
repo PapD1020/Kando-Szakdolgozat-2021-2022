@@ -1,3 +1,7 @@
 //Post kép
 //Adatbázis véglegesítése - postType
 //Post image kötelező legyen? - Mennyi legyen a min-max lengthje?
+
+//Logout
+//Többi oldalon is működik a session meg a cookie?
+//Routok elrejtése, amíg nincs bejelentkezve user
