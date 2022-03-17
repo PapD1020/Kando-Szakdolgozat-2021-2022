@@ -7,6 +7,7 @@ import Users from "./routes/users";
 import All from "./routes/all";
 import Registration from "./routes/registration";
 import Login from "./routes/login";
+import ProfilePage from "./routes/profilePage";
 
 const rootElement = document.getElementById("root");
 render(
@@ -16,6 +17,7 @@ render(
         <Route path="login" element={<Login />}></Route>
         <Route path="registration" element={<Registration />}></Route>
         <Route path="createArticle" element={<Post />}></Route>
+        <Route path="profilePage" element={<ProfilePage />}></Route>
         <Route path="admins" element={<Admins />}></Route>
         <Route path="users" element={<Users />}></Route>
         <Route path="all" element={<All />}></Route>

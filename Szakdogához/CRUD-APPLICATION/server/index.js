@@ -403,6 +403,28 @@ app.post('/api/login/user', (req, res) => {
     });
 });
 
+/************************************************Profile - Udpate********************************************/
+//USER - Profile page (data Update)
+app.put('/api/update/user:userId', (req, res) => {
+
+    const userId = req.body.userId;
+    const userUn = req.body.userUn;
+    const userPP = req.body.userPP;
+    const userPw = req.body.userPw;
+    const userFN = req.body.userFN;
+    const userSN = req.body.userSN;
+    //születési dátumot ne tudjon már véltoztatni
+    const userEmail = req.body.userEmail;
+    const userUpdatedAt = req.body.userUpdatedAt;
+    const sqlUpdate = "UPDATE users SET UserUn = ?, UserPP = ?, UserPw = ?, UserFN = ?, UserSN = ?, UserEmail = ?, UserUpdatedAt = ? WHERE UserId = ?";
+
+    db.query(sqlUpdate, [userUn, userPP, userPw, userFN, userSN, userEmail, userUpdatedAt, userId], (err, result) => {                       //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+        if(err){
+            console.log("Users Profile data UPDATE error: " + err);
+        }
+    });
+});
+
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });
