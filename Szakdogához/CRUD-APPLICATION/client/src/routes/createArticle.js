@@ -1,6 +1,5 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import Button from "react-bootstrap/Button"
 
 export default function CreateArticle(){
 
@@ -92,7 +91,7 @@ export default function CreateArticle(){
                             required: true,
                         })
                     }>
-                        <option value="" selected>Select the article type</option>
+                        <option value="" defaultValue={"Select the article type"}>Select the article type</option>
                         <option value="Programming">Programming</option>
                         <option value="Programming">Other</option>
                     </select>

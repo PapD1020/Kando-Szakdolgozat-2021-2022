@@ -106,7 +106,7 @@ export default function All(){
       ArticleStatus: ArticleStatus,
       ArticleCreatedAt: date,
       ArticleUpdatedAt: date
-    }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem articleName: ArticleName
+    }, //Valamiért mind a kettőt nagy A-vel kell írni, az első értékeket, azaz nem articleName: ArticleName
   ]);
   //console.log("ArticleNameList: ",  JSON.stringify(ArticleNameList[ArticleNameList.length-1].data));
 };
