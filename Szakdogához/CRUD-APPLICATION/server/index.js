@@ -40,7 +40,19 @@ app.get("/", (req, res) => {
 /*
 * POST CRUD
 */
+//GET - Post single
+app.get('/api/get/post/:postId', (req, res) => {
+    const id = req.params.postId;
+    const sqlSelect = "SELECT * FROM post WHERE PostId = ?";
+    db.query(sqlSelect, id, (err, result) => {
+        if(err){
+            console.log("Post GET error: " + err);
+        }
 
+        console.log(result);                //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
 //GET - Post
 app.get('/api/get/post', (req, res) => {
 

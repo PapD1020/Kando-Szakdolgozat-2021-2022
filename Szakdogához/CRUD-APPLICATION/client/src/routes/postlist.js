@@ -9,7 +9,7 @@ export default function Post(){
   const [show, setShow] = useState(false);
   
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  
 
   const [PostName, setPostName] = useState('');
   const [PostSmDescr, setPostSmDescr] = useState('');
@@ -33,14 +33,14 @@ export default function Post(){
       //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
     });
     }, []);
-    useEffect(() => {
-
-      Axios.get(`http://localhost:3001/api/get/post`).then((response) => {
+    
+      const PostSetting = (postId) =>{
+        setShow(true);
+      Axios.get(`http://localhost:3001/api/get/post/${postId}`).then((response) => {
     
         setPostNameSetting(response.data);
         //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
-      });
-      }, []);
+      })};
     //GET - POST
     //Refresh Post data
     const refreshPostData = () => {
@@ -62,9 +62,7 @@ export default function Post(){
       //kell frissítés, hogy eltünjön a törölt, submitos nem működik
     };
 
-    const SettingPost = (post) =>{
-      Axios.get(`http://localhost:3001/api/get/post/${post}`);
-      };
+    
     //PUT - POST
     const updatePostStatus = (post) =>{
 
@@ -158,8 +156,8 @@ export default function Post(){
                             
                            <td>
 
-                           <Button variant="primary" onClick={handleShow}>Setting</Button>
-                           <Button onClick={() => {SettingPost(val.PostName)}}>Setting Post</Button>
+                           <Button variant="primary" onClick={() => {PostSetting(val.PostId)}}>Setting</Button>
+                         
                               
                           <Button onClick={() => {deletePost(val.PostName)}}>Delete Post</Button>
 
