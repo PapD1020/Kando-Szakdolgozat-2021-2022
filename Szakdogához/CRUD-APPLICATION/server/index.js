@@ -122,12 +122,13 @@ app.post('/api/insert/article', (req, res) => {
     const articleSmDescr = req.body.articleSmDescr;
     const articleMDescr = req.body.articleMDescr;
     const articleImg = req.body.articleImg;
-    const articleStatus = req.body.articleStatus;
+    const articleType = req.body.articleType;
+    const articleStatus = 1;
     const articleCreatedAt = req.body.articleCreatedAt;
     const articleUpdatedAt = req.body.articleUpdatedAt;
 
-    const sqlInsert = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?)"
-    db.query(sqlInsert, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleStatus, articleCreatedAt, articleUpdatedAt], (err, result) => {
+    const sqlInsert = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleType`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
+    db.query(sqlInsert, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleCreatedAt, articleUpdatedAt], (err, result) => {
 
         if(err){
             console.log("Article POST error: " + err);
@@ -135,6 +136,7 @@ app.post('/api/insert/article', (req, res) => {
 
         console.log("Nanoid: " + articleId);
         console.log("Article createdAt: " + articleCreatedAt);
+        console.log("Article type: " + articleType);
         res.send(result);
     });
 });
