@@ -9,7 +9,6 @@ export default function Post(){
   const [show, setShow] = useState(false);
   
   const handleClose = () => setShow(false);
-  
 
   const [PostName, setPostName] = useState('');
   const [PostSmDescr, setPostSmDescr] = useState('');
@@ -19,7 +18,7 @@ export default function Post(){
 
     const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
     const [PostNameSetting, setPostNameSetting] = useState([]);
-    const [NewPostStatus, setNewPostStatus] = useState('');
+ 
 
     const current = new Date();
     const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
@@ -63,70 +62,63 @@ export default function Post(){
     };
 
     
-    //PUT - POST
-    const updatePostStatus = (post) =>{
+   //PUT - POST
+   const updatePostStatus = (postid) =>{
+    
+  Axios.put('http://localhost:3001/api/update/post', {
+      postId : postid,
+      postName: PostName,
+      postSmDescr: PostSmDescr,
+      postMDescr: PostMDescr,
+      postImg: PostImg,
+      postStatus: PostStatus,
+      postUpdatedAt: date
+  });
 
-      Axios.put('http://localhost:3001/api/update/post', {
-          postName: post,
-          postStatus: NewPostStatus,
-          postUpdatedAt: date
-      });
+  console.log("Post PostUpdatedAt: " + date);
 
-      console.log("Post PostUpdatedAt: " + date);
-
-      setNewPostStatus("");
-      alert("Successfuly changed! Please click on the refresh button.");
-    };
-
+  setPostStatus("");
+  alert("Successfuly changed! Please click on the refresh button.");
+  setShow(false);
+  refreshPostData();
+};
     return(
         <div >
            <Modal show={show} onHide={handleClose} animation={false}>
           <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
+            <Modal.Title>User Settings</Modal.Title>
           </Modal.Header>
           <Modal.Body>
           {PostNameSetting.map((val) => {
                       return(
-                        <div className="card">
-                          <p>Name:<input type="text" name="postName" value={val.PostName} onChange={(e) => {
+                        <div >
+                          <p>Name:<input type="text" name="postName" placeholder={val.PostName} onChange={(e) => {
                             setPostName(e.target.value)}}></input> </p>
 
-                          <p>Small description:  <input type="text" name="postSmDescr" value={val.PostSmDescr} onChange={(e) => {
+                          <p>Small description:  <input type="text" name="postSmDescr" defaultValue={val.PostSmDescr} onChange={(e) => {
                             setPostSmDescr(e.target.value)}}></input> </p>
 
-                          <p>Main description:  <input type="text" name="postMDescr" value={val.PostMDescr} onChange={(e) => {
+                          <p>Main description:  <input type="text" name="postMDescr" placeholder={val.PostMDescr} onChange={(e) => {
                               setPostMDescr(e.target.value)}}></input> </p>
 
-                          <p>Image: <input type="text" name="postImg" value={val.PostImg}onChange={(e) => {
+                          <p>Image: <input type="text" name="postImg" placeholder={val.PostImg}onChange={(e) => {
                             setPostImg(e.target.value)}}></input></p>
 
-                          <p>Status: <input type="number" name="postStatus" value={val.PostStatus} onChange={(e) => {
+                          <p>Status: <input type="number" name="postStatus" placeholder={val.PostStatus} onChange={(e) => {
                              setPostStatus(e.target.value)}}></input> </p>
                           <p>Ceated at: {val.PostCreatedAt}</p>
                           <p>Updated at: {val.PostUpdatedAt}</p>
 
+                                        
+                          <Button onClick={() => {updatePostStatus(val.PostId)}}>Update Post</Button>
                          
-
-                          <input type="number" className="updateInput" onChange={(e) => {
-                            setNewPostStatus(e.target.value);
-                          }}></input>
-
-                          <button onClick={() => {updatePostStatus(val.PostName)}}>Update Post</button>
-                          <button className="btn" onClick={refreshPostData}>Refresh post data</button>
                         </div>
                       )
                 })} 
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleClose}>
-              Save Changes
-            </Button>
-          </Modal.Footer> 
+          
         </Modal>
-
+        <Button className="btn" onClick={refreshPostData}>Refresh post data</Button>
             <ReactBootStrap.Table>
                         <thead>
                                 <tr>

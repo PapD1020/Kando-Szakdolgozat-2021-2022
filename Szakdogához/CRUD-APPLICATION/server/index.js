@@ -105,13 +105,16 @@ app.delete('/api/delete/post/:postName', (req, res) => {
 
 //PUT-UPDATE - Post
 app.put('/api/update/post', (req, res) => {
-
+    const id=req.body.postId;
     const name = req.body.postName;
+    const smdescr =req.body.postSmDescr;
+    const mdescr = req.body.postMDescr;
+    const img = req.body.postImg;
     const status = req.body.postStatus;
     const updated = req.body.postUpdatedAt;
-    const sqlUpdate = "UPDATE post SET PostStatus = ?, PostUpdatedAt = ? WHERE PostName = ?";
-
-    db.query(sqlUpdate, [status, updated, name], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    const sqlUpdate = "UPDATE post SET PostName = ?, PostStatus = ?, PostSmDescr = ?, PostMDescr = ?, PostImg = ?, PostUpdatedAt = ? WHERE PostId = ?";
+console.log(name);
+    db.query(sqlUpdate, [name,status, smdescr, mdescr, img, updated, id], (err, result) => { //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
         if(err){
             console.log(err);
         }
@@ -200,11 +203,22 @@ app.put('/api/update/admin', (req, res) => {
 /*
 * USERS CRUD
 */
+app.get('/api/get/users/:usersId', (req, res) => {
+    const id = req.params.postId;
+    const sqlSelect = "SELECT * FROM post WHERE PostId = ?";
+    db.query(sqlSelect, id, (err, result) => {
+        if(err){
+            console.log("Post GET error: " + err);
+        }
 
+        console.log(result);                //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
 //GET - USERS
 app.get('/api/get/users', (req, res) => {
     
-    const sqlSelect = "SELECT * FROM users";
+    const sqlSelect = "SELECT * FROM post WHERE UserId = ?";
 
     db.query(sqlSelect, (err, result) => {
         if(err){
@@ -254,13 +268,17 @@ app.delete('/api/delete/users/:userUn', (req, res) => {
 
 //PUT - USERS
 app.put('/api/update/users', (req, res) => {
-
+    const id=req.body.userId;
     const name = req.body.userUn;
+    const password =req.body.userPw;
+    const firstname= req.body.userFN;
+    const secondname= req.body.userSN;
+    const userdob=req.body.userDob;  
     const userE = req.body.userEmail;
     const updated = req.body.userUpdatedAt;
-    const sqlUpdate = "UPDATE users SET UserEmail = ?, UserUpdatedAt = ? WHERE UserUn = ?";
+    const sqlUpdate = "UPDATE users SET UserUn = ?, UserPw = ?, UserFN=?, UserSN=?,UserDob = ?, UserEmail = ?, UserUpdatedAt = ? WHERE UserId = ?";
 
-    db.query(sqlUpdate, [userE, updated, name], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [name, password, firstname, secondname, userdob, userE, updated,id ], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
         if(err){
             console.log("Users UPDATE error: " + err);
         }
