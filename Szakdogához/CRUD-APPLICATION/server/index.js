@@ -12,7 +12,7 @@ const session = require('express-session');
 
 const saltRounds = 10;
 
-/*
+
 //Nethelyes
 const db = mysql.createPool({
     host: 'mysql.nethely.hu',
@@ -20,15 +20,17 @@ const db = mysql.createPool({
     password: 'KozosAdatbazis1',
     database: 'ideashare'
 });
-*/
+
 
 //Xampos
+/*
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
     database: 'ideashare'
 });
+*/
 
 //Middleware
 //app.use(cors());  without express-session
@@ -386,6 +388,8 @@ app.post('/api/login/user', (req, res) => {
         if(result.length > 0){ //checks if there is a user and password with the sent UserUn and UserPw
             console.log("result.length: " + result.length);
             console.log("pw hash: " + result[0].UserPw);
+            console.log("Bejelentkezett user neve: " + result[0].UserUn);
+            console.log("Bejelentkezett user idja: " + result[0].UserId);
             bcrypt.compare(userPw, result[0].UserPw, (err, response) => {
                 
                 if(response){
