@@ -8,9 +8,10 @@ import { Rating, AirbnbRating } from 'react-native-ratings';
 
 import Articles from '../components/Home/Articles';
 import Header from '../components/Home/Header';
+
 //import Comments from '../components/Home/Comments';
 
-const HomeScreen = ({navigation, userName}) => {
+const HomeScreen = ({/*navigation,*/ userName}) => {
   const {landscape} = useDeviceOrientation();
   const [isPanelActive, setIsPanelActive] = useState(false);
 
@@ -19,9 +20,8 @@ const HomeScreen = ({navigation, userName}) => {
     <SafeAreaView style={styles.container}>
       
       {/* <Comments isPanelActive={isPanelActive} setIsPanelActive={setIsPanelActive}/> */}
-      <Header userName={/* route.params.paramKey*/userName} {...navigation} />
+      <Header userName={/* route.params.paramKey*/userName} /* {...navigation}*/ />
       <Articles />
-    
     </SafeAreaView>
   );
 }

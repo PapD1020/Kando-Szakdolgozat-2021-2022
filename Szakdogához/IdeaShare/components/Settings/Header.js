@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         height: '10%',
         fontSize: 40,
-        color: 'white',
-        backgroundColor: '#8aacc8'
+        color: '#4d4a42',
+        backgroundColor: '#cec8b0'
     },
 
     TextContainer: {
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     },
     Text: {
         fontSize: 40,
-        color: 'white',
+        color: '#4d4a42',
         margin:0,
         //textAlign: 'center',
     },

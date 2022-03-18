@@ -15,7 +15,7 @@ const OptionList = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex:10,
+        flex:13,
     },
     item: {
         color: 'black',

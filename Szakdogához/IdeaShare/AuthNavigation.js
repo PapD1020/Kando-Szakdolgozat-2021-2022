@@ -7,7 +7,7 @@ import {useStateIfMounted} from 'use-state-if-mounted';
 const AuthNavigation = () => {
 
     const [userToken, setUserToken] = useStateIfMounted(null);
-    const [userName, setUserName] = useStateIfMounted(null);   
+    const [userName, setUserName] = useStateIfMounted('Mark');   
 
     const authContext = useMemo(() => ({
         signIn: (token,name) => {

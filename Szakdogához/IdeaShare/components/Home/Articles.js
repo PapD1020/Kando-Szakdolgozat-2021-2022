@@ -6,6 +6,8 @@ import { requestCameraPermission, requestStoragePermission } from "../PermReques
 import * as ImagePicker from 'react-native-image-picker';
 import FastImage from 'react-native-fast-image'
 import Animated, { useSharedValue, useAnimatedStyle, Easing, withSpring, withTiming } from 'react-native-reanimated';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 //import 'react-native-gesture-handler';
 import { createGlobalState } from 'react-hooks-global-state';
 
@@ -87,9 +89,9 @@ const Articles = () => {
         fetchMore();
     }, []);
     const fetchMore = () => {
-        console.log(getLastFetchedArticleItemId);
+        //console.log(getLastFetchedArticleItemId);
 
-        const API_URL = Platform.OS === 'ios' ? 'http://localhost:3001' : 'http://192.168.0.107:3001';
+        const API_URL = Platform.OS === 'ios' ? 'http://localhost:3001' : 'http://192.168.0.174:3001';
 
         fetch(`${API_URL}/api/get/article`, {
             method: 'GET',
@@ -229,7 +231,7 @@ item=item-1;
     
     const [getIfZoomed, setIfZoomed] = useState(false);
 
-    const [getArticleStylesForNextAnimation, setArticleStylesForNextAnimation] = useState({height:Dimensions.get('window').height*0.6, padding: 10, paddingTop:5})
+    const [getArticleStylesForNextAnimation, setArticleStylesForNextAnimation] = useState({height:Dimensions.get('window').height*0.6, padding: 10, paddingTop:5, borderRadius: 10})
 
     const animation = useSharedValue(getArticleStylesForNextAnimation);
 
@@ -249,23 +251,28 @@ item=item-1;
                 duration:1000,
                 easing: Easing.bezier(0.6, 0.23, 0, 1),
             }),
+            borderRadius: withTiming(animation.value.borderRadius,{
+                delay:100,
+                duration:500,
+                easing: Easing.bezier(0.6, 0.23, 0, 1),
+            }),
         };  
     });
 
     const ZoomIt = () => {
         if ( getIfZoomed == false) {
             [
-                animation.value = {height: flatListHeight, padding:0, marginBottom: 0, paddingTop:0},
+                animation.value = {height: flatListHeight, padding:0, marginBottom: 0, paddingTop:0, borderRadius: 0},
                 setArticleData([articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleMDescr]),
-                setArticleStylesForNextAnimation({height: flatListHeight, padding:0, paddingTop:0}),
+                setArticleStylesForNextAnimation({height: flatListHeight, padding:0, paddingTop:0, borderRadius:0}),
                 setIfZoomed(true),
                 setScrollUnlock(false),
             ]
         }else{
             [
-                animation.value = {height:Dimensions.get('window').height*0.6, padding: 10, marginBottom: 15, paddingTop:5},
+                animation.value = {height:Dimensions.get('window').height*0.6, padding: 10, marginBottom: 15, paddingTop:5, borderRadius:10},
                 setArticleData([articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleSmDescr]),
-                setArticleStylesForNextAnimation({height:Dimensions.get('window').height*0.6, padding: 10, paddingTop:5}),
+                setArticleStylesForNextAnimation({height:Dimensions.get('window').height*0.6, padding: 10, paddingTop:5, borderRadius:10}),
                 setIfZoomed(false),
                 setScrollUnlock(true),
             ]
@@ -339,15 +346,14 @@ const ArticleFooter = ({post}) => {
 const { openPanel } = useContext(PanelHandlerContext);
     return(
     <View style={styles.articleFooter}>
-        <TouchableHighlight style={styles.articleFooterBtnContainer}/* underlayColor={'rgba(0,0,0,0.3)'} */onPress={() => {openPanel()}}>
-            <FastImage source={require("../../public/images/star.png")} style={styles.articleFooterBtnImg}/>
-        </TouchableHighlight>                   
-        <TouchableHighlight style={styles.articleFooterBtnContainer}/* underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {openPanel()}}>
-            <FastImage source={require("../../public/images/dots.png")} style={styles.articleFooterBtnImg}/>
-        </TouchableHighlight>
-        <TouchableHighlight style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {openPanel()}}>
-            <FastImage source={require("../../public/images/chat-bubble.png")} style={styles.articleFooterBtnImg}/>
-        </TouchableHighlight>                    
+        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer}/* underlayColor={'rgba(0,0,0,0.3)'} */onPress={() => {openPanel()}}>
+            {/* <FastImage source={require("../../public/images/star.png")} style={styles.articleFooterBtnImg}/> */}
+            <MaterialCommunityIcons name="bookmark" color="#4d4a42" size={34} />
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {openPanel()}}>
+            <MaterialCommunityIcons name="comment" color="#4d4a42" size={30} />
+            {/* <FastImage source={require("../../public/images/chat-bubble.png")} style={styles.articleFooterBtnImg}/> */}
+        </TouchableOpacity>                    
     </View>
     )
 }
@@ -355,14 +361,13 @@ const { openPanel } = useContext(PanelHandlerContext);
 const styles = StyleSheet.create({
     container: {
         flex: 13,
-        backgroundColor: 'white',
+        backgroundColor: "#cec8b0", //'#8aacc8',
         //paddingTop: getStatusBarHeight(),
     },
     articleContainer: {
         height: Dimensions.get('window').height*0.6,
-        backgroundColor: '#ffffff',
-        borderBottomLeftRadius: 15,
-        borderBottomRightRadius: 15,
+        backgroundColor: '#f2f1e1',
+        borderRadius: 10,
         marginBottom: 15,
         paddingTop: 5,
         paddingBottom: 10,

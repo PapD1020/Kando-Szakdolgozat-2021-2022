@@ -3,8 +3,9 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, Settings } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-import { AuthScreen, SettingsScreen, HomeScreen } from './screens';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { AuthScreen, SettingsScreen, HomeScreen, NewArticleScreen } from './screens';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,10 +14,13 @@ const screenOptions = {
 }
 
 
+const Tab = createMaterialBottomTabNavigator();
+
+
 export const SignedInStack = ({userName}) => {  
     return (
       <NavigationContainer>
-        <Stack.Navigator
+     {/*    <Stack.Navigator
          initialRouteName="Home"
         screenOptions={screenOptions}
         >
@@ -28,7 +32,44 @@ export const SignedInStack = ({userName}) => {
             name="Settings">
             {props => <SettingsScreen {...props} userName={userName} />}
             </Stack.Screen>
-        </Stack.Navigator>
+        </Stack.Navigator> */}
+        <Tab.Navigator
+        initialRouteName="Home"
+        shifting={true}
+        activeColor="#4d4a42"
+       // inactiveColor="#3e2465"
+        /*barStyle={{ backgroundColor: '#694fad' }}*/>
+          <Tab.Screen
+            name="Home"
+            children={props =><HomeScreen {...props} userName={userName}/>}
+            options={{
+              tabBarColor:"#c9c8b3",
+              tabBarIcon: ({color}) => (
+                <MaterialCommunityIcons name="home" color={color} size={26} />
+              ),
+            }}
+            />
+          <Tab.Screen
+            name="Create New"
+            children={props => <NewArticleScreen {...props} userName={userName} />}
+            options={{
+              tabBarColor:"#c9c8b3",
+              tabBarIcon: ({color}) => (
+                <MaterialCommunityIcons name="plus-thick" color={color} size={26} />
+              ),
+            }}
+            />
+            <Tab.Screen
+            name="PostCreate"
+            children={props => <SettingsScreen {...props} userName={userName} />}
+            options={{
+              tabBarColor:"#c9c8b3",
+              tabBarIcon: ({color}) => (
+                <MaterialCommunityIcons name="account" color={color} size={26} />
+              ),
+            }}
+            />
+        </Tab.Navigator>
       </NavigationContainer>
     );
   }
