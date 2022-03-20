@@ -5,3 +5,6 @@
 //Logout
 //Többi oldalon is működik a session meg a cookie?
 //Routok elrejtése, amíg nincs bejelentkezve user
+
+//Profile updateban, hogy nem lehet ugyan az ami eddig volt
+/Registrationnál ne sql adatbázis dobjon hibát ha vmi unique és mondjuk ugyan olyan user name vel próbál meg regisztrálni

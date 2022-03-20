@@ -12,7 +12,7 @@ const session = require('express-session');
 
 const saltRounds = 10;
 
-
+/*
 //Nethelyes
 const db = mysql.createPool({
     host: 'mysql.nethely.hu',
@@ -20,17 +20,16 @@ const db = mysql.createPool({
     password: 'KozosAdatbazis1',
     database: 'ideashare'
 });
-
+*/
 
 //Xampos
-/*
+
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
     database: 'ideashare'
 });
-*/
 
 //Middleware
 //app.use(cors());  without express-session
