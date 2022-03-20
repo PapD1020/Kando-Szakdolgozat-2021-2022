@@ -22,7 +22,7 @@ render(
         <Route path="postlist" element={<PostList />}></Route>
         <Route path="admin" element={<Admin />}></Route>
         <Route path="users" element={<Users />}></Route>
-        {/* <Route path="userlist" element={<UsersList />}></Route> */}
+        { <Route path="userlist" element={<UsersList />}></Route> }
         <Route path="teszt" element={<Teszt />}></Route>
         <Route path="all" element={<All />}></Route>
 

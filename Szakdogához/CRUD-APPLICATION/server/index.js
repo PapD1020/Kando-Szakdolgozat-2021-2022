@@ -204,8 +204,8 @@ app.put('/api/update/admin', (req, res) => {
 * USERS CRUD
 */
 app.get('/api/get/users/:usersId', (req, res) => {
-    const id = req.params.postId;
-    const sqlSelect = "SELECT * FROM post WHERE PostId = ?";
+    const id = req.params.usersId;
+    const sqlSelect = "SELECT * FROM users WHERE UserId = ?";
     db.query(sqlSelect, id, (err, result) => {
         if(err){
             console.log("Post GET error: " + err);
@@ -218,7 +218,7 @@ app.get('/api/get/users/:usersId', (req, res) => {
 //GET - USERS
 app.get('/api/get/users', (req, res) => {
     
-    const sqlSelect = "SELECT * FROM post WHERE UserId = ?";
+    const sqlSelect = "SELECT * FROM users";
 
     db.query(sqlSelect, (err, result) => {
         if(err){

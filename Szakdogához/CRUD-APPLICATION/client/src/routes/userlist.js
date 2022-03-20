@@ -79,6 +79,7 @@ import Axios from 'axios';
     });
     setUserEmail("");
     alert("Successfuly changed! Please click on the refresh button.");
+    setShow(false);
    };
 
    return(
@@ -90,7 +91,7 @@ import Axios from 'axios';
     <Modal.Body>
           {UsersNameSettings.map((val) => {
                       return(
-                        <div className="card">
+                        <div >
                           
                            <p>Username:<input type="text" name="userUn" placeholder={val.UserUn} onChange={(e) => {
                                  setUserUn(e.target.value); }}></input> </p>
@@ -113,7 +114,7 @@ import Axios from 'axios';
 
                           
                            <Button onClick={() => {updateUser(val.UserId)}}>Update User</Button>
-                           <Button onClick={() => {deleteUser(val.UserUn)}}>Delete User</Button>
+                           
                           
                          </div>
                        )
@@ -154,8 +155,8 @@ import Axios from 'axios';
                            <td>
                           
 
-                          <button onClick={() => {UserSetting(val.UserId)}}>Settings</button>
-                          <button onClick={() => {deleteUser(val.UserUn)}}>Delete User</button>
+                          <Button onClick={() => {UserSetting(val.UserId)}}>Settings</Button>
+                          <Button onClick={() => {deleteUser(val.UserUn)}}>Delete User</Button>
                           
                           
                           </td>
