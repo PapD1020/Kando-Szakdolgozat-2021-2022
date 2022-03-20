@@ -10,6 +10,7 @@ export default function App(){
         <Link to="/login">Login</Link> | {" "}
         <Link to="/registration">Registration</Link> | {" "}
         <Link to="/createArticle">Create Article</Link> | {" "}
+        <Link to="/editArticle">Edit Article</Link> | {" "}
         <Link to="/profilePage">Profile Page</Link> | {" "}
         <Link to="/admins">Admin</Link> | {" "}
         <Link to="/users">Users</Link> | {" "}

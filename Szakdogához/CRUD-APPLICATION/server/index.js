@@ -430,6 +430,25 @@ app.put('/api/update/user:userId', (req, res) => {
     });
 });
 
+/**********************************************Article - Update********************************************/
+//ARTICLE - Edit Article (data update)
+app.put('/api/update/article:articleId', (req, res) => {
+
+    const articleName = req.body.articleName;
+    const articleSmDescr = req.body.articleSmDescr;
+    const articleMDescr = req.body.articleMDescr;
+    const articleImg = req.body.articleImg;
+    const articleUpdatedAt = req.body.articleUpdatedAt;
+    //articleType
+    const sqlUpdate = "UPDATE Articles SET ArticleName = ?, ArticleSmDescr = ?, ArticleMDescr = ?, ArticleImg = ?, ArticleUpdatedAt = ? WHERE ArticleId = ?";
+
+    db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleUpdatedAt], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+        if(err){
+            console.log("Artcile update err: " + err);
+        }
+    });
+});
+
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });
