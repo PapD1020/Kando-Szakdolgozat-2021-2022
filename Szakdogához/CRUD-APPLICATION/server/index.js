@@ -12,6 +12,8 @@ const session = require('express-session');
 
 const saltRounds = 10;
 
+const jwt = require('jsonwebtoken');
+
 /*
 //Nethelyes
 const db = mysql.createPool({
@@ -393,9 +395,20 @@ app.post('/api/login/user', (req, res) => {
                 
                 if(response){
                     req.session.user = result;
+
+                    //JWT - create web token every time the a user loggs in
+
+                    const id = result[0].UserId;
+                    const token = jwt.sign({UserId}, "jwtSecret", {
+                        expiresIn: 300, //5 mins
+                    }); //creating token based on the user's id, secretet meg kell változtatni, azaz .inv file/variable vagy mivel
+
+                    req.session.user = result;
+
                     //ellenőrzés
                     console.log("Session ellenőrzés: " + JSON.stringify(req.session.user));
-                    res.send(result);
+                    //res.send(result); //all the information from the data base of the user
+                    res.json({auth: true, token: token, result: result});
                 }
                 else{
                     res.send({message: "Wrong username or password!"});
