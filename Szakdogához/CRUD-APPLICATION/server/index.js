@@ -369,6 +369,31 @@ app.get('/api/login/user', (req, res) => {
     }
 });
 
+//verifyJWT
+const verifyJWT = (req, res, next) => {
+    const token = req.headers["x-access-token"]; //Grabing the token from the headers
+
+    if(!token){ //Ha nincs token
+        res.send("We need a token. Not authenticated.");
+    }
+    else{
+        jwt.verify(token, "jwtSecret", (err, decoded) => {
+            if(err){
+                res.json({auth: false, message: "Failed to authenticate."});
+            }
+            else{
+                req.DecodedUserId = decoded.UserId;
+                next();
+            }
+        });
+    }
+};
+
+//Authentication
+app.get('/api/login/user/auth', verifyJWT, (req, res) => {
+    res.send("You are authenticated!");
+});
+
 //LOGIN - CHECK IF USER EXISTS - USERS
 app.post('/api/login/user', (req, res) => {
 
@@ -399,7 +424,7 @@ app.post('/api/login/user', (req, res) => {
                     //JWT - create web token every time the a user loggs in
 
                     const id = result[0].UserId;
-                    const token = jwt.sign({UserId}, "jwtSecret", {
+                    const token = jwt.sign({id}, "jwtSecret", { //ezt a secretet kell a verify-nál is megadni (verifyJWT)
                         expiresIn: 300, //5 mins
                     }); //creating token based on the user's id, secretet meg kell változtatni, azaz .inv file/variable vagy mivel
 
@@ -407,16 +432,18 @@ app.post('/api/login/user', (req, res) => {
 
                     //ellenőrzés
                     console.log("Session ellenőrzés: " + JSON.stringify(req.session.user));
-                    //res.send(result); //all the information from the data base of the user
+                    //res.send(result); //all the information from the data base of the user !!! mivel ez ki van kommeztezve, a frontenden a response.data[0].UserUn nem működik
                     res.json({auth: true, token: token, result: result});
                 }
                 else{
-                    res.send({message: "Wrong username or password!"});
+                    //res.send({message: "Wrong username or password!"}); jwt előtt
+                    res.json({auth: false, message: "Wrong username or password."});
                 }
             }) //pass the password the user inputed and comapre it with the one in the database
         }
         else{
-            res.send({message: "The user does not exists"});
+            //res.send({message: "The user does not exists"}); jwt előtt
+            res.json({auth: false, message: "No user exists."});
         }
     });
 });

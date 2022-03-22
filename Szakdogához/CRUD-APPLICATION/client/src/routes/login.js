@@ -8,7 +8,7 @@ export default function Login(){
     const [UserUnLogin, setUserUnLogin] = useState('');
     const [UserPwLogin, setUserPwLogin] = useState('');
 
-    const [LoginStatus, setLoginStatus] = useState('');
+    const [LoginStatus, setLoginStatus] = useState(false);
 
     Axios.defaults.withCredentials = true;
 
@@ -31,14 +31,29 @@ export default function Login(){
         userUn: UserUnLogin, userPw: UserPwLogin
         }).then((response) => {
 
-            if(response.data.message){
-                setLoginStatus(response.data.message);
+            if(!response.data.auth){ //ha nem vagyunk authentikálva
+                //setLoginStatus(response.data.message);
+                setLoginStatus(false);
                 console.log("Login user response.data: " + JSON.stringify(response.data));
             }
             else{
-                setLoginStatus("Successfully logged in as: " + response.data[0].UserUn); //it will be an array
-                alert("Successfully logged in as: " + response.data[0].UserUn);
+                console.log("Bejelentkezve");
+                console.log(JSON.stringify(response.data));
+                //setLoginStatus("Successfully logged in as: " + response.data[0].UserUn); //it will be an array !!! a jwt óta nem sima res.send(result) van, amivel ez működne, hanem res.json({auth: true, token: token, result: result});
+
+                console.log("token: " + JSON.stringify(response.data.token));
+                localStorage.setItem("token", response.data.token); //a local storegabe mentjük a tokent, máshogy is lehetne. data.token - meg kell nézni console.loggaé, hogy hogy kell rá hivatkozni.
+                setLoginStatus(true);
+                //alert("Successfully logged in as: " + response.data[0].UserUn); jwt óta nem jó, backendben nem sime res.send(result) van, hanem res.json({auth: true, token: token, result: result});
             }
+        });
+    };
+
+    const userAuthenticated = () => {
+        Axios.get('http://localhost:3001/api/login/user/auth', {headers: {
+            "x-access-token": localStorage.getItem("token")
+        }}).then((response) => {
+            console.log("isUserAuth response: " + JSON.stringify(response.data));
         });
     };
 
@@ -93,7 +108,11 @@ export default function Login(){
                 </div>
 
 
-                <h1>{LoginStatus}</h1>
+                {/*<h1>{LoginStatus}</h1>*/}
+
+                {LoginStatus && (
+                    <button onClick={userAuthenticated}>Check if authenticated</button>
+                )}
                 
                 <input type="submit" value={"Login"}/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
             </form>
