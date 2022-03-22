@@ -132,8 +132,8 @@ export default function Registration(){
                 }}/>
 
                 {errors?.userFNReg?.type === "required" && <div><h5>This field is required!</h5></div>}
-                {errors?.userFNReg?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
-                {errors?.userFNReg?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
+                {errors?.userFNReg?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 3 and 20 characters.</p></div>}
+                {errors?.userFNReg?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 3 and 20 characters.</p></div>}
             </div>
 
             <div className="form-group">

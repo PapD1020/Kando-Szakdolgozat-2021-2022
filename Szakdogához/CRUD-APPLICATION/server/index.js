@@ -334,18 +334,19 @@ app.post('/api/register/user', (req, res) => {
     const userSN = req.body.userSN;
     const userDob = req.body.userDob;
     const userEmail = req.body.userEmail;
+    const userPL = 1;
     const userCreatedAt = req.body.userCreatedAt;
     const userUpdatedAt = req.body.userUpdatedAt;
 
     bcrypt.hash(userPw, saltRounds, (err, hash) => {
 
-        const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?,?)"
+        const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserPL`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
 
         if(err){
             console.log("Registration - bcrypt error: " + err);
         }
 
-        db.query(sqlInsert, [userId, userUn, userPP, hash, userFN, userSN, userDob, userEmail, userCreatedAt, userUpdatedAt], (err, result) => {
+        db.query(sqlInsert, [userId, userUn, userPP, hash, userFN, userSN, userDob, userEmail, userPL, userCreatedAt, userUpdatedAt], (err, result) => {
 
             console.log("UserUn: " + JSON.stringify(req.body.UserUn));
 
