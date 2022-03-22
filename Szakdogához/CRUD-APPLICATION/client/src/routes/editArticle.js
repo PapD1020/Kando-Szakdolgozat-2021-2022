@@ -46,22 +46,22 @@ export default function CreateArticle(){
 
         //articleName - backend variable name
         Axios.put('http://localhost:3001/api/insert/article', { //URL for our api (node.js backend)
-          articleName: ArticleName,
-          articleSmDescr: ArticleSmDescr,
-          articleMDescr: ArticleMDescr,
-          articleImg: ArticleImg,
-          articleType: ArticleType,
+          articleName: ArticleNameUpd,
+          articleSmDescr: ArticleSmDescrUpd,
+          articleMDescr: ArticleMDescrUpd,
+          articleImg: ArticleImgUpd,
+          articleType: ArticleTypeUpd,
           articleUpdatedAt: date
       });
         
       setArticleNameList([
         ...ArticleNameList,
         {
-          ArticleName: ArticleName,
-          ArticleSmDescr: ArticleSmDescr,
-          ArticleMDescr: ArticleMDescr,
-          ArticleImg: ArticleImg,
-          ArticleType: ArticleType,
+          ArticleName: ArticleNameUpd,
+          ArticleSmDescr: ArticleSmDescrUpd,
+          ArticleMDescr: ArticleMDescrUpd,
+          ArticleImg: ArticleImgUpd,
+          ArticleType: ArticleTypeUpd,
           ArticleCreatedAt: date,
           ArticleUpdatedAt: date
         }, //Valamiért mind a kettőt nagy A-vel kell írni, az első értékeket, azaz nem articleName: ArticleName
@@ -80,7 +80,7 @@ export default function CreateArticle(){
                             required: true,
                         })
                     } onChange={(e) => {
-                        setArticleType(e.target.value);
+                        setArticleTypeUpd(e.target.value);
                     }}>
                         <option value="" defaultValue={"Select the article type"}>Select the article type</option>
                         <option value="Programming">Programming</option>
@@ -99,7 +99,7 @@ export default function CreateArticle(){
                             pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
                         })
                     }onChange={(e) => {
-                        setArticleName(e.target.value);
+                        setArticleNameUpd(e.target.value);
                     }}/>
                     
                     {errors?.articleName?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a name.</p></div>}
@@ -118,7 +118,7 @@ export default function CreateArticle(){
                             pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
                         })
                     }onChange={(e) => {
-                        setArticleSmDescr(e.target.value);
+                        setArticleSmDescrUpd(e.target.value);
                     }}/>
 
                     {errors?.articleSmDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a small description of your article.</p></div>}
@@ -137,7 +137,7 @@ export default function CreateArticle(){
                             pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
                         })
                     }onChange={(e) => {
-                        setArticleMDescr(e.target.value);
+                        setArticleMDescrUpd(e.target.value);
                     }}/>
 
                     {errors?.articleMDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a main description of your article.</p></div>}
@@ -155,7 +155,7 @@ export default function CreateArticle(){
                             maxLength: 500, //Mennyi legyen?
                         })
                     }onChange={(e) => {
-                        setArticleImg(e.target.value);
+                        setArticleImgUpd(e.target.value);
                     }}/>
 
                     {errors?.articleImg?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a picture</p></div>}
