@@ -100,6 +100,7 @@ app.get("/", (req, res) => {
     });
 });*/
 
+/*
 //Egyenkénti lekérdezés
 app.get('/api/get/article', (req, res) => {
 
@@ -114,6 +115,28 @@ app.get('/api/get/article', (req, res) => {
 
         //console.log(result[0].ArticleId);                //valamiért Object-et kapok terminálban
         res.send(result);
+    });
+});*/
+
+//20-asával lekérdezés
+app.get('/api/get/article', (req, res) => {
+
+    //const item = req.body.item-1; POST-hoz body kérés
+    const item = req.get("item")-1;
+    console.log(item);
+    //const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 1 OFFSET " + item + "";
+    const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 20  OFFSET " + item + "";
+    db.query(sqlSelect, (err, result) => {
+        if(err){
+            console.log("Article GET error: " + err);
+        }
+        if (!result){
+            res.status(404).send('Not found');
+        }else{
+        //console.log(result[0].ArticleId);                //valamiért Object-et kapok terminálban
+        console.log(result);
+        res.send(result);
+        }
     });
 });
 
