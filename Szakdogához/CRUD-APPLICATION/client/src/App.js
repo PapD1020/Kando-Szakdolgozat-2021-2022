@@ -9,6 +9,7 @@ export default function App(){
       <nav>
         <Link to="/login">Login</Link> | {" "}
         <Link to="/registration">Registration</Link> | {" "}
+        <Link to="/articles">Articles</Link> | {" "}
         <Link to="/createArticle">Create Article</Link> | {" "}
         <Link to="/editArticle">Edit Article</Link> | {" "}
         <Link to="/profilePage">Profile Page</Link> | {" "}
