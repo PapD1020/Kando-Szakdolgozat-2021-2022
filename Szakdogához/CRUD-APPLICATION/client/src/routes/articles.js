@@ -5,6 +5,7 @@ import Axios from 'axios';
 
 var articleData = [];
 var found = false;
+var lastFetchedArticleItemId = 1;
 
 export default function Article(){
 
@@ -20,33 +21,42 @@ export default function Article(){
     const [getData, setData] = useState([]);
 
 
-
     const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
-    useEffect(() => {
+   /* useEffect(() => {
         fetchMoreData();
-    }, []);
+    }, []);*/
 
     const fetchMoreData = () => {
       setTimeout(() => {
         //console.log(getLastFetchedArticleItemId);
 
         const API_URL = 'http://localhost:3001';
-
+/*
         fetch(`${API_URL}/api/get/article`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'item' : getLastFetchedArticleItemId,
+                'item' : lastFetchedArticleItemId,
             },
         })
-        .then(async res => { 
+        .then(async res => { */
+        
+        
+         Axios.get('http://localhost:3001/api/get/article', {
+          headers: {
+            'content-type': "application/json",
+            'item': lastFetchedArticleItemId
+          }
+        }).then((res) => { 
+        
             try {
                 if (res.status !== 200) {
                     console.log('not200');
                     found=false;
                 } else {
-                    const jsonRes = await res.json();
+                    const jsonRes = res.data;
                     console.log(articleData);
+                    console.log(lastFetchedArticleItemId + " " + jsonRes.length);
                     found=true;
                     console.log("Message: " + JSON.stringify(res.status));
                     var articleResultId = 0;
@@ -57,8 +67,9 @@ export default function Article(){
                     setData(
                       getData.concat(Array.from({ length: articleResultId }))
                     );
-                    setLastFetchedArticleItemId(getLastFetchedArticleItemId+jsonRes.length)
-                }
+                    lastFetchedArticleItemId= lastFetchedArticleItemId+jsonRes.length
+                    console.log(lastFetchedArticleItemId);
+                  }
             } catch (err) {
                 console.log(err);
             };
@@ -87,7 +98,7 @@ export default function Article(){
     };
 */
     //On page load get articles
-    useEffect(() => {
+  /*  useEffect(() => {
 
     Axios.get('http://localhost:3001/api/get/article', {
       headers: {
@@ -100,7 +111,7 @@ export default function Article(){
       setArticleNameList(response.data);
       console.log("Új articles get: " + JSON.stringify(response.data));
     });
-    }, []);
+    }, []);*/
 
     return(
       <div className="cardContainer">
@@ -111,23 +122,47 @@ export default function Article(){
           hasMore={found}
           loader={<h4>Loading...</h4>}
         >
-          {getData.map((index) => (
-            <Card className="card" key={index} item={index}/>
-          ))}
+           { found == true ?
+              getData.map((index, i) => (
+                <Card key={index} item={index} data={articleData[i]}/>
+              ))
+          : null}
         </InfiniteScroll>
       </div>
     );
 }
 
-const Card = ({item}) => {
+
+//PureComponent - jobb optimalizáció, pl. nincsenek felesleges újra renderelések
+class Card extends React.PureComponent {    
+
+  render() {
+      const {data} = this.props;
+      return(
+        <div className="card">
+          <div>
+            {data.ArticleName}
+            {data.ArticleSmDescr}
+            {data.ArticleMDescr}
+            {data.ArticleImg}
+          </div> 
+        </div>
+      )
+  }
+}
+
+
+//Functional component - ha valami nem működne a PureComponent-ben, próbáld ebben
+/*const Card = ({data}) => {
 
   return (
     <div>
-        { found == true ?
-        <div>
-          item
+        <div className="card">
+          {data.ArticleName}
+          {data.ArticleSmDescr}
+          {data.ArticleMDescr}
+          {data.ArticleImg}
         </div> 
-        : null}
     </div>
   )
-}
+}*/

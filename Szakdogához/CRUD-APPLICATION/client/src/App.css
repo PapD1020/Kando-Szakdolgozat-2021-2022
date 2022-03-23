@@ -9,7 +9,7 @@
   padding: 10px;
 }
 */
-.smallContainer{
+.smallContainer {
   border: 4px solid black;
   border-radius: 25px;
   width: 30%;
@@ -17,7 +17,7 @@
   margin: 10px;
 }
 
-.form{
+.form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,30 +25,30 @@
   margin: 10px;
 }
 
-.form input{
+.form input {
   width: 50%;
   height: 40px;
   margin: 10px;
   font-size: 25px;
 }
 
-.btn{
+.btn {
   margin: 10px;
   padding: 10px;
 }
 
-.cardContainer{
+.cardContainer {
   display: contents;
 }
 
-.card{
+.card {
   width: 100%;
   border: 3px solid black;
   border-radius: 20px;
   margin: 10px;
 }
 
-.updateInput{
+.updateInput {
   width: 35%;
   height: 30px;
   margin-bottom: 10px;
