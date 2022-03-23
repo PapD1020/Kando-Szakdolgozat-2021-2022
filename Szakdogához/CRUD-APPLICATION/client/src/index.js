@@ -22,7 +22,6 @@ render(
         <Route path="createArticle" element={<CreateArticle />}></Route>
         <Route path="editArticle" element={<EditArticle />}></Route>
         <Route path="profilePage" element={<ProfilePage />}></Route>
-        <Route path="admins" element={<Admins />}></Route>
         <Route path="users" element={<Users />}></Route>
         <Route path="all" element={<All />}></Route>
       </Route>

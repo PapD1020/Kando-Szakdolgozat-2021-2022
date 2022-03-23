@@ -42,15 +42,20 @@ export default function All(){
   const current = new Date();
   const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
-  //On page load get articles
-  useEffect(() => {
+    //On page load get articles
+    useEffect(() => {
 
-    Axios.get('http://localhost:3001/api/get/article').then((response) => {
-
-      setArticleNameList(response.data);
-      //console.log(response.data); //console logging the SELECT * FROM article to the frontend terminal
-    });
-  }, []);
+      Axios.get('http://localhost:3001/api/get/article', {
+        headers: {
+          'content-type': "application/json",
+          'item': 1
+        }
+      }).then((response) => {
+        
+        setArticleNameList(response.data);
+        console.log("Új articles get: " + response.data);
+      });
+      }, []);
 
   //On page load get admins
   useEffect(() => {
@@ -70,14 +75,19 @@ export default function All(){
     });
   }, []);
 
-  //GET - POST
-  //Refresh Article data
-  const refreshArticleData = () => {
+    //GET - POST
+    //Refresh Article data
+    const refreshArticleData = () => {
 
-      Axios.get('http://localhost:3001/api/get/article').then((response) => {
-    
-        setArticleNameList(response.data);
-        //console.log(response.data); //console logging the SELECT * FROM article to the frontend terminal
+      Axios.get('http://localhost:3001/api/get/article', {
+        headers: {
+          'content-type': "application/json",
+          'item': 1
+        }
+      }).then((response) => {
+  
+      setArticleNameList(response.data);
+      //console.log(response.data); //console logging the SELECT * FROM article to the frontend terminal
       });
   };
 

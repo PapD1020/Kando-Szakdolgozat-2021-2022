@@ -13,7 +13,6 @@ export default function App(){
         <Link to="/createArticle">Create Article</Link> | {" "}
         <Link to="/editArticle">Edit Article</Link> | {" "}
         <Link to="/profilePage">Profile Page</Link> | {" "}
-        <Link to="/admins">Admin</Link> | {" "}
         <Link to="/users">Users</Link> | {" "}
         <Link to="/all">All</Link>
       </nav>

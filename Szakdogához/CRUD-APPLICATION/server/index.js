@@ -130,12 +130,13 @@ app.get('/api/get/article', (req, res) => {
         if(err){
             console.log("Article GET error: " + err);
         }
-        if (!result){
+        if (result.length == 0){
+            console.log("no result");
             res.status(404).send('Not found');
         }else{
-        //console.log(result[0].ArticleId);                //valamiért Object-et kapok terminálban
-        console.log(result);
-        res.send(result);
+            //console.log(result[0].ArticleId);                //valamiért Object-et kapok terminálban
+            console.log(result);
+            res.send(result);
         }
     });
 });
@@ -502,11 +503,12 @@ app.put('/api/update/article:articleId', (req, res) => {
     const articleSmDescr = req.body.articleSmDescr;
     const articleMDescr = req.body.articleMDescr;
     const articleImg = req.body.articleImg;
+    const articleType = req.body.articleType;
     const articleUpdatedAt = req.body.articleUpdatedAt;
-    //articleType
-    const sqlUpdate = "UPDATE Articles SET ArticleName = ?, ArticleSmDescr = ?, ArticleMDescr = ?, ArticleImg = ?, ArticleUpdatedAt = ? WHERE ArticleId = ?";
+    
+    const sqlUpdate = "UPDATE Articles SET ArticleName = ?, ArticleSmDescr = ?, ArticleMDescr = ?, ArticleImg = ?, ArticleType = ?, ArticleUpdatedAt = ? WHERE ArticleId = ?";
 
-    db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleUpdatedAt], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleUpdatedAt], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
         if(err){
             console.log("Artcile update err: " + err);
         }
