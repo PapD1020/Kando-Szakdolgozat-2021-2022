@@ -2,23 +2,13 @@ import './App.css';
 import {Outlet, Link} from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Topbar from './components/Topbar/Topbar';
 
 export default function App(){
   return(
     <div className='App'>
-      <h1>Admin Panel</h1>
-      <nav>
-        <Link to="/login">Login</Link> | {" "}
-        <Link to="/registration">Registration</Link> | {" "}
-        
-        
-        <Link to="/articleslist">PostList</Link> | {" "}
-        
-         <Link to="/userlist">userlist</Link>| {" "}
-         
-         {/* <Link to="/all">All</Link>  */}
-       
-      </nav>
+      <Topbar/>
+      
       <Outlet />
     </div>
   );

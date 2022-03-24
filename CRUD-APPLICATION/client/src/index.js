@@ -6,6 +6,7 @@ import Registration from "./routes/registration";
 import Login from "./routes/login";
 import UsersList from "./routes/userlist";
 import PostList from "./routes/articleslist";
+import ProfileUpdate from "./routes/profilePage";
 
 
 const rootElement = document.getElementById("root");
@@ -20,7 +21,7 @@ render(
      
      
         <Route path="userlist" element={<UsersList />}></Route>
-       
+        <Route path="profilePage" element={<ProfileUpdate />}></Route>
         {/* <Route path="all" element={<All />}></Route> */}
 
       </Route>
