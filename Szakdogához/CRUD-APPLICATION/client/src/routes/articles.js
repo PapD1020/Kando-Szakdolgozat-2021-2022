@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import '../App.css';
 import Axios from 'axios';
@@ -9,7 +9,7 @@ var lastFetchedArticleItemId = 1;
 
 export default function Article(){
 
-    const [ArticleNameList, setArticleNameList] = useState([]); //'' hibás, [] kell használni
+    //const [ArticleNameList, setArticleNameList] = useState([]); //'' hibás, [] kell használni
 
     //***Infinite scroll***/
     /*
@@ -21,7 +21,7 @@ export default function Article(){
     const [getData, setData] = useState([]);
 
 
-    const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
+    //const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
    /* useEffect(() => {
         fetchMoreData();
     }, []);*/
@@ -30,7 +30,7 @@ export default function Article(){
       setTimeout(() => {
         //console.log(getLastFetchedArticleItemId);
 
-        const API_URL = 'http://localhost:3001';
+        //const API_URL = 'http://localhost:3001';
 /*
         fetch(`${API_URL}/api/get/article`, {
             method: 'GET',
@@ -122,7 +122,7 @@ export default function Article(){
           hasMore={found}
           loader={<h4>Loading...</h4>}
         >
-           { found == true ?
+           { found === true ?
               getData.map((index, i) => (
                 <Card key={index} item={index} data={articleData[i]}/>
               ))

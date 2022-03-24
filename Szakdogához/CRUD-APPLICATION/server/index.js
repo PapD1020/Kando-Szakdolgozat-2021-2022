@@ -416,7 +416,12 @@ const verifyJWT = (req, res, next) => {
 
 //Authentication
 app.get('/api/login/user/auth', verifyJWT, (req, res) => {
-    res.send("You are authenticated!");
+    if(verifyJWT){
+        res.send({isUserAuth: true, message: "You are authenticated!"});
+    }
+    else{
+        res.send({isUserAuth: false, message: "You are NOT authenticated!"});
+    }
 });
 
 //LOGIN - CHECK IF USER EXISTS - USERS

@@ -53,6 +53,7 @@ export default function Login(){
         Axios.get('http://localhost:3001/api/login/user/auth', {headers: {
             "x-access-token": localStorage.getItem("token")
         }}).then((response) => {
+            alert("Authenticated");
             console.log("isUserAuth response: " + JSON.stringify(response.data));
         });
     };
