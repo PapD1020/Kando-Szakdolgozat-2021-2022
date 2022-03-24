@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import '../App.css';
 import Axios from 'axios';
@@ -21,10 +21,10 @@ export default function Article(){
     const [getData, setData] = useState([]);
 
 
-    //const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
-   /* useEffect(() => {
-        fetchMoreData();
-    }, []);*/
+    const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
+    useEffect(() => {
+      lastFetchedArticleItemId = 1;
+    }, []);
 
     const fetchMoreData = () => {
       setTimeout(() => {
