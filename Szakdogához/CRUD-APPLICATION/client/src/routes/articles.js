@@ -22,9 +22,9 @@ export default function Article(){
 
 
     const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
-   /* useEffect(() => {
-        fetchMoreData();
-    }, []);*/
+    useEffect(() => {
+      lastFetchedArticleItemId = 1;
+    }, []);
 
     const fetchMoreData = () => {
       setTimeout(() => {
