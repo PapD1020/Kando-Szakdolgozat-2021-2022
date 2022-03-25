@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Image, Dimensions, StyleSheet, TouchableHighlight, Platform, Pressable, FlatList } from "react-native";
-import { SwipeablePanel } from 'rn-swipeable-panel';
+import React, {useContext } from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { AuthContext } from '../../components/Context';
 
 function Header ({userName, ...navigation}) {

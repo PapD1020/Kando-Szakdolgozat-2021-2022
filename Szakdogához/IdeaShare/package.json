@@ -24,6 +24,7 @@
     "react-native-image-picker": "^4.7.0",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-paper": "^4.11.2",
+    "react-native-pell-rich-editor": "^1.8.8",
     "react-native-ratings": "^8.1.0",
     "react-native-reanimated": "^2.4.1",
     "react-native-safe-area-context": "^3.3.2",
@@ -32,9 +33,11 @@
     "react-native-status-bar-height": "^2.6.0",
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.1",
+    "react-native-webview": "^11.17.2",
     "react-navigation": "^4.4.4",
-    "rn-swipeable-panel": "^1.2.6",
-    "use-state-if-mounted": "^1.0.4"
+    "rn-swipeable-panel": "^1.2.7",
+    "use-state-if-mounted": "^1.0.4",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "7.16.7",

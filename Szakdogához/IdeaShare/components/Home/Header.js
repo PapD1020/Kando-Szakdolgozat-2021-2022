@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, Dimensions, StyleSheet, TouchableHighlight, Pressable, FlatList } from "react-native";
-import { SwipeablePanel } from 'rn-swipeable-panel';
-
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
 const Header = ({userName/*, ...navigation*/}) => {
     return(

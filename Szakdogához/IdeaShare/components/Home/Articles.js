@@ -1,23 +1,22 @@
 import React, { useState, useEffect, useMemo, useCallback, useContext } from "react";
-import { View, ScrollView, Text, Button, Image, Dimensions, StyleSheet, TouchableHighlight, TouchableOpacity, Pressable, FlatList, ImageBackground } from "react-native";
+import { View, ScrollView, Text, Image, Dimensions, StyleSheet, TouchableOpacity, Pressable, FlatList, ImageBackground } from "react-native";
 import { SwipeablePanel } from 'rn-swipeable-panel';
 import { PanelHandlerContext } from "../Context";
 import { requestCameraPermission, requestStoragePermission } from "../PermRequests";
 import * as ImagePicker from 'react-native-image-picker';
-import FastImage from 'react-native-fast-image'
 import Animated, { useSharedValue, useAnimatedStyle, Easing, withSpring, withTiming } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 //import 'react-native-gesture-handler';
 import { createGlobalState } from 'react-hooks-global-state';
 
-
 const initialState = { scrollUnlock: true };
 const { useGlobalState } = createGlobalState(initialState);
 
-var articleData = [];
 var flatListHeight = 0;
 var globalRef = null;
+var lastFetchedArticleItemId = 1;
+var articleData = [];
 
 const Articles = () => {
 
@@ -84,48 +83,61 @@ const Articles = () => {
 
     //infiniteScroll
     const [data, setData] = useState ([]);
+    const [getArticleData, setArticleData] = useState([]);
     const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
     useEffect(() => {
+        lastFetchedArticleItemId = 1;
+        //setArticleData([]); ////state-es articledata-hoz
+        articleData = [];
+        setData([]);
         fetchMore();
     }, []);
-    const fetchMore = () => {
-        //console.log(getLastFetchedArticleItemId);
+    const fetchMore = (refreshing) => {
+        if (refreshing == true) {
+            lastFetchedArticleItemId = 1;
+            //setArticleData([]);////state-es articledata-hoz
+            setData([]); 
+            articleData = [];
+        }
 
-        const API_URL = Platform.OS === 'ios' ? 'http://localhost:3001' : 'http://192.168.0.174:3001';
-
-        fetch(`${API_URL}/api/get/article`, {
+        fetch(`${global.NodeJS_URL}/api/get/article`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'item' : getLastFetchedArticleItemId,
+                'item' : lastFetchedArticleItemId,
             },
         })
         .then(async res => { 
             try {
-                const jsonRes = await res.json();
                 if (res.status !== 200) {
-                    console.log('not200');
-                    console.log(jsonRes.message);
+                   // console.log('not200');
                     found=false;
                 } else {
+                    const jsonRes = await res.json();
+
                     found=true;
                     var articleResultId = 0;
+                    //let adata = [...getArticleData]; //state-es articledata-hoz
                     for (articleResultId = 0; articleResultId < jsonRes.length; articleResultId++){
+                        //adata.push(jsonRes[articleResultId]); //state-es articledata-hoz
                         articleData.push(jsonRes[articleResultId]);
-                        //console.log(articleData[getLastFetchedArticleItemId+articleResultId].ArticleId);
                     };
+                        //setArticleData(adata);//,()=> 		console.log("setState completed", this.state)); //state-es articledata
                     setData(prevState =>[
-                    ...prevState,
-                    ...Array.from({length:articleResultId}).map((_,articleResultId)=>articleResultId+1 + prevState.length),
+                        ...prevState,
+                        ...Array.from({length:articleResultId}).map((_,articleResultId)=>articleResultId+1 + prevState.length),
                     ]);
                     setLastFetchedArticleItemId(getLastFetchedArticleItemId+jsonRes.length)
+                    lastFetchedArticleItemId = lastFetchedArticleItemId +jsonRes.length;
+                    //console.log(data);
+                    //console.log(articleData);
                 }
             } catch (err) {
-                console.log(err);
+               // console.log(err);
             };
         })
         .catch(err => {
-            console.log(err);
+           // console.log(err);
         });        
 
     };
@@ -134,9 +146,15 @@ const Articles = () => {
 
     const renderItem = useCallback(
         ({item}) => (
-            <Article item={item}/>),
-        []
-    );
+            <View>
+                { articleData[item-1] != [] ?
+                    <Article item={item} /*data={getArticleData}*//>
+                : null} 
+            </View>
+
+
+        ),
+    []);
 
     //const keyExtractor = useCallback((item) => item.toString(),[])
     const keyExtractor = useCallback(e => e,[]);
@@ -190,16 +208,18 @@ const Articles = () => {
                 ref={(ref) => {
                     globalRef = ref;
                   }}
-                onEndReachedThreshold={1}
-                onEndReached={fetchMore}
+                onEndReachedThreshold={2}
+                onEndReached={() => fetchMore(false)}
                 style={{flex: 1}}
                 //removeClippedSubviews = {false}
                 //updateCellsBatchingPeriod = {10}
-                initialNumToRender = {1}
+                initialNumToRender = {0}
                 maxToRenderPerBatch={3}
                 windowSize={5}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
+                onRefresh={() => fetchMore(true)}
+                refreshing={false}
                 /*ListHeaderComponent={this.renderHeader}*/
                 />
         </View>
@@ -210,14 +230,21 @@ const Articles = () => {
 class Article extends React.PureComponent {    
 
     render() {
+
         const {item} = this.props;
+        //const {data} = this.props;
         return(
-            <ArticleFunc item={item}/>
+            <ArticleFunc item={item} /*data={data[item-1]}*//>
         )
     }
 }
-
-const ArticleFunc = ({item}) => {
+/*
+const Article = ({item,data}) => {
+    console.log("data: " + data);
+    return(
+        <ArticleFunc item={item}/>
+)}*/
+const ArticleFunc = ({item, data}) => {
 
 item=item-1;
     
@@ -227,6 +254,7 @@ item=item-1;
 
     const [getScrollUnlock, setScrollUnlock] = useGlobalState('scrollUnlock');
 
+    //const [getArticleData, setArticleData] = useState([data.ArticleImg, data.ArticleName, data.ArticleSmDescr]);
     const [getArticleData, setArticleData] = useState([articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleSmDescr]);
     
     const [getIfZoomed, setIfZoomed] = useState(false);
@@ -243,7 +271,7 @@ item=item-1;
             }),
             padding: withTiming(animation.value.padding,{
                 delay:100,
-                duration:1000,
+                duration:800,
                 easing: Easing.bezier(0.6, 0.23, 0, 1),
             }),
             paddingTop: withTiming(animation.value.paddingTop,{
@@ -259,10 +287,11 @@ item=item-1;
         };  
     });
 
-    const ZoomIt = () => {
+    const ZoomIt = ({data}) => {
         if ( getIfZoomed == false) {
             [
                 animation.value = {height: flatListHeight, padding:0, marginBottom: 0, paddingTop:0, borderRadius: 0},
+                //setArticleData([data.ArticleImg, data.ArticleName, data.ArticleMDescr]),
                 setArticleData([articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleMDescr]),
                 setArticleStylesForNextAnimation({height: flatListHeight, padding:0, paddingTop:0, borderRadius:0}),
                 setIfZoomed(true),
@@ -271,6 +300,7 @@ item=item-1;
         }else{
             [
                 animation.value = {height:Dimensions.get('window').height*0.6, padding: 10, marginBottom: 15, paddingTop:5, borderRadius:10},
+                //setArticleData([data.ArticleImg, data.ArticleName, data.ArticleSmDescr]),
                 setArticleData([articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleSmDescr]),
                 setArticleStylesForNextAnimation({height:Dimensions.get('window').height*0.6, padding: 10, paddingTop:5, borderRadius:10}),
                 setIfZoomed(false),
@@ -281,10 +311,10 @@ item=item-1;
     return (
         
         <View>
-        { found == true ?
+
             <Animated.View  style={[styles.articleContainer, animatedStyles]}>
                 <ArticleHeader props={["Mark"]}/>
-                <TouchableOpacity activeOpacity={0.9} style={styles.articleBodyContainer} onPress={() => ([ZoomIt(), globalRef.scrollToIndex({
+                <TouchableOpacity activeOpacity={0.9} style={styles.articleBodyContainer} onPress={() => ([ZoomIt({data}), globalRef.scrollToIndex({
             animated: true,
             index: item,
             viewPosition: 0
@@ -296,7 +326,7 @@ item=item-1;
                 </TouchableOpacity>
                 <ArticleFooter/>
             </Animated.View>
-        : null }
+
         </View>           
         
     

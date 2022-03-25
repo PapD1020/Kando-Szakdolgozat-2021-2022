@@ -11,8 +11,6 @@ import {useStateIfMounted} from 'use-state-if-mounted';
 //const API_URL = Platform.OS === 'ios' ? 'http://localhost:5000' : 'http://192.168.1.51:5000';
 //const API_URL = Platform.OS === 'ios' ? 'http://localhost:3001' : 'http://192.168.0.107:3001';
 
-const API_URL = Platform.OS === 'ios' ? 'https://nodejs-server-test-app.herokuapp.com' : 'https://nodejs-server-test-app.herokuapp.com';
-
 
 function AuthScreen ({navigation}) {
 
@@ -32,7 +30,7 @@ function AuthScreen ({navigation}) {
     };
 
     const onLoggedIn = token => {
-        fetch(`${API_URL}/private`, {
+        fetch(`${global.NodeJS_URL}/private`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,11 +53,11 @@ function AuthScreen ({navigation}) {
                     setMessage(jsonRes.message);
                 }
             } catch (err) {
-                console.log(err);
+             //   console.log(err);
             };
         })
         .catch(err => {
-            console.log(err);
+         //   console.log(err);
         });
     }
 
@@ -69,7 +67,7 @@ function AuthScreen ({navigation}) {
             name,
             password,
         };
-        fetch(`${API_URL}/${isLogin ? 'login' : 'signup'}`, {
+        fetch(`${global.NodeJS_URL}/${isLogin ? 'login' : 'signup'}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,11 +85,11 @@ function AuthScreen ({navigation}) {
                     setIsError(false);
                 }
             } catch (err) {
-                console.log(err);
+               // console.log(err);
             };
         })
         .catch(err => {
-            console.log(err);
+          //  console.log(err);
         });
     };
 

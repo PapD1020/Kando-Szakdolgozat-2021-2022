@@ -1,5 +1,4 @@
-import React from "react";
-import { Button, PermissionsAndroid, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
+import {PermissionsAndroid } from "react-native";
 
 export const requestCameraPermission = async () => {
   try {
@@ -16,9 +15,9 @@ export const requestCameraPermission = async () => {
       }
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log("You can use the camera");
+    //  console.log("You can use the camera");
     } else {
-      console.log("Camera permission denied");
+    //  console.log("Camera permission denied");
     }
   } catch (err) {
     console.warn(err);
@@ -40,9 +39,9 @@ export const requestStoragePermission = async () => {
         }
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("You can use the camera");
+    //    console.log("You can use the camera");
       } else {
-        console.log("Camera permission denied");
+     //   console.log("Camera permission denied");
       }
     } catch (err) {
       console.warn(err);

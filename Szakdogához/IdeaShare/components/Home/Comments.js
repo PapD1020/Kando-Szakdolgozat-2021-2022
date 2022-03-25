@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, Dimensions, StyleSheet, Pressable } from "react-native";
+import { Text, Image, StyleSheet, Pressable } from "react-native";
 import { SwipeablePanel } from 'rn-swipeable-panel';
 import * as ImagePicker from 'expo-image-picker';
 
