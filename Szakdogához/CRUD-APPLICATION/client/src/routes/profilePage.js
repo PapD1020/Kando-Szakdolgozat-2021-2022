@@ -15,6 +15,9 @@ export default function ProfileUpdate(){
     const [UserSNUpd, setUserSNUpd] = useState('');
     const [UserEmailUpd, setUserEmailUpd] = useState('');
     const [LoginStatus, setLoginStatus] = useState('');
+    var useId = () => {
+        
+    }
 
     const current = new Date();
     const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
@@ -39,6 +42,8 @@ export default function ProfileUpdate(){
             //console.log("Are we logged in: " + JSON.stringify(response));
             if(response.data.loggedIn === true){
                 setLoginStatus(response.data.user[0].UserUn);
+                GotUserId = response.data.user[0].UserId;
+                alert("response.data.user[0].UserId: " + response.data.user[0].UserId + " " + "UserId: " + GotUserId);
             }
         });
     }, []);
@@ -47,8 +52,9 @@ export default function ProfileUpdate(){
     const submitUserDataUpd = (userId) => {
   
     //postName - backend variable name
-        Axios.put(`http://localhost:3001/api/update/user/${userId}`, { //URL for our api (node.js backend)
+        Axios.put(`http://localhost:3001/api/update/user/userId`, { //URL for our api (node.js backend)
         //userUn must be the same as in back-end index.js req.body.userUn !!!
+        userId: GotUserId,
         userUn: UserUnUpd,
         userPP: UserPPUpd,
         userPw: UserPwUpd,
@@ -57,11 +63,12 @@ export default function ProfileUpdate(){
         userEmail: UserEmailUpd,
         userCreatedAt: date,
         userUpdatedAt: date
+
         }).then((response) => 
             console.log("Update user response: " + JSON.stringify(response))
         );
-
-        alert("Successfully updated as: ");
+        alert("Successfully updated as maga a változó: " + GotUserId);
+        alert("Successfully updated as: " + userId);
     };
 
     return(

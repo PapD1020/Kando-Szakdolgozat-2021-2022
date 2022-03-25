@@ -115,7 +115,14 @@ export default function Login(){
                     <button onClick={userAuthenticated}>Check if authenticated</button>
                 )}
                 
-                <input type="submit" value={"Login"}/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
+                {!LoginStatus && (
+                    <input type="submit" value={"Login"}/>
+                )}
+                
+
+                {LoginStatus && (
+                    <h1>{LoginStatus}</h1>
+                )}
             </form>
         </div>
     );

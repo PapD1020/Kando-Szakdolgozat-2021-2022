@@ -18,6 +18,10 @@ export default function ProtectedRoutes(){
                 setAuthStatus(response.data.isUserAuth);
                 alert("Auth status eldöntés után: " + AuthStatus);
             }
+            else{
+                setAuthStatus(false);
+                alert("Session terminated. You have been logged out.");
+            }
             console.log("isUserAuth response: " + JSON.stringify(response.data));
             console.log(response.data.isUserAuth);
         });
