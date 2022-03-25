@@ -21,7 +21,7 @@ export default function Article(){
     const [getData, setData] = useState([]);
 
 
-    const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
+    //const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
     useEffect(() => {
       lastFetchedArticleItemId = 1;
     }, []);
