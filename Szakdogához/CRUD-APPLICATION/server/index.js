@@ -482,7 +482,7 @@ app.post('/api/login/user', (req, res) => {
 //USER - Profile page (data Update)
 app.put('/api/update/user/userId', (req, res) => {
 
-    const userId = req.params.userId;
+    const userId = req.body.userId;
     const userUn = req.body.userUn;
     const userPP = req.body.userPP;
     const userPw = req.body.userPw;
@@ -491,19 +491,28 @@ app.put('/api/update/user/userId', (req, res) => {
     //születési dátumot ne tudjon már véltoztatni
     const userEmail = req.body.userEmail;
     const userUpdatedAt = req.body.userUpdatedAt;
-    const sqlUpdate = "UPDATE Users SET UserUn = ?, UserPP = ?, UserPw = ?, UserFN = ?, UserSN = ?, UserEmail = ?, UserUpdatedAt = ? WHERE UserId = ?";
 
-    db.query(sqlUpdate, [userUn, userPP, userPw, userFN, userSN, userEmail, userUpdatedAt, userId], (err, result) => {                       //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+    bcrypt.hash(userPw, saltRounds, (err, hash) => {
+
         if(err){
-            console.log("Users Profile data UPDATE error: " + err);
+            console.log("Update password - bcrypt error: " + err);
         }
+
+        const sqlUpdate = "UPDATE Users SET UserUn = ?, UserPP = ?, UserPw = ?, UserFN = ?, UserSN = ?, UserEmail = ?, UserUpdatedAt = ? WHERE UserId = ?";
+
+        db.query(sqlUpdate, [userUn, userPP, hash, userFN, userSN, userEmail, userUpdatedAt, userId], (err, result) => {                       //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+            if(err){
+                console.log("Users Profile data UPDATE error: " + err);
+            }
+        });
     });
 });
 
 /**********************************************Article - Update********************************************/
 //ARTICLE - Edit Article (data update)
-app.put('/api/update/article:articleId', (req, res) => {
+app.put('/api/update/article/articleId', (req, res) => {
 
+    const articleId = req.body.articleId;
     const articleName = req.body.articleName;
     const articleSmDescr = req.body.articleSmDescr;
     const articleMDescr = req.body.articleMDescr;
@@ -513,7 +522,7 @@ app.put('/api/update/article:articleId', (req, res) => {
     
     const sqlUpdate = "UPDATE Articles SET ArticleName = ?, ArticleSmDescr = ?, ArticleMDescr = ?, ArticleImg = ?, ArticleType = ?, ArticleUpdatedAt = ? WHERE ArticleId = ?";
 
-    db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleUpdatedAt], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleUpdatedAt, articleId], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
         if(err){
             console.log("Artcile update err: " + err);
         }

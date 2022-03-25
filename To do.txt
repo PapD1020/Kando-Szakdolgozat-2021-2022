@@ -9,3 +9,8 @@
 //Profile updateban, hogy nem lehet ugyan az ami eddig volt
 /Registrationnál ne sql adatbázis dobjon hibát ha vmi unique és mondjuk ugyan olyan user name vel próbál meg regisztrálni
 //edit profile és edit article, csak bejelentkezett user tehesse. A változtatások a usernél az id alapján, az új article, hogy legyen a userhez kötve, aki csinálta
+
+
+//FONTOS
+LOGOUT, cokkie, token törlés
+Ha megváltoztatom a bejelentkezett user adatait, akkor uagyan úgy a kijeletnkezve elérhető volt minden.

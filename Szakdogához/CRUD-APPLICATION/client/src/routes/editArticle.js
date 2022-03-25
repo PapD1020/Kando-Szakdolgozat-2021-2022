@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { useForm } from "react-hook-form";
 import Axios from 'axios';
 
@@ -14,6 +14,8 @@ export default function CreateArticle(){
     const [ArticleNameList, setArticleNameList] = useState([]);
     
     const [LoginStatus, setLoginStatus] = useState('');
+
+    const GotArticleId = useRef(null);
 
     Axios.defaults.withCredentials = true;
 
@@ -38,6 +40,7 @@ export default function CreateArticle(){
         //console.log("Are we logged in: " + JSON.stringify(response));
             if(response.data.loggedIn === true){
                 setLoginStatus(response.data.user[0].UserUn);
+                GotArticleId.current = response.data.article[0].ArticleId;
             }
         });
     }, []);
