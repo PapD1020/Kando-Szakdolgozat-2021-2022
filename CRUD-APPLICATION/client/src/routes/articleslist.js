@@ -164,10 +164,10 @@ export default function Article(){
                             
                            <td>
                            
-                           <Button variant="primary" onClick={() => {ArticleSetting(val.ArticleId)}}>Setting</Button>
+                           <td><Button variant="primary" onClick={() => {ArticleSetting(val.ArticleId)}}>Setting</Button></td>
                          
                               
-                          <Button onClick={() => {deleteArticle(val.ArticleName)}}>Delete</Button>
+                           <td><Button onClick={() => {deleteArticle(val.ArticleName)}}>Delete</Button></td>
                           
                             </td>
                             </tr> 

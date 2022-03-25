@@ -294,6 +294,7 @@ app.delete('/api/delete/user/:userUn', (req, res) => {
 app.put('/api/update/user', (req, res) => {
     const id=req.body.userId;
     const name = req.body.userUn;
+    const pimg = req.body.userPP;
     const password =req.body.userPw;
     const firstname= req.body.userFN;
     const secondname= req.body.userSN;
@@ -301,9 +302,9 @@ app.put('/api/update/user', (req, res) => {
     const userE = req.body.userEmail;
     const userPL = req.body.userPL;
     const updated = req.body.userUpdatedAt;
-    const sqlUpdate = "UPDATE users SET UserUn = ?, UserPw = ?, UserFN=?, UserSN=?,UserDob = ?, UserEmail = ?,UserPL=?, UserUpdatedAt = ? WHERE UserId = ?";
+    const sqlUpdate = "UPDATE Users SET UserUn = ?, UserPw = ?,UserPP = ?, UserFN=?, UserSN=?,UserDob = ?, UserEmail = ?,UserPL=?, UserUpdatedAt = ? WHERE UserId = ?";
 
-    db.query(sqlUpdate, [name, password, firstname, secondname, userdob, userE,userPL, updated,id ], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [name, password,pimg, firstname, secondname, userdob, userE,userPL, updated,id ], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
         if(err){
             console.log("Users UPDATE error: " + err);
         }
