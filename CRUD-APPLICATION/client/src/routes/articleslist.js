@@ -10,13 +10,14 @@ export default function Article(){
   
   const handleClose = () => setShow(false);
 
-  const [ArticleName, setArticleName] = useState('');
-  const [ArticleSmDescr, setArticleSmDescr] = useState('');
-  const [ArticleMDescr, setArticleMDescr] = useState('');
-  const [ArticleImg, setArticleImg] = useState('');
-  const [ArticleStatus, setArticleStatus] = useState('');
-  const [ArticleType, setArticleType] = useState('');
   
+  var ArticleName = '';
+  var ArticleSmDescr = '';
+  var ArticleMDescr = '';
+  var ArticleImg = '';
+  var ArticleStatus = '';
+  var ArticleType = '';
+
 
     const [ArticleNameList, setArticleNameList] = useState([]); //'' hibás, [] kell használni
     const [ArticleNameSetting, setArticleNameSetting] = useState([]);
@@ -66,7 +67,6 @@ export default function Article(){
     
    //PUT - POST
    const updateArticleStatus = (Articleid) =>{
-    
   Axios.put('http://localhost:3001/api/update/article', {
     articleId : Articleid,
     articleName: ArticleName,
@@ -80,7 +80,6 @@ export default function Article(){
 
   console.log("Article ArticleUpdatedAt: " + date);
 
-  setArticleStatus("");
   alert("Successfuly changed! Please click on the refresh button.");
   setShow(false);
   refreshArticleData();
@@ -95,27 +94,37 @@ export default function Article(){
           {ArticleNameSetting.map((val) => {
                       return(
                         <div >
-                          <p>Name:<input type="text" name="articleName" defaultValue={val.ArticleName} onChangeCapture={(e) => {
-                            setArticleName(e.target.value)}}></input> </p>
+                          <p>Name:<input type="text" name="articleName" defaultValue={val.ArticleName} 
+                          onBlur={(e) => {ArticleName = e.target.value}}></input> </p>
 
-                          <p>Small description:  <input type="text" name="articleSmDescr" defaultValue={val.ArticleSmDescr} onChangeCapture={(e) => {
-                            setArticleSmDescr(e.target.value)}}></input> </p>
+                          <p>Small description:  <input type="text" name="articleSmDescr" defaultValue={val.ArticleSmDescr} 
+                          onBlur={(e) => {ArticleSmDescr = e.target.value}}></input> </p>
 
-                          <p>Main description:  <textarea type="text" name="articleMDescr" defaultValue={val.ArticleMDescr} onChangeCapture={(e) => {
-                              setArticleMDescr(e.target.value)}}></textarea> </p>
+                          <p>Main description:  <textarea type="text" name="articleMDescr" defaultValue={val.ArticleMDescr} 
+                          onBlur={(e) => {ArticleMDescr=e.target.value}}></textarea> </p>
 
-                          <p>Image: <input type="text" name="articleImg" defaultValue={val.ArticleImg} onChangeCapture={(e) => {
-                            setArticleImg(e.target.value)}}></input></p>
+                          <p>Image: <input type="text" name="articleImg" defaultValue={val.ArticleImg} 
+                          onBlur={(e) => {ArticleImg=e.target.value}}></input></p>
                             
-                          <p>Type: <input type="text" name="articleType" defaultValue={val.ArticleType} onChangeCapture={(e) => {
-                            setArticleType(e.target.value)}}></input></p>
-                          <p>Status: <input type="number" name="articleStatus" defaultValue={val.ArticleStatus} onChangeCapture={(e) => {
-                             setArticleStatus(e.target.value)}}></input> </p>
+                          <p>Type: <input type="text" name="articleType" defaultValue={val.ArticleType} 
+                          onBlur={(e) => {ArticleType=e.target.value}}></input></p>
+
+                          <p>Status: <input type="number" name="articleStatus" defaultValue={val.ArticleStatus} 
+                          onBlur={(e) => {ArticleStatus=e.target.value}}></input> </p>
                           <p>Created at: {val.ArticleCreatedAt}</p>
                           <p>Updated at: {val.ArticleUpdatedAt}</p>
 
                                         
-                          <Button onClick={() => {updateArticleStatus(val.ArticleId)}}>Update</Button>
+                          <Button onClick={() => {
+                            if ( ArticleName === "" ) { ArticleName = val.ArticleName }
+                            if ( ArticleSmDescr === "" ) { ArticleSmDescr = val.ArticleSmDescr}
+                            if ( ArticleMDescr === "" ) { ArticleMDescr = val.ArticleMDescr }
+                            if ( ArticleImg === "" ) { ArticleImg = val.ArticleImg }
+                            if ( ArticleType === "" ) { ArticleType = val.ArticleType }
+                            if ( ArticleStatus=== "" ) { ArticleStatus = val.ArticleStatus }
+                            updateArticleStatus(val.ArticleId)
+                            
+                            }}>Update</Button>
                          
                         </div>
                       )

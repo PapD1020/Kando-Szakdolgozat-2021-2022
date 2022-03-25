@@ -31,7 +31,7 @@ import Axios from 'axios';
     //On page load get users
    useEffect(() => {
 
-  Axios.get('http://localhost:3001/api/get/users').then((response) => {
+  Axios.get('http://localhost:3001/api/get/user').then((response) => {
      setUsersNameList(response.data);
     });
     }, []);
@@ -39,7 +39,7 @@ import Axios from 'axios';
 
      const UserSetting = (userId) =>{
        setShow(true);
-    Axios.get(`http://localhost:3001/api/get/users/${userId}`).then((response) => {
+    Axios.get(`http://localhost:3001/api/get/user/${userId}`).then((response) => {
   
      setUsersNameSettings(response.data);
       //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
@@ -47,7 +47,7 @@ import Axios from 'axios';
      
     //GET - USERS
     const refreshUserData = () => {
-      Axios.get('http://localhost:3001/api/get/users').then((response) => {
+      Axios.get('http://localhost:3001/api/get/user').then((response) => {
       setUsersNameList(response.data);
     });
    };
@@ -56,7 +56,7 @@ import Axios from 'axios';
   
    //DELETE - USERS
   const deleteUser = (user) =>{
-    Axios.delete(`http://localhost:3001/api/delete/users/${user}`); // with altgr+7 you can add variables to it
+    Axios.delete(`http://localhost:3001/api/delete/user/${user}`); // with altgr+7 you can add variables to it
   
    alert("Successfuly deleted. Please click on the refresh button.")
     //kell frissítés, hogy eltünjön a törölt, submitos nem működik
@@ -69,7 +69,7 @@ import Axios from 'axios';
   
   //PUT - USERS
   const updateUser = (userid) =>{
-     Axios.put('http://localhost:3001/api/update/users', {
+     Axios.put('http://localhost:3001/api/update/user', {
       userId: userid,
       userUn: UserUn,
       userPw: UserPw,
@@ -97,10 +97,10 @@ import Axios from 'axios';
                         <div >
                           
                            <p>Username:<input type="text" name="userUn" placeholder={val.UserUn} onChangeCapture={(e) => {
-                                 setUserUn(e.target.value); }}></input> </p>
+                                 setUserUn(e.target.value) }}></input> </p>
 
                            <p>Password:<input type="password" name="userPw" placeholder={val.UserPw} onChangeCapture={(e) => {
-                                 setUserPw(e.target.value); }}></input></p>
+                                 setUserPw(e.target.value) }}></input></p>
                          
                           <p>First name: <input type="text" name="userFN" placeholder={val.UserFN} onChangeCapture={(e) => {
                             setUserFN(e.target.value)}}></input></p>
@@ -110,7 +110,7 @@ import Axios from 'axios';
 
                           <p>Date of birth:  <input type="date" name="userDob" placeholder={val.UserDob} onChangeCapture={(e) => {
                             setUserDob(e.target.value)}}></input></p>
-                          <p>Permisson Level:  <input type="date" name="UserPL" placeholder={val.UserPL} onChangeCapture={(e) => {
+                          <p>Permisson Level:  <input type="number" name="UserPL" placeholder={val.UserPL} onChangeCapture={(e) => {
                             setUserPL(e.target.value)}}></input></p>
                           <p>Email: <input type="email" name="userEmail" placeholder={val.UserEmail} onChangeCapture={(e) => {
                            setUserEmail(e.target.value); }}></input></p>

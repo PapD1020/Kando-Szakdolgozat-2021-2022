@@ -225,7 +225,19 @@ console.log(name);
 /*
 * USERS CRUD
 */
+//GET - Post single
+app.get('/api/get/user/:userId', (req, res) => {
+    const id = req.params.userId;
+    const sqlSelect = "SELECT * FROM Users WHERE UserId = ?";
+    db.query(sqlSelect, id, (err, result) => {
+        if(err){
+            console.log("Article GET error: " + err);
+        }
 
+        console.log(result);                //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
 //GET - USERS
 app.get('/api/get/user', (req, res) => {
     
