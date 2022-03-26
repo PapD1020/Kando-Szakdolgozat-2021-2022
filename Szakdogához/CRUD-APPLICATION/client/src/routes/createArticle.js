@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { useForm } from "react-hook-form";
 import Axios from 'axios';
 
@@ -15,6 +15,8 @@ export default function CreateArticle(){
     const [LoginStatus, setLoginStatus] = useState('');
 
     Axios.defaults.withCredentials = true;
+
+    const GotUserId = useRef(null);
 
     const current = new Date();
     const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
@@ -37,6 +39,7 @@ export default function CreateArticle(){
         //console.log("Are we logged in: " + JSON.stringify(response));
             if(response.data.loggedIn === true){
                 setLoginStatus(response.data.user[0].UserUn);
+                GotUserId.current = response.data.user[0].UserId;
             }
         });
     }, []);
@@ -45,6 +48,7 @@ export default function CreateArticle(){
 
         //articleName - backend variable name
         Axios.post('http://localhost:3001/api/insert/article', { //URL for our api (node.js backend)
+          userId: GotUserId.current,
           articleName: ArticleName,
           articleSmDescr: ArticleSmDescr,
           articleMDescr: ArticleMDescr,
@@ -94,7 +98,7 @@ export default function CreateArticle(){
                     <input type="text" className="form-control" {
                         ...register("articleName", {
                             required: true,
-                            minLength: 6,
+                            minLength: 1,
                             maxLength: 20,
                             pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
                         })
@@ -113,7 +117,7 @@ export default function CreateArticle(){
                     <input type="text" className="form-control" {
                         ...register("articleSmDescr", {
                             required: true,
-                            minLength: 8,
+                            minLength: 1,
                             maxLength: 100,
                             pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
                         })
@@ -132,7 +136,7 @@ export default function CreateArticle(){
                     <input type="text" className="form-control" {
                         ...register("articleMDescr", {
                             required: true,
-                            minLength: 150,
+                            minLength: 1,
                             maxLength: 500,
                             pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
                         })
@@ -151,7 +155,7 @@ export default function CreateArticle(){
                     <input type="url" className="form-control" {
                         ...register("articleImg", {
                             required: true, //kötelező legyen?
-                            minLength: 20, //Mennyi legyen?
+                            minLength: 1, //Mennyi legyen?
                             maxLength: 500, //Mennyi legyen?
                         })
                     }onChange={(e) => {

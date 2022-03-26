@@ -141,6 +141,33 @@ app.get('/api/get/article', (req, res) => {
     });
 });
 
+/**Article kiválasztása editeléshez - bejelentkezett user id-ja alapján kilistásázásuk**/
+//20-asával lekérdezés
+app.get('/api/get/article/byId', (req, res) => {
+
+    //const item = req.body.item-1; POST-hoz body kérés
+    const item = req.get("item")-1;
+    const userId = req.get("userId");
+    console.log("item: " + item);
+    console.log("userId: " + userId);
+    //SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = 'W3Zk4vHXzBnAhv9BptcZI' ORDER BY Articles.ArticleId ASC;
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = " + "'" + userId + "'" + " ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET " + item + "";
+    console.log("SQL SELECT: " + sqlSelect);
+    db.query(sqlSelect, [userId], (err, result) => {
+        if(err){
+            console.log("Article GET error: " + err);
+        }
+        if (result.length == 0){
+            console.log("no result");
+            res.status(404).send('Not found');
+        }else{
+            console.log(result);
+            res.send(result);
+        }
+    });
+});
+
+/*
 //POST - Article
 app.post('/api/insert/article', (req, res) => {
 
@@ -165,6 +192,45 @@ app.post('/api/insert/article', (req, res) => {
         console.log("Article createdAt: " + articleCreatedAt);
         console.log("Article type: " + articleType);
         res.send(result);
+    });
+});
+*/
+
+//POST - Article by userId
+app.post('/api/insert/article/byId', (req, res1, res2) => {
+
+    const articleId = Nanoid.nanoid();
+    const userId = req.body.userId;
+    const articleName = req.body.articleName;
+    const articleSmDescr = req.body.articleSmDescr;
+    const articleMDescr = req.body.articleMDescr;
+    const articleImg = req.body.articleImg;
+    const articleType = req.body.articleType;
+    const articleStatus = 1;
+    const articleCreatedAt = req.body.articleCreatedAt;
+    const articleUpdatedAt = req.body.articleUpdatedAt;
+
+    const sqlInsert1 = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleType`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
+    db.query(sqlInsert1, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleCreatedAt, articleUpdatedAt], (err, result) => {
+
+        if(err){
+            console.log("Article POST error: " + err);
+        }
+
+        console.log("Nanoid: " + articleId);
+        console.log("Article createdAt: " + articleCreatedAt);
+        console.log("Article type: " + articleType);
+        res1.send(result);
+    });
+
+    const sqlInsert2 = "INSERT INTO `ArticleUser`(`Uid`, `Aid`) VALUES (?, ?)";
+    db.query(sqlInsert2, [userId, articleId], (err, result) => {
+
+        if(err){
+            console.log("Article post, kapcsoló tábla error: " + err);
+        }
+
+        res2.send(result);
     });
 });
 
