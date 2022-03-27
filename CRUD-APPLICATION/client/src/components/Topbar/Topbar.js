@@ -2,6 +2,7 @@ import React from "react";
 import "./topbar.css";
 import {Outlet, Link} from 'react-router-dom';
 import { NotificationsNone, Language, Settings, Accessibility,AccountTree} from "@material-ui/icons";
+import { Button } from "react-bootstrap";
 
 export default function Topbar() {
     return (
@@ -13,13 +14,10 @@ export default function Topbar() {
 
           <div className="topMiddle">
          
-               
+      
+                  <Link to="/articleslist"><Button>Articleslist</Button></Link> {" "}
                   
-                  
-                  
-                  <Link to="/articleslist"><AccountTree/> </Link> {" "}
-                  
-                  <Link to="/userlist"><Accessibility/></Link> {" "}
+                  <Link to="/userlist"><Button>Userlist</Button></Link> {" "}
                   
                   {/* <Link to="/all">All</Link>  */}
                 
