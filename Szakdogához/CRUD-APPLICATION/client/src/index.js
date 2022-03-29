@@ -11,6 +11,7 @@ import ProfilePage from "./routes/profilePage";
 import Articles from "./routes/articles";
 import ProtectedRoutes from "./ProtectedRoutes";
 import ChooseArticles from "./routes/chooseArticles"
+import TestModal from "./routes/modalTest"
 
 const rootElement = document.getElementById("root");
 render(
@@ -20,6 +21,7 @@ render(
       <Route path="/" element={<App />}>
         <Route path="login" element={<Login />}></Route>
         <Route path="registration" element={<Registration />}></Route>
+        <Route path="testModal" element={<TestModal />}></Route>
         <Route element={<ProtectedRoutes/>}>
           <Route path="articles" element={<Articles />}></Route>
           <Route path="createArticle" element={<CreateArticle />}></Route>

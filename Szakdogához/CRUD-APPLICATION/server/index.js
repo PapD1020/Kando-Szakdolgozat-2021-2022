@@ -53,7 +53,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        expires: 60 * 60 * 24 //ez 24 óra 
+        expires: 60 * 60 * 24 * 2 //ez 24 óra = 60 * 60 * 24
     },
 }));
 
