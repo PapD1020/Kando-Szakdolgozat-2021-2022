@@ -16,6 +16,8 @@ export default function ProfileUpdate(){
     const [UserEmailUpd, setUserEmailUpd] = useState('');
     const [LoginStatus, setLoginStatus] = useState('');
 
+    const [UserUpdList, setUserUpdList] = useState([]);
+
     const GotUserId = useRef(null);
 
     const current = new Date();
@@ -44,8 +46,28 @@ export default function ProfileUpdate(){
                 GotUserId.current = response.data.user[0].UserId;
                 //alert("response.data.user[0].UserId: " + response.data.user[0].UserId + " " + "UserId: " + GotUserId.current);
             }
+        }).then(() => {
+            Axios.get("http://localhost:3001/api/get/userById",{
+            headers: {
+                'content-type': "application/json",
+                'userIdUpd': GotUserId.current
+                }
+            })
+            alert("frontend userId: " + GotUserId.current);
         });
     }, []);
+
+    /*
+    useEffect(() => {
+        Axios.get("http://localhost:3001/api/get/userById",{
+            headers: {
+                'content-type': "application/json",
+                'userIdUpd': GotUserId.current
+            }
+        })
+        alert("frontend userId: " + GotUserId.current);
+    }, []);
+    */
 
     //POST - USERS
     const submitUserDataUpd = (userId) => {
@@ -72,101 +94,114 @@ export default function ProfileUpdate(){
 
     return(
         <div>
-
-        <form onSubmit={handleSubmit(onSubmit)}>
-
-            <div className="form-group">
-                <label>User name:</label>
-                <input type="text" className="form-control" {
-                    ...register("userUnUpd", {
-                        minLength: 6,
-                        maxLength: 20,
-                        pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
-                    })
-                }onChange={(e) => {
-                    setUserUnUpd(e.target.value);
-                }}/>
-                
-                {errors?.userUnUpd?.type === "minLength" && <div><h5>Your user name is too short.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
-                {errors?.userUnUpd?.type === "maxLength" && <div><h5>Your user name is too long.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
-                {errors?.userUnUpd?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+        {UserUpdList.map((val) => {
+            return(
+                <div>
+        
+                <form onSubmit={handleSubmit(onSubmit)}>
+        
+                    <div className="form-group">
+                        <label>User name:</label>
+                        <input type="text" className="form-control" placeholder={val.userNameUpd}{
+                            ...register("userUnUpd", {
+                                minLength: 6,
+                                maxLength: 20,
+                                pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
+                            })
+                        }onChange={(e) => {
+                            setUserUnUpd(e.target.value);
+                        }}/>
+                        
+                        {errors?.userUnUpd?.type === "minLength" && <div><h5>Your user name is too short.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
+                        {errors?.userUnUpd?.type === "maxLength" && <div><h5>Your user name is too long.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
+                        {errors?.userUnUpd?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                    </div>
+                    
+                    <div className="form-group">
+                        <label>User profile picture:</label>
+                        <input type="url" className="form-control" placeholder={val.userPPUpd}{
+                            ...register("userPPUpd", {
+                                minLength: 8,
+                                maxLength: 100,
+                            })
+                        }onChange={(e) => {
+                            setUserPPUpd(e.target.value);
+                        }}/>
+        
+                        {errors?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 8 and 100 characters.</p></div>}
+                        {errors?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 8 and 100 characters.</p></div>}
+                    </div>
+        
+                    <div className="form-group">
+                        <label>User password: </label>
+                        <input type="password" className="form-control" placeholder={val.userPwUpd}{
+                            ...register("userPwUpd", {
+                                minLength: 8,
+                                maxLength: 16,
+                            })
+                        }onChange={(e) => {
+                            setUserPwUpd(e.target.value);
+                        }}/>
+        
+                        {errors?.userPwUpd?.type === "minLength" && <div><h5>Your password is too short.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
+                        {errors?.userPwUpd?.type === "maxLength" && <div><h5>Your password is too long.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
+                    </div>
+        
+                    <div className="form-group">
+                        <label>User first name:</label>
+                        <input type="text" className="form-control" placeholder={val.userFNUpd}{
+                            ...register("userFNUpd", {
+                                minLength: 3, //Mennyi legyen?
+                                maxLength: 20, //Mennyi legyen?
+                            })
+                        }onChange={(e) => {
+                            setUserFNUpd(e.target.value);
+                        }}/>
+        
+                        {errors?.userFNUpd?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
+                        {errors?.userFNUpd?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
+                    </div>
+        
+                    <div className="form-group">
+                        <label>User second name:</label>
+                        <input type="text" className="form-control" placeholder={val.userSNUpd}{
+                            ...register("userSNUpd", {
+                                minLength: 3, //Mennyi legyen?
+                                maxLength: 20, //Mennyi legyen?
+                            })
+                        }onChange={(e) => {
+                            setUserSNUpd(e.target.value);
+                        }}/>
+        
+                        {errors?.userSNUpd?.type === "minLength" && <div><h5>Your second name is too short.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
+                        {errors?.userSNUpd?.type === "maxLength" && <div><h5>Your second name is too long.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
+                    </div>
+        
+                    <div className="form-group">
+                        <label>User email: </label>
+                        <input type="email" className="form-control" placeholder={val.userEmailUpd}{
+                            ...register("userEmailUpd", {
+                                //vmi must contain @ ellenőrzés stb
+                            })
+                        }onChange={(e) => {
+                            setUserEmailUpd(e.target.value);
+                        }}/>
+                    </div>
+        
+                    <input type="submit" onClick={() => {
+                        if(UserUnUpd === ""){UserUnUpd = val.UserUnUpd}
+                        if(UserPPUpd === ""){UserPPUpd = val.UserPPUpd}
+                        if(UserPwUpd === ""){UserPwUpd = val.UserPwUpd}
+                        if(UserFNUpd === ""){UserFNUpd = val.UserFNUpd}
+                        if(UserSNUpd === ""){UserSNUpd = val.UserSNUpd}
+                        if(UserEmailUpd === ""){UserEmailUpd = val.UserEmailUpd}
+                    }}/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
+                </form>
+        
+                <h1>{LoginStatus}</h1>
             </div>
-            
-            <div className="form-group">
-                <label>User profile picture:</label>
-                <input type="url" className="form-control" {
-                    ...register("userPPUpd", {
-                        minLength: 8,
-                        maxLength: 100,
-                    })
-                }onChange={(e) => {
-                    setUserPPUpd(e.target.value);
-                }}/>
-
-                {errors?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 8 and 100 characters.</p></div>}
-                {errors?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 8 and 100 characters.</p></div>}
-            </div>
-
-            <div className="form-group">
-                <label>User password: </label>
-                <input type="password" className="form-control" {
-                    ...register("userPwUpd", {
-                        minLength: 8,
-                        maxLength: 16,
-                    })
-                }onChange={(e) => {
-                    setUserPwUpd(e.target.value);
-                }}/>
-
-                {errors?.userPwUpd?.type === "minLength" && <div><h5>Your password is too short.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
-                {errors?.userPwUpd?.type === "maxLength" && <div><h5>Your password is too long.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
-            </div>
-
-            <div className="form-group">
-                <label>User first name:</label>
-                <input type="text" className="form-control" {
-                    ...register("userFNUpd", {
-                        minLength: 3, //Mennyi legyen?
-                        maxLength: 20, //Mennyi legyen?
-                    })
-                }onChange={(e) => {
-                    setUserFNUpd(e.target.value);
-                }}/>
-
-                {errors?.userFNUpd?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
-                {errors?.userFNUpd?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
-            </div>
-
-            <div className="form-group">
-                <label>User second name:</label>
-                <input type="text" className="form-control" {
-                    ...register("userSNUpd", {
-                        minLength: 3, //Mennyi legyen?
-                        maxLength: 20, //Mennyi legyen?
-                    })
-                }onChange={(e) => {
-                    setUserSNUpd(e.target.value);
-                }}/>
-
-                {errors?.userSNUpd?.type === "minLength" && <div><h5>Your second name is too short.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
-                {errors?.userSNUpd?.type === "maxLength" && <div><h5>Your second name is too long.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
-            </div>
-
-            <div className="form-group">
-                <label>User email: </label>
-                <input type="email" className="form-control" {
-                    ...register("userEmailUpd", {
-                        //vmi must contain @ ellenőrzés stb
-                    })
-                }onChange={(e) => {
-                    setUserEmailUpd(e.target.value);
-                }}/>
-            </div>
-
-            <input type="submit" /> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
-        </form>
-
-        <h1>{LoginStatus}</h1>
-    </div>
-    );  
+            ); 
+        })}
+        </div>
+    )
 }

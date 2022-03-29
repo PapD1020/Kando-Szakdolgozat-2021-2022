@@ -38,6 +38,11 @@ export default function Article(){
       lastFetchedArticleItemId = 1;
     }, []);
 
+    //ablak
+    const updateArticle = () => {
+      Axios.put("http://localhost:3001/api/update/article/articleById")
+    }
+
     const fetchMoreData = () => {
       setTimeout(() => {
         
@@ -112,7 +117,9 @@ class Card extends React.PureComponent {
             {data.ArticleMDescr}
             {data.ArticleImg}
           </div> 
-          <button>Edit</button>
+          <button onClick={() => {
+            alert(data.AId, data.ArticleName, data.ArticleSmDescr, data.ArticleMDescr, data.ArticleImg);
+          }}>Edit</button>
         </div>
       )
   }

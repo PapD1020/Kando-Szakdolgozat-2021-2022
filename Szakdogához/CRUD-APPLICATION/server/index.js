@@ -167,37 +167,8 @@ app.get('/api/get/article/byId', (req, res) => {
     });
 });
 
-/*
-//POST - Article
-app.post('/api/insert/article', (req, res) => {
-
-    const articleId = Nanoid.nanoid();
-    const articleName = req.body.articleName;
-    const articleSmDescr = req.body.articleSmDescr;
-    const articleMDescr = req.body.articleMDescr;
-    const articleImg = req.body.articleImg;
-    const articleType = req.body.articleType;
-    const articleStatus = 1;
-    const articleCreatedAt = req.body.articleCreatedAt;
-    const articleUpdatedAt = req.body.articleUpdatedAt;
-
-    const sqlInsert = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleType`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
-    db.query(sqlInsert, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleCreatedAt, articleUpdatedAt], (err, result) => {
-
-        if(err){
-            console.log("Article POST error: " + err);
-        }
-
-        console.log("Nanoid: " + articleId);
-        console.log("Article createdAt: " + articleCreatedAt);
-        console.log("Article type: " + articleType);
-        res.send(result);
-    });
-});
-*/
-
 //POST - Article by userId
-app.post('/api/insert/article/byId', (req, res1, res2) => {
+app.post('/api/insert/article/byId', (req, res) => {
 
     const articleId = Nanoid.nanoid();
     const userId = req.body.userId;
@@ -210,8 +181,8 @@ app.post('/api/insert/article/byId', (req, res1, res2) => {
     const articleCreatedAt = req.body.articleCreatedAt;
     const articleUpdatedAt = req.body.articleUpdatedAt;
 
-    const sqlInsert1 = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleType`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)"
-    db.query(sqlInsert1, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleCreatedAt, articleUpdatedAt], (err, result) => {
+    const sqlInsert = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleType`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?); INSERT INTO `ArticleUser`(`Uid`, `Aid`) VALUES (?, ?)";
+    db.query(sqlInsert, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleCreatedAt, articleUpdatedAt, userId, articleId], (err, result) => {
 
         if(err){
             console.log("Article POST error: " + err);
@@ -220,17 +191,9 @@ app.post('/api/insert/article/byId', (req, res1, res2) => {
         console.log("Nanoid: " + articleId);
         console.log("Article createdAt: " + articleCreatedAt);
         console.log("Article type: " + articleType);
-        res1.send(result);
-    });
-
-    const sqlInsert2 = "INSERT INTO `ArticleUser`(`Uid`, `Aid`) VALUES (?, ?)";
-    db.query(sqlInsert2, [userId, articleId], (err, result) => {
-
-        if(err){
-            console.log("Article post, kapcsoló tábla error: " + err);
-        }
-
-        res2.send(result);
+        res.send(JSON.stringify(result[0]) + JSON.stringify(result[1]));
+        console.log("Kapcsolótáblás dupla insert 0: " + result[0]);
+        console.log("Kapcsolótáblás dupla insert 1: " + JSON.stringify(result[1]));
     });
 });
 
@@ -576,7 +539,7 @@ app.put('/api/update/user/userId', (req, res) => {
 
 /**********************************************Article - Update********************************************/
 //ARTICLE - Edit Article (data update)
-app.put('/api/update/article/articleId', (req, res) => {
+app.put('/api/update/article/articleById', (req, res) => {
 
     const articleId = req.body.articleId;
     const articleName = req.body.articleName;
@@ -592,6 +555,27 @@ app.put('/api/update/article/articleId', (req, res) => {
         if(err){
             console.log("Artcile update err: " + err);
         }
+    });
+});
+
+//Get user by Id for profilePage default data
+app.get("/api/get/userById", (req, res) => {
+    
+    const userIdUpd = req.get("userIdUpd");
+    console.log("userIdUpd: " + userIdUpd);
+
+    sqlSelect = "SELECT * FROM Users WHERE UserId = " + "'" + userIdUpd + "'";
+    console.log("sqlSelect: " + sqlSelect);
+
+    db.query(sqlSelect, userIdUpd, (err, result) => {
+        if(err){
+            console.log("User get byId error: " + err);
+        }
+
+        console.log("userById result: " + result.data);
+        console.log("userById result: " + result);
+
+        res.send(result);
     });
 });
 

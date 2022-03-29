@@ -48,7 +48,7 @@ export default function CreateArticle(){
     const submitArticleData = () => {
 
         //articleName - backend variable name
-        Axios.put('http://localhost:3001/api/insert/article', { //URL for our api (node.js backend)
+        Axios.put('http://localhost:3001/api/update/articleById', { //URL for our api (node.js backend)
           articleName: ArticleNameUpd,
           articleSmDescr: ArticleSmDescrUpd,
           articleMDescr: ArticleMDescrUpd,
