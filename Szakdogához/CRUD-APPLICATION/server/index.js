@@ -86,19 +86,24 @@ app.get("/", (req, res) => {
 
 //GET - Article
 
-//kikommentelve, Danié, működik, minden Articlet lekér. Helyette: egyesével kérés header alapján
-/*app.get('/api/get/article', (req, res) => {
 
-    const sqlSelect = "SELECT * FROM Articles";
-    db.query(sqlSelect, (err, result) => {
+app.get('/api/get/article/allById', (req, res) => {
+
+    const userId = req.get("userId");
+    console.log("userId: " + userId);
+    
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = " + "'" + userId + "'";
+    console.log("SQL SELECT: " + sqlSelect);
+
+    db.query(sqlSelect, [userId], (err, result) => {
         if(err){
             console.log("Article GET error: " + err);
         }
 
-        console.log("Result:" + result);                //valamiért Object-et kapok terminálban
+        console.log(result);
         res.send(result);
     });
-});*/
+});
 
 /*
 //Egyenkénti lekérdezés

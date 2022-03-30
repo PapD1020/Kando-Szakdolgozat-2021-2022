@@ -57,18 +57,6 @@ export default function ProfileUpdate(){
         });
     }, []);
 
-    /*
-    useEffect(() => {
-        Axios.get("http://localhost:3001/api/get/userById",{
-            headers: {
-                'content-type': "application/json",
-                'userIdUpd': GotUserId.current
-            }
-        })
-        alert("frontend userId: " + GotUserId.current);
-    }, []);
-    */
-
     //POST - USERS
     const submitUserDataUpd = (userId) => {
   

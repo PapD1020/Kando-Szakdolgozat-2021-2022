@@ -116,6 +116,8 @@ class Card extends React.PureComponent {
   closeModal = () => this.setState({ isOpen: false });
 
   render() {
+
+
       const {data} = this.props;
       return(
         <div className="card">
