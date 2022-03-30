@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect,useRef} from "react";
 import '../App.css';
 import Axios from 'axios';
+import { useForm } from "react-hook-form";
 import * as ReactBootStrap from "react-bootstrap";
 import { Button,Modal } from "react-bootstrap";
 
@@ -18,6 +19,16 @@ export default function Article(){
   var ArticleStatus = '';
   var ArticleType = '';
 
+    const {
+      register,
+      handleSubmit,
+      formState: {errors}
+    } = useForm();
+
+    const onSubmit = (data) => {
+        alert(JSON.stringify(data));
+        updateArticleStatus();
+    };
 
     const [ArticleNameList, setArticleNameList] = useState([]); //'' hibás, [] kell használni
     const [ArticleNameSetting, setArticleNameSetting] = useState([]);
@@ -93,39 +104,111 @@ export default function Article(){
           <Modal.Body>
           {ArticleNameSetting.map((val) => {
                       return(
-                        <div >
-                          <p>Name:<input type="text" name="articleName" defaultValue={val.ArticleName} 
-                          onBlur={(e) => {ArticleName = e.target.value}}></input> </p>
+                        <div>
+                          
+                        <form  onSubmit={handleSubmit(onSubmit)}>
+                          <div className="form-group"> 
+                          <label>Name: </label><input type="text" className="form-control" defaultValue={val.ArticleName}{
+                              ...register("articleName",{
+                                required: true,
+                              minLength: 6,
+                              maxLength: 20,
+                              pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
+                              })
 
-                          <p>Small description:  <input type="text" name="articleSmDescr" defaultValue={val.ArticleSmDescr} 
-                          onBlur={(e) => {ArticleSmDescr = e.target.value}}></input> </p>
-
-                          <p>Main description:  <textarea type="text" name="articleMDescr" defaultValue={val.ArticleMDescr} 
-                          onBlur={(e) => {ArticleMDescr=e.target.value}}></textarea> </p>
-
-                          <p>Image: <input type="text" name="articleImg" defaultValue={val.ArticleImg} 
-                          onBlur={(e) => {ArticleImg=e.target.value}}></input></p>
+                            }onBlur={(e) => {ArticleName = e.target.value}}></input>
                             
-                          <p>Type: <input type="text" name="articleType" defaultValue={val.ArticleType} 
-                          onBlur={(e) => {ArticleType=e.target.value}}></input></p>
+                            {errors?.articleName?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a name.</p></div>}
+                            {errors?.articleName?.type === "minLength" && <div><h5>Your article's name is too short.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
+                            {errors?.articleName?.type === "maxLength" && <div><h5>Your article's name is too long.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
+                            {errors?.articleName?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                         </div>
+                        <div className="form-group">   
+                          <label>Small description:</label>  <input type="text" className="form-control" defaultValue={val.ArticleSmDescr} {
+                            ...register("articleSmDescr", {
+                              required: true,
+                              minLength: 8,
+                              maxLength: 100,
+                              pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
+                          })
+                            }onBlur={(e) => {ArticleSmDescr = e.target.value}}></input>
 
-                          <p>Status: <input type="number" name="articleStatus" defaultValue={val.ArticleStatus} 
-                          onBlur={(e) => {ArticleStatus=e.target.value}}></input> </p>
+                            {errors?.articleSmDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a small description of your article.</p></div>}
+                            {errors?.articleSmDescr?.type === "minLength" && <div><h5>Your article's small description is too short.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
+                            {errors?.articleSmDescr?.type === "maxLength" && <div><h5>Your article's small description is too long.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
+                            {errors?.articleSmDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                        </div>
+                        <div className="form-group">  
+                          <label>Main description:</label>  <textarea type="text" className="form-control" name="articleMDescr" defaultValue={val.ArticleMDescr} {
+                            ...register("articleMDescr", {
+                              required: true,
+                              minLength: 8,
+                              maxLength: 100,
+                              pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
+                            })
+                            }onBlur={(e) => {ArticleMDescr=e.target.value}}></textarea> 
+                            {errors?.articleMDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a small description of your article.</p></div>}
+                            {errors?.articleMDescr?.type === "minLength" && <div><h5>Your article's small description is too short.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
+                            {errors?.articleMDescr?.type === "maxLength" && <div><h5>Your article's small description is too long.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
+                            {errors?.articleMDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                        </div>
+                        <div className="form-group">
+                          <label>Image:</label> <input type="url" className="form-control" defaultValue={val.ArticleImg} {
+                                ...register("articleImg", {
+                                    required: true, //kötelező legyen?
+                                    minLength: 20, //Mennyi legyen?
+                                    maxLength: 500, //Mennyi legyen?
+                                })
+                              }onBlur={(e) => {ArticleImg=e.target.value}}/>
+
+                              {errors?.articleImg?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a picture</p></div>}
+                              {errors?.articleImg?.type === "minLength" && <div><h5>Your article's picture URL is too short.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
+                              {errors?.articleImg?.type === "maxLength" && <div><h5>Your article's picture URL is too long.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
+                        </div>   
+                        <div className="form-group">
+                          <label>Type:</label> <select id="types" className="form-control"  required {
+                                ...register("articleType", {
+                                    required: true,
+                                })
+                              }onBlur={(e) => {ArticleType=e.target.value}}>
+                              <option defaultValue={val.ArticleType}>{val.ArticleType}</option>
+                                <option value="Programming">Programming</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div className="invalid-feedback">You must select a article type.</div>
+                        </div>
+                        <div className="form-group">
+                          <label>Status:</label> <select id="status" className="form-control"  required {
+                                ...register("articleType", {
+                                    required: true,
+                                })
+                            } onBlur={(e) => {ArticleStatus=e.target.value}}>
+                              <option defaultValue={val.ArticleStatus} >{val.ArticleStatus}</option>
+                              <option value="-2">Törlés</option>
+                              <option value="-1">Felfüggesztett</option>
+                              <option value="0">Inaktív</option>
+                              <option value="1">Aktív</option>
+                              </select>
+                              <div className="invalid-feedback">You must select a article status.</div>
+                          </div>
                           <p>Created at: {val.ArticleCreatedAt}</p>
                           <p>Updated at: {val.ArticleUpdatedAt}</p>
 
-                                        
-                          <Button onClick={() => {
+                                      
+                          <Button type="submit" onClick={() => {
                             if ( ArticleName === "" ) { ArticleName = val.ArticleName }
                             if ( ArticleSmDescr === "" ) { ArticleSmDescr = val.ArticleSmDescr}
                             if ( ArticleMDescr === "" ) { ArticleMDescr = val.ArticleMDescr }
                             if ( ArticleImg === "" ) { ArticleImg = val.ArticleImg }
                             if ( ArticleType === "" ) { ArticleType = val.ArticleType }
-                            if ( ArticleStatus=== "" ) { ArticleStatus = val.ArticleStatus }
+                            if ( ArticleStatus=== "" ) { ArticleStatus = val.ArticleStatus} 
+                            
+                          
                             updateArticleStatus(val.ArticleId)
                             
                             }}>Update</Button>
-                         
+                            <input type="submit" />
+                         </form> 
                         </div>
                       )
                 })} 
@@ -158,7 +241,13 @@ export default function Article(){
                               <td>{val.ArticleMDescr}</td>  
                               <td><img src={val.ArticleImg} style={{ width: "80%" }} alt={val.ArticleImg} /></td>  
                               <td>{val.ArticleType}</td>  
-                              <td>{val.ArticleStatus}</td>  
+                              <td>
+                                
+                                if({val.ArticleStatus}==-2){ArticleStatus = "Törölt"}
+                                if({val.ArticleStatus}==-1){ArticleStatus = "Felfüggesztett"}
+                                if({val.ArticleStatus}==0){ArticleStatus = "Inaktív"}
+                                if({val.ArticleStatus}==1){ArticleStatus = "Aktív"}
+                                </td>  
                               <td>{val.ArticleCreatedAt}</td>  
                               <td>{val.ArticleUpdatedAt}</td>  
 

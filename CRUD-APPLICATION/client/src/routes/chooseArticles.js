@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import '../App.css';
 import Axios from 'axios';
+import {Modal, Button} from "react-bootstrap";
 
 var articleData = [];
 var found = false;
@@ -9,44 +10,49 @@ var lastFetchedArticleItemId = 1;
 
 export default function Article(){
 
-    //const [ArticleNameList, setArticleNameList] = useState([]); //'' hibás, [] kell használni
+    const [LoginStatus, setLoginStatus] = useState('');
 
-    //***Infinite scroll***/
-    /*
-    state = {
-      items: Array.from({ length: 20 })
-    };
-    */
+    const GotUserId = useRef(null);
+
+    //const choosenArticleId = useRef(null);
+
+    //const GotArticleId = useRef(null);
+
+    Axios.defaults.withCredentials = true;
 
     const [getData, setData] = useState([]);
 
+        //check every time we refresh the page if a user is logged in
+        useEffect(() => {
+            Axios.get('http://localhost:3001/api/login/user').then((response) => {
+            //ellenőrzésre
+            //console.log("Are we logged in: " + JSON.stringify(response));
+                if(response.data.loggedIn === true){
+                    setLoginStatus(response.data.user[0].UserUn);
+                    //GotArticleId.current = response.data.article[0].ArticleId;
+                    GotUserId.current = response.data.user[0].UserId;
+                }
+            });
+        }, []);
 
-    //const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
     useEffect(() => {
       lastFetchedArticleItemId = 1;
     }, []);
 
+    //ablak
+    const updateArticle = () => {
+      Axios.put("http://localhost:3001/api/update/article/articleById")
+    }
+
     const fetchMoreData = () => {
       setTimeout(() => {
-        //console.log(getLastFetchedArticleItemId);
-
-        //const API_URL = 'http://localhost:3001';
-/*
-        fetch(`${API_URL}/api/get/article`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'item' : lastFetchedArticleItemId,
-            },
-        })
-        .then(async res => { */
         
-        
-         Axios.get('http://localhost:3001/api/get/article', {
+         Axios.get('http://localhost:3001/api/get/article/byId', {
           headers: {
             'content-type': "application/json",
-            'item': lastFetchedArticleItemId
-          }
+            'item': lastFetchedArticleItemId,
+            'userId': GotUserId.current
+          },
         }).then((res) => { 
         
             try {
@@ -62,7 +68,6 @@ export default function Article(){
                     var articleResultId = 0;
                     for (articleResultId = 0; articleResultId < jsonRes.length; articleResultId++){
                         articleData.push(jsonRes[articleResultId]);
-                        //console.log(articleData[getLastFetchedArticleItemId+articleResultId].ArticleId);
                     };
                     setData(
                       getData.concat(Array.from({ length: articleResultId }))
@@ -80,41 +85,9 @@ export default function Article(){
       }, 1)
     };
 
-    /*const fetchMoreData = () => {
-      
-      // a fake async api call like which sends
-      // 20 more records in 1.5 secs
-
-
-
-
-
-
-      setTimeout(() => {
-        setData(
-          getData.concat(Array.from({ length: 20 }))
-        );
-      }, 1500);
-    };
-*/
-    //On page load get articles
-  /*  useEffect(() => {
-
-    Axios.get('http://localhost:3001/api/get/article', {
-      headers: {
-        'content-type': "application/json",
-        'item': 1
-      }
-    }).then((response) => {
-      
-      setData(Array.from({length: 20}));
-      setArticleNameList(response.data);
-      console.log("Új articles get: " + JSON.stringify(response.data));
-    });
-    }, []);*/
-
     return(
       <div className="cardContainer">
+          <h1>{LoginStatus}</h1>
         <hr />
         <InfiniteScroll
           dataLength={getData.length}
@@ -132,9 +105,15 @@ export default function Article(){
     );
 }
 
-
 //PureComponent - jobb optimalizáció, pl. nincsenek felesleges újra renderelések
-class Card extends React.PureComponent {    
+class Card extends React.PureComponent { 
+  
+  state = {
+    isOpen: false
+  };
+
+  openModal = () => this.setState({ isOpen: true });
+  closeModal = () => this.setState({ isOpen: false });
 
   render() {
       const {data} = this.props;
@@ -146,23 +125,15 @@ class Card extends React.PureComponent {
             {data.ArticleMDescr}
             {data.ArticleImg}
           </div> 
+          <div
+          className="d-flex align-items-center justify-content-center"
+          style={{ height: "100vh" }}
+          >
+          <Button variant="primary" onClick={this.openModal}>
+            Edit
+          </Button>
+          </div>
         </div>
       )
   }
 }
-
-
-//Functional component - ha valami nem működne a PureComponent-ben, próbáld ebben
-/*const Card = ({data}) => {
-
-  return (
-    <div>
-        <div className="card">
-          {data.ArticleName}
-          {data.ArticleSmDescr}
-          {data.ArticleMDescr}
-          {data.ArticleImg}
-        </div> 
-    </div>
-  )
-}*/

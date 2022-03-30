@@ -4,15 +4,15 @@ import Axios from 'axios';
 
 export default function All(){
   //Post
-  const [PostName, setPostName] = useState('');
-  const [PostSmDescr, setPostSmDescr] = useState('');
-  const [PostMDescr, setPostMDescr] = useState('');
-  const [PostImg, setPostImg] = useState('');
-  const [PostStatus, setPostStatus] = useState('');
+  const [ArticleName, setArticleName] = useState('');
+  const [ArticleSmDescr, setArticleSmDescr] = useState('');
+  const [ArticleMDescr, setArticleMDescr] = useState('');
+  const [ArticleImg, setArticleImg] = useState('');
+  const [ArticleStatus, setArticleStatus] = useState('');
 
-  const [PostNameList, setPostNameList] = useState([]); //'' hibás, [] kell használni
+  const [ArticleNameList, setArticleNameList] = useState([]); //'' hibás, [] kell használni
 
-  const [NewPostStatus, setNewPostStatus] = useState('');
+  const [NewArticleStatus, setNewArticleStatus] = useState('');
 
   //Admin
   const [AdminUn, setAdminUn] = useState('');
@@ -28,6 +28,7 @@ export default function All(){
 
   //USERS
   const [UserUn, setUserUn] = useState('');
+  const [UserPP, setUserPP] = useState('');
   const [UserPw, setUserPw] = useState('');
   const [UserFN, setUserFN] = useState('');
   const [UserSN, setUserSN] = useState('');
@@ -41,15 +42,20 @@ export default function All(){
   const current = new Date();
   const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
-  //On page load get posts
-  useEffect(() => {
+    //On page load get articles
+    useEffect(() => {
 
-    Axios.get('http://localhost:3001/api/get/post').then((response) => {
-
-      setPostNameList(response.data);
-      //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
-    });
-  }, []);
+      Axios.get('http://localhost:3001/api/get/article', {
+        headers: {
+          'content-type': "application/json",
+          'item': 1
+        }
+      }).then((response) => {
+        
+        setArticleNameList(response.data);
+        console.log("Új articles get: " + response.data);
+      });
+      }, []);
 
   //On page load get admins
   useEffect(() => {
@@ -60,72 +66,77 @@ export default function All(){
     });
   }, []);
 
-  //On page load get users
+  //On page load get user
   useEffect(() => {
 
-    Axios.get('http://localhost:3001/api/get/users').then((response) => {
+    Axios.get('http://localhost:3001/api/get/user').then((response) => {
 
       setUsersNameList(response.data);
     });
   }, []);
 
-  //GET - POST
-  //Refresh Post data
-  const refreshPostData = () => {
+    //GET - POST
+    //Refresh Article data
+    const refreshArticleData = () => {
 
-      Axios.get('http://localhost:3001/api/get/post').then((response) => {
-    
-        setPostNameList(response.data);
-        //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
+      Axios.get('http://localhost:3001/api/get/article', {
+        headers: {
+          'content-type': "application/json",
+          'item': 1
+        }
+      }).then((response) => {
+  
+      setArticleNameList(response.data);
+      //console.log(response.data); //console logging the SELECT * FROM article to the frontend terminal
       });
   };
 
-  //POST - POST
+  //POST - Article
   //Request the subbmit button
-  const submitPostData = () => {
+  const submitArticleData = () => {
 
-    //postName - backend variable name
-    Axios.post('http://localhost:3001/api/insert/post', { //URL for our api (node.js backend)
-      postName: PostName,
-      postSmDescr: PostSmDescr,
-      postMDescr: PostMDescr,
-      postImg: PostImg,
-      postStatus: PostStatus,
-      postCreatedAt: date,
-      postUpdatedAt: date
+    //articleName - backend variable name
+    Axios.post('http://localhost:3001/api/insert/article', { //URL for our api (node.js backend)
+      articleName: ArticleName,
+      articleSmDescr: ArticleSmDescr,
+      articleMDescr: ArticleMDescr,
+      articleImg: ArticleImg,
+      articleStatus: ArticleStatus,
+      articleCreatedAt: date,
+      articleUpdatedAt: date
   });
     
-  setPostNameList([
-    ...PostNameList,
+  setArticleNameList([
+    ...ArticleNameList,
     {
-      PostName: PostName,
-      PostSmDescr: PostSmDescr,
-      PostMDescr: PostMDescr,
-      PostImg: PostImg,
-      PostStatus: PostStatus,
-      PostCreatedAt: date,
-      PostUpdatedAt: date
-    }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+      ArticleName: ArticleName,
+      ArticleSmDescr: ArticleSmDescr,
+      ArticleMDescr: ArticleMDescr,
+      ArticleImg: ArticleImg,
+      ArticleStatus: ArticleStatus,
+      ArticleCreatedAt: date,
+      ArticleUpdatedAt: date
+    }, //Valamiért mind a kettőt nagy A-vel kell írni, az első értékeket, azaz nem articleName: ArticleName
   ]);
-  //console.log("PostNameList: ",  JSON.stringify(PostNameList[PostNameList.length-1].data));
+  //console.log("ArticleNameList: ",  JSON.stringify(ArticleNameList[ArticleNameList.length-1].data));
 };
 
 //DELETE - POST
-const deletePost = (post) =>{
-  Axios.delete(`http://localhost:3001/api/delete/post/${post}`); // with altgr+7 you can add variables to it
+const deleteArticle = (article) =>{
+  Axios.delete(`http://localhost:3001/api/delete/article/${article}`); // with altgr+7 you can add variables to it
 
   alert("Successfuly deleted. Please click on the refresh button.")
   //kell frissítés, hogy eltünjön a törölt, submitos nem működik
 };
 
 //PUT - POST
-const updatePostStatus = (post) =>{
-  Axios.put('http://localhost:3001/api/update/post', {
-    postName: post,
-    postStatus: NewPostStatus,
-    postUpdatedAt: date
+const updateArticleStatus = (article) =>{
+  Axios.put('http://localhost:3001/api/update/article', {
+    articleName: article,
+    articleStatus: NewArticleStatus,
+    articleUpdatedAt: date
   });
-  setNewPostStatus("");
+  setNewArticleStatus("");
   alert("Successfuly changed! Please click on the refresh button.");
 };
 
@@ -167,7 +178,7 @@ const submitAdminData = () => {
       AdminEmail: AdminEmail,
       AdminCreatedAt: date,
       AdminUpdatedAt: date
-    }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+    }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem articleName: ArticleName
   ]);
 };
 
@@ -196,7 +207,7 @@ const updateAdminPermL = (admin) =>{
 
 //GET - USERS
 const refreshUserData = () => {
-  Axios.get('http://localhost:3001/api/get/users').then((response) => {
+  Axios.get('http://localhost:3001/api/get/user').then((response) => {
 
     setUsersNameList(response.data);
   });
@@ -205,9 +216,10 @@ const refreshUserData = () => {
 //POST - USERS
 const submitUserData = () => {
 
-  //postName - backend variable name
-  Axios.post('http://localhost:3001/api/insert/users', { //URL for our api (node.js backend)
+  //articleName - backend variable name
+  Axios.post('http://localhost:3001/api/insert/user', { //URL for our api (node.js backend)
     userUn: UserUn,
+    userPP: UserPP,
     userPw: UserPw,
     userFN: UserFN,
     userSN: UserSN,
@@ -222,6 +234,7 @@ const submitUserData = () => {
     ...UsersNameList,
     {
       UserUn: UserUn,
+      userPP: UserPP,
       UserPw: UserPw,
       UserFN: UserFN,
       UserSN: UserSN,
@@ -229,13 +242,13 @@ const submitUserData = () => {
       UserEmail: UserEmail,
       UserCreatedAt: date,
       UserUpdatedAt: date
-    }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem postName: PostName
+    }, //Valamiért mind a kettőt nagy P-vel kell írni, az első értékeket, azaz nem articleName: ArticleName
   ]);
 };
 
 //DELETE - USERS
 const deleteUser = (user) =>{
-  Axios.delete(`http://localhost:3001/api/delete/users/${user}`); // with altgr+7 you can add variables to it
+  Axios.delete(`http://localhost:3001/api/delete/user/${user}`); // with altgr+7 you can add variables to it
 
   alert("Successfuly deleted. Please click on the refresh button.")
   //kell frissítés, hogy eltünjön a törölt, submitos nem működik
@@ -243,7 +256,7 @@ const deleteUser = (user) =>{
 
 //PUT - USERS
 const updateUserEmail = (user) =>{
-  Axios.put('http://localhost:3001/api/update/users', {
+  Axios.put('http://localhost:3001/api/update/user', {
     userUn: user,
     userEmail: NewUserEmail,
   });
@@ -259,55 +272,53 @@ const updateUserEmail = (user) =>{
         <div className="smallContainer">
           <div className='form'>
             <h3>POST</h3>
-                <label>PostName</label>
-                <input type="text" name="postName" onChange={(e) => {
-                  setPostName(e.target.value);
+                <label>ArticleName</label>
+                <input type="text" name="articleName" onChange={(e) => {
+                  setArticleName(e.target.value);
                 }}></input>
 
-                <label>PostSmDescr</label>
-                <input type="text" name="postSmDescr" onChange={(e) => {
-                  setPostSmDescr(e.target.value);
+                <label>ArticleSmDescr</label>
+                <input type="text" name="articleSmDescr" onChange={(e) => {
+                  setArticleSmDescr(e.target.value);
                 }}></input>
 
-                <label>PostMDescr</label>
-                <input type="text" name="postMDescr" onChange={(e) => {
-                  setPostMDescr(e.target.value);
+                <label>ArticleMDescr</label>
+                <input type="text" name="articleMDescr" onChange={(e) => {
+                  setArticleMDescr(e.target.value);
                 }}></input>
 
-                <label>PostImg</label>
-                <input type="text" name="postImg" onChange={(e) => {
-                  setPostImg(e.target.value);
+                <label>ArticleImg</label>
+                <input type="text" name="articleImg" onChange={(e) => {
+                  setArticleImg(e.target.value);
                 }}></input>
 
-                <label>PostStatus</label>
-                <input type="number" name="postStatus" onChange={(e) => {
-                  setPostStatus(e.target.value);
+                <label>ArticleStatus</label>
+                <input type="number" name="articleStatus" onChange={(e) => {
+                  setArticleStatus(e.target.value);
                 }}></input>
 
-                <button className="btn" onClick={submitPostData}>Add post</button>
-                <button className="btn" onClick={refreshPostData}>Refresh post data</button>
+                <button className="btn" onClick={submitArticleData}>Add article</button>
+                <button className="btn" onClick={refreshArticleData}>Refresh post data</button>
 
                 <div className="cardContainer">
-                  {PostNameList.map((val) => {
+                  {ArticleNameList.map((val) => {
                       return(
                         <div className="card">
-                          <h1>Post name: {val.PostName}</h1>
-                          <h2>Post small description: {val.PostSmDescr}</h2>
-                          <p>Post main description: {val.PostMDescr}</p>
-                          <p>Post image: {val.PostImg}</p>
-                          <p>Post status: {val.PostStatus}</p>
-                          <p>Post created at: {val.PostCreatedAt}</p>
-                          <p>Post updated at: {val.PostUpdatedAt}</p>
-                          <p>Admin created at: {val.AdminCreatedAt}</p>
-                          <p>Admin updated at: {val.AdminUpdatedAt}</p>
+                          <h1>Article name: {val.ArticleName}</h1>
+                          <h2>Article small description: {val.ArticleSmDescr}</h2>
+                          <p>Article main description: {val.ArticleMDescr}</p>
+                          <p>Article image: {val.ArticleImg}</p>
+                          <p>Article status: {val.ArticleStatus}</p>
+                          <p>Article created at: {val.ArticleCreatedAt}</p>
+                          <p>Article updated at: {val.ArticleUpdatedAt}</p>
 
-                          <button onClick={() => {deletePost(val.PostName)}}>Delete Post</button>
+                          <button onClick={() => {deleteArticle(val.ArticleName)}}>Delete Article</button>
 
                           <input type="number" className="updateInput" onChange={(e) => {
-                            setNewPostStatus(e.target.value);
+                            setNewArticleStatus(e.target.value);
                           }}></input>
 
-                          <button onClick={() => {updatePostStatus(val.PostName)}}>Update Post</button>
+                          <button onClick={() => {updateArticleStatus(val.ArticleName)}}>Update Article</button>
                         </div>
                       )
                   })}
@@ -388,6 +399,11 @@ const updateUserEmail = (user) =>{
                   setUserUn(e.target.value);
                 }}></input>
 
+                <label>UserPP</label>
+                <input type="text" name="userPP" onChange={(e) => {
+                  setUserPP(e.target.value);
+                }}></input>
+
                 <label>UserPw</label>
                 <input type="password" name="userPw" onChange={(e) => {
                   setUserPw(e.target.value);
@@ -421,6 +437,7 @@ const updateUserEmail = (user) =>{
                       return(
                         <div className="card">
                           <h1>User username: {val.UserUn}</h1>
+                          <h1>User profile picture: {val.UserPP}</h1>
                           <p>User password: {val.UserPw}</p>
                           <h2>User first name: {val.UserFN}</h2>
                           <p>User second name: {val.UserSN}</p>
