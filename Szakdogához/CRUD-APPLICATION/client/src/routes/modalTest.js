@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 import { useForm } from "react-hook-form";
 import Axios from 'axios';
+import { Modal, Button } from "react-bootstrap";
 
 export default function CreateArticle(){
 
@@ -58,6 +59,12 @@ export default function CreateArticle(){
           });
       }, []);
 
+      const [ModalState, setModalState] = useState(false);
+
+      const modalClose = () => setModalState(false);
+
+      const modalOpen = () => setModalState(true);
+
       
     return(
         <div>
@@ -72,18 +79,22 @@ export default function CreateArticle(){
                           <p>Article created at: {val.ArticleCreatedAt}</p>
                           <p>Article updated at: {val.ArticleUpdatedAt}</p>
 
-                          <button>Edit</button>
-                        </div>
-                      )
-                  })}
+                          <div
+                              className="d-flex align-items-center justify-content-center"
+                              style={{ height: "100vh" }}
+                            >
+                              
+                              <Button variant="primary" onClick={modalOpen}>
+                                  Launch demo modal
+                              </Button>
 
-            <h1>{LoginStatus}</h1>
-        </div>
-    );
-}
+                              <Modal show={ModalState} onHide={modalClose}>
+                                <Modal.Header closeButton>
+                                  <Modal.Title>Modal heading</Modal.Title>
+                                </Modal.Header>
 
-/*into modal body
-{ArticleNameList.map((val) => {
+                              <Modal.Body>
+                              {ArticleNameList.map((val) => {
             return(
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
@@ -180,8 +191,25 @@ export default function CreateArticle(){
               </form>
               ) 
             })}
+                              </Modal.Body>
+                            
+                              <Modal.Footer>
+                                <Button variant="secondary" onClick={modalClose}>
+                                  Close
+                                </Button>
+                            </Modal.Footer>
+                          </Modal>
+                          </div>
 
-*/
+                          
+                        </div>
+                      )
+                  })}
+
+            <h1>{LoginStatus}</h1>
+        </div>
+    );
+}
 
 //Modal pop up test. Works!
 /*

@@ -193,9 +193,7 @@ app.post('/api/insert/article/byId', (req, res) => {
             console.log("Article POST error: " + err);
         }
 
-        console.log("Nanoid: " + articleId);
-        console.log("Article createdAt: " + articleCreatedAt);
-        console.log("Article type: " + articleType);
+        console.log("Dupla insert: " + sqlInsert);
         res.send(JSON.stringify(result[0]) + JSON.stringify(result[1]));
         console.log("Kapcsolótáblás dupla insert 0: " + result[0]);
         console.log("Kapcsolótáblás dupla insert 1: " + JSON.stringify(result[1]));
@@ -418,6 +416,7 @@ app.post('/api/register/user', (req, res) => {
     });
 });
 
+//ELLENŐRIZNI
 //Session check
 app.get('/api/login/user', (req, res) => {
     if(req.session.user){ //megnézzük, hogy van-e már egy ilyen "user"-ünk
@@ -458,6 +457,7 @@ app.get('/api/login/user/auth', verifyJWT, (req, res) => {
     }
 });
 
+//ELLENŐRIZNI
 //LOGIN - CHECK IF USER EXISTS - USERS
 app.post('/api/login/user', (req, res) => {
 

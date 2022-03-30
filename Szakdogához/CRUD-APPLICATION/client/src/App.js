@@ -28,8 +28,6 @@ export default function App(){
         <Link to="/createArticle">Create Article</Link> | {" "}
         <Link to="/chooseArticle">Choose article for editing Article</Link> | {" "}
         <Link to="/profilePage">Profile Page</Link> | {" "}
-        <Link to="/testModal">Test modal</Link> | {" "}
-        <Link to="/users">Users</Link> | {" "}
         <Link to="/all">All</Link>
       </nav>
       <Outlet />
