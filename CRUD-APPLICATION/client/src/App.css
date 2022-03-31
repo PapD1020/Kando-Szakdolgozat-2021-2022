@@ -64,4 +64,11 @@
 
 .tabla{
   background-color: bisque;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+.status{
+  background-color: rgb(255, 78, 78);
+  
 }

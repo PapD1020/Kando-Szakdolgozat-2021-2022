@@ -52,6 +52,7 @@ export default function Article(){
       Axios.get(`http://localhost:3001/api/get/article/${articleId}`).then((response) => {
     
         setArticleNameSetting(response.data);
+        
         //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
       })};
     //GET - POST
@@ -95,6 +96,15 @@ export default function Article(){
   setShow(false);
   refreshArticleData();
 };
+const ArticleStatusView=(ArticleStatus)=>{
+  if(ArticleStatus==-2){ArticleStatus = "Törölt"}
+  if(ArticleStatus==-1){ArticleStatus = "Felfüggesztett"}
+  if(ArticleStatus==0){ArticleStatus = "Inaktív"}
+  if(ArticleStatus==1){ArticleStatus = "Aktív"}
+
+  return ArticleStatus;
+}
+
     return(
         <div >
            <Modal show={show} onHide={handleClose} animation={false}>
@@ -103,20 +113,22 @@ export default function Article(){
           </Modal.Header>
           <Modal.Body>
           {ArticleNameSetting.map((val) => {
+            
                       return(
                         <div>
                           
-                        <form  onSubmit={handleSubmit(onSubmit)}>
+                        <form onSubmit={handleSubmit(onSubmit)}>
                           <div className="form-group"> 
                           <label>Name: </label><input type="text" className="form-control" defaultValue={val.ArticleName}{
-                              ...register("articleName",{
-                                required: true,
+                              ...register(val.ArticleName,{
+                              required: true,
                               minLength: 6,
                               maxLength: 20,
                               pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
-                              })
-
-                            }onBlur={(e) => {ArticleName = e.target.value}}></input>
+                              })                            
+                            }
+                            
+                            onBlur={(e) => {ArticleName = e.target.value}}></input>
                             
                             {errors?.articleName?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a name.</p></div>}
                             {errors?.articleName?.type === "minLength" && <div><h5>Your article's name is too short.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
@@ -139,7 +151,7 @@ export default function Article(){
                             {errors?.articleSmDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
                         </div>
                         <div className="form-group">  
-                          <label>Main description:</label>  <textarea type="text" className="form-control" name="articleMDescr" defaultValue={val.ArticleMDescr} {
+                          <label>Main description:</label>  <textarea type="text" className="form-control" defaultValue={val.ArticleMDescr} {
                             ...register("articleMDescr", {
                               required: true,
                               minLength: 8,
@@ -166,12 +178,12 @@ export default function Article(){
                               {errors?.articleImg?.type === "maxLength" && <div><h5>Your article's picture URL is too long.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
                         </div>   
                         <div className="form-group">
-                          <label>Type:</label> <select id="types" className="form-control"  required {
-                                ...register("articleType", {
+                          <label>Type:</label> <select id="types" className="form-control" required {
+                                ...register(val.ArticleType, {
                                     required: true,
                                 })
                               }onBlur={(e) => {ArticleType=e.target.value}}>
-                              <option defaultValue={val.ArticleType}>{val.ArticleType}</option>
+                                <option value={val.ArticleType}>{val.ArticleType}</option>
                                 <option value="Programming">Programming</option>
                                 <option value="Other">Other</option>
                             </select>
@@ -179,11 +191,11 @@ export default function Article(){
                         </div>
                         <div className="form-group">
                           <label>Status:</label> <select id="status" className="form-control"  required {
-                                ...register("articleType", {
+                                ...register(ArticleStatusView(val.ArticleStatus), {
                                     required: true,
                                 })
                             } onBlur={(e) => {ArticleStatus=e.target.value}}>
-                              <option defaultValue={val.ArticleStatus} >{val.ArticleStatus}</option>
+                              <option value={val.ArticleStatus} >{ArticleStatusView(val.ArticleStatus)}</option>
                               <option value="-2">Törlés</option>
                               <option value="-1">Felfüggesztett</option>
                               <option value="0">Inaktív</option>
@@ -195,7 +207,8 @@ export default function Article(){
                           <p>Updated at: {val.ArticleUpdatedAt}</p>
 
                                       
-                          <Button type="submit" onClick={() => {
+                          <Button  onClick={() => {
+                            
                             if ( ArticleName === "" ) { ArticleName = val.ArticleName }
                             if ( ArticleSmDescr === "" ) { ArticleSmDescr = val.ArticleSmDescr}
                             if ( ArticleMDescr === "" ) { ArticleMDescr = val.ArticleMDescr }
@@ -207,7 +220,7 @@ export default function Article(){
                             updateArticleStatus(val.ArticleId)
                             
                             }}>Update</Button>
-                            <input type="submit" />
+                           
                          </form> 
                         </div>
                       )
@@ -234,20 +247,14 @@ export default function Article(){
                   {ArticleNameList.map((val) => {
                       return(
 
-                          <tbody>
+                          <tbody class="status">
                             <tr>
                               <td>{val.ArticleName}</td>    
                               <td>{val.ArticleSmDescr}</td>  
                               <td>{val.ArticleMDescr}</td>  
                               <td><img src={val.ArticleImg} style={{ width: "80%" }} alt={val.ArticleImg} /></td>  
                               <td>{val.ArticleType}</td>  
-                              <td>
-                                
-                                if({val.ArticleStatus}==-2){ArticleStatus = "Törölt"}
-                                if({val.ArticleStatus}==-1){ArticleStatus = "Felfüggesztett"}
-                                if({val.ArticleStatus}==0){ArticleStatus = "Inaktív"}
-                                if({val.ArticleStatus}==1){ArticleStatus = "Aktív"}
-                                </td>  
+                              <td>  {ArticleStatusView(val.ArticleStatus)}</td>  
                               <td>{val.ArticleCreatedAt}</td>  
                               <td>{val.ArticleUpdatedAt}</td>  
 
