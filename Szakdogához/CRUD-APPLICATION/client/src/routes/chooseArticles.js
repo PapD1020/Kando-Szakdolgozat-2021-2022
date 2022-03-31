@@ -13,6 +13,8 @@ export default function CreateArticle(){
     //articleType
   
     const [ArticleNameList, setArticleNameList] = useState([]);
+
+    const [OneArticleList, setOneArticleList] = useState([]);
     
     const [LoginStatus, setLoginStatus] = useState('');
 
@@ -54,7 +56,7 @@ export default function CreateArticle(){
         }).then((response) => {
           
           setArticleNameList(response.data);
-          console.log("Új articles get: " + response.data);
+          console.log("Új articles get: " + response);
         });
           });
       }, []);
@@ -65,6 +67,20 @@ export default function CreateArticle(){
 
       const modalOpen = () => setModalState(true);
 
+      const getChoosenArticleById = (id) => {
+
+        Axios.get('http://localhost:3001/api/get/article/oneById', {
+
+          headers: {
+            'content-type': "application/json",
+            'articleId': id
+          }
+        }).then((response) => {
+
+          setOneArticleList(...OneArticleList, response.data);
+          console.log("One article get: " + response);
+        })
+      }
       
     return(
         <div>
@@ -84,7 +100,7 @@ export default function CreateArticle(){
                               style={{ height: "100vh" }}
                             >
                               
-                              <Button variant="primary" onClick={modalOpen}>
+                              <Button variant="primary" onClick={() => {modalOpen(); getChoosenArticleById(val.ArticleId);}}>
                                   Edit
                               </Button>
 
@@ -94,7 +110,7 @@ export default function CreateArticle(){
                                 </Modal.Header>
 
                               <Modal.Body>
-                              {ArticleNameList.map((val) => {
+                              {OneArticleList.map((val) => {
                                 return(
                                   <form onSubmit={handleSubmit(onSubmit)}>
                                     <div className="form-group">
@@ -190,7 +206,7 @@ export default function CreateArticle(){
                               </Modal.Body>
                             
                               <Modal.Footer>
-                                <Button variant="secondary" onClick={modalClose}>
+                                <Button variant="secondary" onClick={() => {modalClose(); setOneArticleList(...OneArticleList, //VALAMI KELL!!!!)}}>
                                   Close
                                 </Button>
                             </Modal.Footer>

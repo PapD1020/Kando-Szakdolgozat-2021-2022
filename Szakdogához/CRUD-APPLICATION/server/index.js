@@ -105,6 +105,23 @@ app.get('/api/get/article/allById', (req, res) => {
     });
 });
 
+app.get('/api/get/article/oneById', (req, res) => {
+
+    const articleId = req.get("articleId");
+
+    const sqlSelect = "SELECT * FROM Articles WHERE articleId = ?";
+
+    db.query(sqlSelect, [articleId], (err, result) => {
+
+        if(err){
+            console.log("One article get error: " + err);
+        }
+
+        console.log("One article get: " + result);
+        res.send(result);
+    });
+});
+
 /*
 //Egyenkénti lekérdezés
 app.get('/api/get/article', (req, res) => {
