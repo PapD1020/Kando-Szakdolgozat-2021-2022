@@ -247,14 +247,14 @@ const ArticleStatusView=(ArticleStatus)=>{
                   {ArticleNameList.map((val) => {
                       return(
 
-                          <tbody class="status">
+                          <tbody >
                             <tr>
                               <td>{val.ArticleName}</td>    
                               <td>{val.ArticleSmDescr}</td>  
                               <td>{val.ArticleMDescr}</td>  
                               <td><img src={val.ArticleImg} style={{ width: "80%" }} alt={val.ArticleImg} /></td>  
                               <td>{val.ArticleType}</td>  
-                              <td>  {ArticleStatusView(val.ArticleStatus)}</td>  
+                              <td > {ArticleStatusView(val.ArticleStatus)}</td>  
                               <td>{val.ArticleCreatedAt}</td>  
                               <td>{val.ArticleUpdatedAt}</td>  
 
