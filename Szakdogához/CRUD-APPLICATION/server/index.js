@@ -108,8 +108,10 @@ app.get('/api/get/article/allById', (req, res) => {
 app.get('/api/get/article/oneById', (req, res) => {
 
     const articleId = req.get("articleId");
+    console.log("articleId: " + articleId);
 
     const sqlSelect = "SELECT * FROM Articles WHERE articleId = ?";
+    console.log("oneById select: " + sqlSelect);
 
     db.query(sqlSelect, [articleId], (err, result) => {
 
