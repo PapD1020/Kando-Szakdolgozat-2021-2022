@@ -44,14 +44,12 @@ export default function CreateArticle(){
 
       
       //EZ IS JÓ
-      //const GotArticleId = useRef(null);
-
-      var GotArticleId;
+      const GotArticleId = useRef(null);
 
       const GetSelectedArticleId = () => {
         const location = useLocation();
-        GotArticleId = location.state.id;
-        alert("GotArticleId.current in useEffect: " + GotArticleId);
+        GotArticleId.current = location.state.id;
+        alert("GotArticleId.current in useEffect: " + GotArticleId.current);
       }
       
       const GetChoosenArticleById = (id) => {
@@ -70,9 +68,8 @@ export default function CreateArticle(){
     }
 
 
-    useEffect(GetSelectedArticleId(), GetChoosenArticleById(GotArticleId));
+    useEffect(GetSelectedArticleId());
     
-    /*
     //check every time we refresh the page if a user is logged in
     useEffect(() => {
         Axios.get('http://localhost:3001/api/login/user').then((response) => {
@@ -84,7 +81,7 @@ export default function CreateArticle(){
             }
         });
     }, []);
-  */
+  
 
     const submitArticleData = () => {
 
@@ -125,7 +122,6 @@ export default function CreateArticle(){
 
     return(
         <div>
-          <h1>{GotArticleId}</h1>
           {OneArticleList.map((val) => {
                       return(
                         <div className="card">

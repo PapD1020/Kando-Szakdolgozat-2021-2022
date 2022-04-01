@@ -51,7 +51,7 @@ export default function CreateArticle(props){
       let navigate = useNavigate();
       const routeChange = (gotId) =>{
         alert("Második selected got id: " + gotId);
-        navigate('/editArticle', {state:{id: gotId, asd: "asd"}});
+        navigate('/editArticle', {state:{id: gotId}});
       }
 
       /*
