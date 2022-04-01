@@ -1,158 +1,105 @@
-import React, {useState, useEffect, useRef} from "react";
-import { useForm } from "react-hook-form";
+import React, {useEffect, useState} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {useForm} from 'react-hook-form';
 import Axios from 'axios';
 import { Modal, Button } from "react-bootstrap";
-import {Link, useNavigate, useLocation} from "react-router-dom";
 
-export default function CreateArticle(){
+export default function EditArticle() {
 
-    const [ArticleNameUpd, setArticleNameUpd] = useState('');
-    const [ArticleSmDescrUpd, setArticleSmDescrUpd] = useState('');
-    const [ArticleMDescrUpd, setArticleMDescrUpd] = useState('');
-    const [ArticleImgUpd, setArticleImgUpd] = useState('');
-    const [ArticleTypeUpd, setArticleTypeUpd] = useState('');
-    //articleType
+  const [ArticleNameUpd, setArticleNameUpd] = useState('');
+  const [ArticleSmDescrUpd, setArticleSmDescrUpd] = useState('');
+  const [ArticleMDescrUpd, setArticleMDescrUpd] = useState('');
+  const [ArticleImgUpd, setArticleImgUpd] = useState('');
+  const [ArticleTypeUpd, setArticleTypeUpd] = useState('');
 
-    const [OneArticleList, setOneArticleList] = useState([]);
-    
-    const [LoginStatus, setLoginStatus] = useState('');
+  const location = useLocation();
 
-    //const GotArticleId = useRef(null);
+  const [LoginStatus, setLoginStatus] = useState(false);
 
-    Axios.defaults.withCredentials = true;
+  const [OneArticleList, setOneArticleList] = useState([]);
 
-    const current = new Date();
-    const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+  const [ModalState, setModalState] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        formState: {errors}
-    } = useForm();
+  const modalClose = () => setModalState(false);
 
-    const onSubmit = (data) => {
-        alert(JSON.stringify(data));
-        submitArticleData();
-    };
+  const modalOpen = () => setModalState(true);
 
-      /*
-      //ez jó
-      const location = useLocation();
-      var GotArticleId = location.state.id;
-      alert("GotArticleId: " + GotArticleId);
-      */
+  Axios.defaults.withCredentials = true;
 
-      
-      //EZ IS JÓ
-      //const GotArticleId = useRef(null);
-
-      var GotArticleId;
-
-      const GetSelectedArticleId = () => {
-        const location = useLocation();
-        GotArticleId = location.state.id;
-        alert("GotArticleId.current in useEffect: " + GotArticleId);
+  //check every time we refresh the page if a user is logged in
+  useEffect(() => {
+    Axios.get('http://localhost:3001/api/login/user').then((response) => {
+      //ellenőrzésre
+      //console.log("Are we logged in: " + JSON.stringify(response));
+      if(response.data.loggedIn === true){
+        setLoginStatus(response.data.user[0].UserUn);
+        getChoosenArticleById();
       }
-      
-      const GetChoosenArticleById = (id) => {
-  
-        Axios.get('http://localhost:3001/api/get/article/oneById', {
-          headers: {
-            'content-type': "application/json",
-            'articleId': id
-          }
-        }).then((response) => {
-  
-          alert("itt vagyok");
-          setOneArticleList(response.data);
-          console.log("One article get: " + response);
-        });
-    }
+    });
+  }, []);
 
+  const getChoosenArticleById = () => {
 
-    useEffect(GetSelectedArticleId(), GetChoosenArticleById(GotArticleId));
-    
-    /*
-    //check every time we refresh the page if a user is logged in
-    useEffect(() => {
-        Axios.get('http://localhost:3001/api/login/user').then((response) => {
-        //ellenőrzésre
-        //console.log("Are we logged in: " + JSON.stringify(response));
-            if(response.data.loggedIn === true){
-                setLoginStatus(response.data.user[0].UserUn);
-                console.log("useEffect: " + response);
-            }
-        });
-    }, []);
-  */
+    Axios.get('http://localhost:3001/api/get/article/oneById', {
+      headers: {
+        'content-type': "application/json",
+        'articleId': location.state.id
+      }
+    }).then((response) => {
+      setOneArticleList(response.data);
+      console.log("One article get: " + JSON.stringify(response));
+    })
+  }
 
-    const submitArticleData = () => {
+  let navigate = useNavigate();
+  const routeChange = () => {
+    navigate('/chooseArticle');
+  }
 
-        //articleName - backend variable name
-        Axios.put('http://localhost:3001/api/update/articleById', { //URL for our api (node.js backend)
-          articleName: ArticleNameUpd,
-          articleSmDescr: ArticleSmDescrUpd,
-          articleMDescr: ArticleMDescrUpd,
-          articleImg: ArticleImgUpd,
-          articleType: ArticleTypeUpd,
-          articleUpdatedAt: date
-      });
-        
-      setOneArticleList([
-        ...OneArticleList,
-        {
-          ArticleName: ArticleNameUpd,
-          ArticleSmDescr: ArticleSmDescrUpd,
-          ArticleMDescr: ArticleMDescrUpd,
-          ArticleImg: ArticleImgUpd,
-          ArticleType: ArticleTypeUpd,
-          ArticleCreatedAt: date,
-          ArticleUpdatedAt: date
-        }, //Valamiért mind a kettőt nagy A-vel kell írni, az első értékeket, azaz nem articleName: ArticleName
-      ]);
-    };
+  const {
+    register,
+    handleSubmit,
+    formState: {errors}
+} = useForm();
 
-    const [ModalState, setModalState] = useState(false);
+const onSubmit = (data) => {
+    alert(JSON.stringify(data));
+    //submitArticleData();
+};
 
-    const modalClose = () => setModalState(false);
+  return (
+    <div>
+      <h1>Logged in as: {LoginStatus}</h1>
+      <h1>Sent ArticleId from chooseArticles.js page: {location.state.id}</h1>
 
-    const modalOpen = () => setModalState(true);
-
-    let navigate = useNavigate();
-    const routeChangeBack = () =>{
-      navigate('/chooseArticle');
-    }
-
-    return(
         <div>
-          <h1>{GotArticleId}</h1>
           {OneArticleList.map((val) => {
-                      return(
-                        <div className="card">
-                          <h1>Article name: {val.ArticleName}</h1>
-                          <h2>Article small description: {val.ArticleSmDescr}</h2>
-                          <p>Article main description: {val.ArticleMDescr}</p>
-                          <p>Article image: {val.ArticleImg}</p>
-                          <p>Article status: {val.ArticleStatus}</p>
-                          <p>Article created at: {val.ArticleCreatedAt}</p>
-                          <p>Article updated at: {val.ArticleUpdatedAt}</p>
+            return(
+              <div className=''>
+                <h1>Article name: {val.ArticleName}</h1>
+                <h2>Article small description: {val.ArticleSmDescr}</h2>
+                <p>Article main description: {val.ArticleMDescr}</p>
+                <p>Article image: {val.ArticleImg}</p>
+                <p>Article status: {val.ArticleStatus}</p>
+                <p>Article created at: {val.ArticleCreatedAt}</p>
+                <p>Article updated at: {val.ArticleUpdatedAt}</p>
 
-                          <div
-                              className="d-flex align-items-center justify-content-center"
-                              style={{ height: "100vh" }}
-                            >
-                              
-                              <Button variant="primary" onClick={() => {modalOpen();}}>
-                                  Edit
-                              </Button>
+                  <div
+                    className="d-flex align-items-center justify-content-center"
+                    style={{ height: "100vh" }}
+                  >
 
-                              <Modal show={ModalState} onHide={modalClose}>
-                                <Modal.Header closeButton>
-                                  <Modal.Title>Modal heading</Modal.Title>
-                                </Modal.Header>
+                    <Button variant="primary" onClick={modalOpen}>
+                      Edit
+                    </Button>
+                  </div>
+                    <Modal show={ModalState} onHide={modalClose}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>You are editing {val.ArticleName} article</Modal.Title>
+                      </Modal.Header>
 
-                              <Modal.Body>
-                              {OneArticleList.map((val) => {
+                      <Modal.Body>
+                        {OneArticleList.map((val) => {
                                 return(
                                   <form onSubmit={handleSubmit(onSubmit)}>
                                     <div className="form-group">
@@ -241,29 +188,25 @@ export default function CreateArticle(){
                                       {errors?.articleImg?.type === "maxLength" && <div><h5>Your article's picture URL is too long.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
                                     </div>
 
-                                    <input type="submit" onClick={submitArticleData()}/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
+                                    <input type="submit"/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
                                   </form>
                                   ) 
                                 })}
-                              </Modal.Body>
-                            
-                              <Modal.Footer>
-                                <Button variant="secondary" onClick={() => {modalClose();}}>
-                                  Close
-                                </Button>
-                            </Modal.Footer>
-                          </Modal>
-                          </div>
+                      </Modal.Body>
+                    
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={modalClose}>
+                          Close
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+              </div>
+              )
+            })}
+          </div>
 
-                          
-                        </div>
-                      )
-                  })}
+          <button onClick={routeChange}>Back to selection page</button>
+    </div>
 
-            <h1>{LoginStatus}</h1>
-
-            {/*<button onClick={routeChangeBack()}>Back</button>*/}
-        </div>
-        
-    );
+  )
 }
