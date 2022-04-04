@@ -44,7 +44,7 @@ export default function ProfileUpdate(){
     };
 
     const password = useRef({});
-    password.current = watch("firstPw", "");
+    password.current = watch("password", "");
 
     Axios.defaults.withCredentials = true;
 
@@ -129,39 +129,32 @@ export default function ProfileUpdate(){
                                     </Modal.Header>
 
                                     <Modal.Body>
-                                    <form onSubmit={handleSubmit(onSubmitPw)}>
+                                        <form onSubmit={e => e.preventDefault()}>
 
-                                        <div className="form-group">
-                                            <label>New password: </label>
-                                            <input name="password" type="password" className="form-control" {
-                                                ...register("firstPw", {
+                                            <div className="form-group">
+                                                <label>New password: </label>
+                                                <input name="password" type="password" className="form-control" ref={register({
                                                     required: true,
                                                     minLength: 8,
-                                                    maxLength: 16,
-                                                })
-                                            }/>
+                                                    maxLength: 16
+                                                })}/>
 
-                                            {errors?.firstPw?.type === "required" && <div><h5>This field is required!</h5><p>Your must have a password!</p></div>}
-                                            {errors?.firstPw?.type === "minLength" && <div><h5>Your password is too short.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
-                                            {errors?.firstPw?.type === "maxLength" && <div><h5>Your password is too long.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
-                                        </div>
+                                                {errors?.password?.type === "required" && <div><h5>This field is required!</h5><p>Your must have a password</p></div>}
+                                                {errors?.password?.type === "minLength" && <div><h5>Your password is too short.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
+                                                {errors?.password?.type === "maxLength" && <div><h5>Your password is too long.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
+                                            </div>
 
-                                        <div className="form-group">
-                                            <label>Password again: </label>
-                                            <input type="password" className="form-control" {
-                                                ...register("secondPw", {
+                                            <div className="form-group">
+                                                <label>Password again: </label>
+                                                <input name="password_repeat" type="password" className="form-control" ref={register({
                                                     validate: value => value === password.current
-                                                })
-                                            }onChange={(e) => {
-                                                setUserPwUpd(e.target.value);
-                                            }}/>
+                                                })}onChange={(e) => {
+                                                    setUserPwUpd(e.target.value);
+                                                }}/>
 
-                                            {errors?.secondPw?.type === "validate" && <div><h5>Passwords must match!</h5></div>}
-                                    
-                                        </div>
-
-                                            <input type="submit" />
-
+                                                {errors?.password_repeat?.type === "validate" && <div><h5>Passwords must match!</h5></div>}
+                                            </div>
+                                            <input type="submit" onClick={handleSubmit(onSubmitPw)}/>
                                         </form>
                                     </Modal.Body>
 

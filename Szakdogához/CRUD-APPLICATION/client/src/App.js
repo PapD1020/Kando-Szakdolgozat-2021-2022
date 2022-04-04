@@ -20,13 +20,13 @@ export default function App(){
 
   return(
     <div className='App'>
-      <h1>CRUD-APPLICATION WITH ROUTER V6</h1>
+      <h1>IdeaShare</h1>
       <nav>
         <Link to="/login">Login</Link> | {" "}
         <Link to="/registration">Registration</Link> | {" "}
         <Link to="/articles">Articles</Link> | {" "}
         <Link to="/createArticle">Create Article</Link> | {" "}
-        <Link to="/chooseArticle">Choose article for editing Article</Link> | {" "}
+        <Link to="/chooseArticle">Choose article for editing</Link> | {" "}
         <Link to="/profilePage">Profile Page</Link> | {" "}
         <Link to="/all">All</Link>
       </nav>
