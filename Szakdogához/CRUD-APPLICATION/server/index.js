@@ -231,19 +231,30 @@ app.delete('/api/delete/article/:articleName', (req, res) => {
 });
 
 //PUT-UPDATE - Article
-app.put('/api/update/article', (req, res) => {
+app.put('/api/update/article/byUser', (req, res) => {
 
-    const name = req.body.articleName;
-    const status = req.body.articleStatus;
-    const updated = req.body.articleUpdatedAt;
-    const sqlUpdate = "UPDATE Articles SET ArticleStatus = ?, ArticleUpdatedAt = ? WHERE ArticleName = ?";
+    //const userId = req.body.userId;
+    const articleId = req.body.articleId;
+    const articleName = req.body.articleName;
+    const articleSmDescr = req.body.articleSmDescr;
+    const articleMDescr = req.body.articleMDescr;
+    const articleImg = req.body.articleImg;
+    const articleType = req.body.articleType;
+    const articleStatus = req.body.articStatus;
+   // const articleCreatedAt = req.body.articleCreatedAt;
+    const articleUpdatedAt = req.body.articleUpdatedAt;
 
-    db.query(sqlUpdate, [status, updated, name], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+    const sqlUpdate = "UPDATE Articles SET ArticleName = ?, ArticleSmDescr = ?, ArticleMDescr = ?, ArticleImg = ?, ArticleType = ?, ArticleStatus = ?, ArticleUpdatedAt = ? WHERE ArticleId = ?";
+
+    db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleUpdatedAt, articleId], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
         if(err){
             console.log(err);
+            res.sendStatus(404);
         }
+        res.sendStatus(200);
     });
 });
+
 
 /*
 * Admin CRUD
