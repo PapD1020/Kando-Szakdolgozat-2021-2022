@@ -150,7 +150,9 @@ app.get('/api/get/article', (req, res) => {
     const item = req.get("item")-1;
     console.log(item);
     //const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 1 OFFSET " + item + "";
-    const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 20  OFFSET " + item + "";
+    //const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 20  OFFSET " + item + "";
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 ORDER BY ArticleId ASC LIMIT 20  OFFSET " + item + "";
+    
     db.query(sqlSelect, (err, result) => {
         if(err){
             console.log("Article GET error: " + err);

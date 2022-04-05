@@ -3,13 +3,6 @@ import {Link, useNavigate} from "react-router-dom";
 import Axios from 'axios';
 
 export default function CreateArticle(props){
-
-    const [ArticleNameUpd, setArticleNameUpd] = useState('');
-    const [ArticleSmDescrUpd, setArticleSmDescrUpd] = useState('');
-    const [ArticleMDescrUpd, setArticleMDescrUpd] = useState('');
-    const [ArticleImgUpd, setArticleImgUpd] = useState('');
-    const [ArticleTypeUpd, setArticleTypeUpd] = useState('');
-    //articleType
   
     const [ArticleNameList, setArticleNameList] = useState([]);
     
@@ -19,9 +12,6 @@ export default function CreateArticle(props){
     
 
     Axios.defaults.withCredentials = true;
-
-    const current = new Date();
-    const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
       //check every time we refresh the page if a user is logged in
       useEffect(() => {
@@ -53,13 +43,6 @@ export default function CreateArticle(props){
         alert("Második selected got id: " + gotId);
         navigate('/editArticle', {state:{id: gotId}});
       }
-
-      /*
-      const gotSelectedArticleId = (id) =>{
-        alert("Első got selected id: " + id);
-        return id;
-      }
-      */
       
     return(
         <div>

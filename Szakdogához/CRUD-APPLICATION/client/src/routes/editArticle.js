@@ -11,6 +11,7 @@ export default function EditArticle() {
   const [ArticleMDescrUpd, setArticleMDescrUpd] = useState('');
   const [ArticleImgUpd, setArticleImgUpd] = useState('');
   const [ArticleTypeUpd, setArticleTypeUpd] = useState('');
+  const [ArticleStatusUpd, setArticleStatusUpd] = useState('');
 
   const location = useLocation();
 
@@ -25,6 +26,9 @@ export default function EditArticle() {
   const modalOpen = () => setModalState(true);
 
   Axios.defaults.withCredentials = true;
+
+  const current = new Date();
+  const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
   //check every time we refresh the page if a user is logged in
   useEffect(() => {
@@ -60,26 +64,27 @@ export default function EditArticle() {
     register,
     handleSubmit,
     formState: {errors}
-} = useForm();
+  } = useForm();
 
-const onSubmit = (data) => {
-    alert(JSON.stringify(data));
-    submitArticleData();
-};
+  const onSubmit = (data) => {
+      alert(JSON.stringify(data));
+      submitArticleData();
+  };
 
-const submitArticleData = () => {
+  const submitArticleData = () => {
 
-  //articleName - backend variable name
-  Axios.put('http://localhost:3001/api/update/article/articleById', { //URL for our api (node.js backend)
-    articleId: ArticleId,
-    articleName: ArticleName,
-    articleSmDescr: ArticleSmDescr,
-    articleMDescr: ArticleMDescr,
-    articleImg: ArticleImg,
-    articleType: ArticleType,
-    articleUpdatedAt: date
-});
-};
+    //articleName - backend variable name
+    Axios.put('http://localhost:3001/api/update/article/byUser', { //URL for our api (node.js backend)
+      articleId: location.state.id,
+      articleName: ArticleNameUpd,
+      articleSmDescr: ArticleSmDescrUpd,
+      articleMDescr: ArticleMDescrUpd,
+      articleImg: ArticleImgUpd,
+      articleType: ArticleTypeUpd,
+      articleStatus: ArticleStatusUpd,
+      articleUpdatedAt: date
+    });
+  };
 
   return (
     <div>
@@ -100,7 +105,7 @@ const submitArticleData = () => {
 
                   <div
                     className="d-flex align-items-center justify-content-center"
-                    style={{ height: "100vh" }}
+                    style={{ height: "10vh" }}
                   >
 
                     <Button variant="primary" onClick={modalOpen}>
@@ -172,7 +177,7 @@ const submitArticleData = () => {
                                       <label>Article main description:</label>
                                       <input type="text" className="form-control" defaultValue={val.ArticleMDescr} {
                                           ...register("articleMDescr", {
-                                              minLength: 150,
+                                              minLength: 3,
                                               maxLength: 500,
                                               pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
                                           })
@@ -206,7 +211,7 @@ const submitArticleData = () => {
                                       <label>Article status:</label>
                                       <select id="status" className="form-control" required {
                                           ...register("articleStatus", {
-                                              required: false,
+                                              required: true,
                                           })
                                       } onChange={(e) => {
                                           setArticleStatusUpd(e.target.value);
@@ -216,7 +221,6 @@ const submitArticleData = () => {
                                           <option value="0">Inaktív</option>
                                           <option value="-2">Törölt</option>
                                       </select>
-                                      <div className="invalid-feedback">You must select a article type.</div>
                                   </div>
 
                                     <input type="submit"/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
