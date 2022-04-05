@@ -64,7 +64,21 @@ export default function EditArticle() {
 
 const onSubmit = (data) => {
     alert(JSON.stringify(data));
-    //submitArticleData();
+    submitArticleData();
+};
+
+const submitArticleData = () => {
+
+  //articleName - backend variable name
+  Axios.put('http://localhost:3001/api/update/article/articleById', { //URL for our api (node.js backend)
+    articleId: ArticleId,
+    articleName: ArticleName,
+    articleSmDescr: ArticleSmDescr,
+    articleMDescr: ArticleMDescr,
+    articleImg: ArticleImg,
+    articleType: ArticleType,
+    articleUpdatedAt: date
+});
 };
 
   return (
@@ -187,6 +201,23 @@ const onSubmit = (data) => {
                                       {errors?.articleImg?.type === "minLength" && <div><h5>Your article's picture URL is too short.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
                                       {errors?.articleImg?.type === "maxLength" && <div><h5>Your article's picture URL is too long.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
                                     </div>
+
+                                    <div className="form-group">
+                                      <label>Article status:</label>
+                                      <select id="status" className="form-control" required {
+                                          ...register("articleStatus", {
+                                              required: false,
+                                          })
+                                      } onChange={(e) => {
+                                          setArticleStatusUpd(e.target.value);
+                                      }}>
+                                          <option defaultValue={val.ArticleStatus}>{val.ArticleStatus}</option>
+                                          <option value="1">Aktív</option>
+                                          <option value="0">Inaktív</option>
+                                          <option value="-2">Törölt</option>
+                                      </select>
+                                      <div className="invalid-feedback">You must select a article type.</div>
+                                  </div>
 
                                     <input type="submit"/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
                                   </form>

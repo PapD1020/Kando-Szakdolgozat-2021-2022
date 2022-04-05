@@ -27,7 +27,6 @@ render(
           <Route path="chooseArticle" element={<ChooseArticles />}></Route>
           <Route path="editArticle" element={<EditArticle />}></Route>
           <Route path="profilePage" element={<ProfilePage />}></Route>
-          <Route path="all" element={<All />}></Route>
         </Route>
       </Route>
     </Routes>

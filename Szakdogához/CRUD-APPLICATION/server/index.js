@@ -92,7 +92,8 @@ app.get('/api/get/article/allById', (req, res) => {
     const userId = req.get("userId");
     console.log("userId: " + userId);
     
-    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = " + "'" + userId + "'";
+    //SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = 'g8lgdpeaghN1r9vRmRqDh' AND ArticleStatus != -1
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = " + "'" + userId + "' AND ArticleStatus != -1";
     console.log("SQL SELECT: " + sqlSelect);
 
     db.query(sqlSelect, [userId], (err, result) => {
@@ -565,7 +566,6 @@ app.put('/api/update/user/userId', (req, res) => {
 //ARTICLE - Edit Article (data update)
 app.put('/api/update/article/articleById', (req, res) => {
 
-    const articleId = req.body.articleId;
     const articleName = req.body.articleName;
     const articleSmDescr = req.body.articleSmDescr;
     const articleMDescr = req.body.articleMDescr;
