@@ -575,6 +575,7 @@ app.put('/api/update/user/userId', (req, res) => {
 
 /**********************************************Article - Update********************************************/
 //ARTICLE - Edit Article (data update)
+/*
 app.put('/api/update/article/articleById', (req, res) => {
 
     const articleName = req.body.articleName;
@@ -592,6 +593,7 @@ app.put('/api/update/article/articleById', (req, res) => {
         }
     });
 });
+*/
 
 //Get user by Id for profilePage default data
 app.get("/api/get/userById", (req, res) => {
