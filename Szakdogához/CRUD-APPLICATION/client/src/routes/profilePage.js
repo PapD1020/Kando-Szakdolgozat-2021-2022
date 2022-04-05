@@ -273,7 +273,7 @@ export default function ProfileUpdate(){
                                         }}/>
                                     </div>
                         
-                                    <input type="submit" /> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
+                                    <input type="submit"/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
                                 </form>
                                   ) 
                                 })}
