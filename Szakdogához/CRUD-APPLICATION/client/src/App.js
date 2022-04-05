@@ -1,16 +1,16 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Outlet, Link} from 'react-router-dom';
-import Axios from 'axios';
-import React, {useEffect, useState} from "react";
+//import Axios from 'axios';
+//import React, {useEffect, useState} from "react";
 
 export default function App(){
 
   //Authot vagy logint? Tokent vagy cookiet?
   
-  const [LoginStatus, setLoginStatus] = useState('');
+  //const [LoginStatus, setLoginStatus] = useState('');
   
-  const [AuthStatus, setAuthStatus] = useState(false);
+  //const [AuthStatus, setAuthStatus] = useState(false);
 
   /*
   userAuthenticated = () => {
@@ -27,6 +27,7 @@ export default function App(){
   return(
     <div className='App'>
       <h1>IdeaShare</h1>
+      
       <nav>
         <Link to="/login">Login</Link> | {" "}
         <Link to="/registration">Registration</Link> | {" "}

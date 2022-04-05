@@ -3,17 +3,16 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import App from "./App";
 import CreateArticle from "./routes/createArticle";
 import EditArticle from "./routes/editArticle"
-//import Users from "./routes/users";
-import All from "./routes/all";
 import Registration from "./routes/registration";
 import Login from "./routes/login";
 import ProfilePage from "./routes/profilePage";
 import Articles from "./routes/articles";
 import ProtectedRoutes from "./ProtectedRoutes";
 import ChooseArticles from "./routes/chooseArticles"
-//import TestModal from "./routes/modalTest"
+
 
 const rootElement = document.getElementById("root");
+
 render(
 
   <BrowserRouter>
@@ -33,3 +32,4 @@ render(
   </BrowserRouter>,
   rootElement
 );
+
