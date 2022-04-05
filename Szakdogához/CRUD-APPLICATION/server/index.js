@@ -550,27 +550,38 @@ app.post('/api/login/user', (req, res) => {
 app.put('/api/update/user/userId', (req, res) => {
 
     const userId = req.body.userId;
-    const userUn = req.body.userUn;
     const userPP = req.body.userPP;
-    const userPw = req.body.userPw;
     const userFN = req.body.userFN;
     const userSN = req.body.userSN;
-    //születési dátumot ne tudjon már véltoztatni
     const userEmail = req.body.userEmail;
     const userUpdatedAt = req.body.userUpdatedAt;
 
-    bcrypt.hash(userPw, saltRounds, (err, hash) => {
+        const sqlUpdate = "UPDATE Users SET UserPP = ?, UserFN = ?, UserSN = ?, UserEmail = ?, UserUpdatedAt = ? WHERE UserId = ?";
 
-        if(err){
-            console.log("Update password - bcrypt error: " + err);
-        }
-
-        const sqlUpdate = "UPDATE Users SET UserUn = ?, UserPP = ?, UserPw = ?, UserFN = ?, UserSN = ?, UserEmail = ?, UserUpdatedAt = ? WHERE UserId = ?";
-
-        db.query(sqlUpdate, [userUn, userPP, hash, userFN, userSN, userEmail, userUpdatedAt, userId], (err, result) => {                       //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+        db.query(sqlUpdate, [userPP, userFN, userSN, userEmail, userUpdatedAt, userId], (err, result) => {                       //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
             if(err){
                 console.log("Users Profile data UPDATE error: " + err);
             }
+        });
+});
+
+//Password change
+app.put('/api/update/user/password', (req, res) => {
+    const userId = req.body.userId;
+    const userPw = req.body.userPw;
+    const userUpdatedAt = req.body.userUpdatedAt;
+
+    bcrypt.hash(userPw, saltRounds, (err, hash) => {
+        if(err){
+            console.log("Change password - bcrypt error: " + err);
+        }
+
+        const sqlUpdate = "UPDATE Users SET UserPw = ?, UserUpdatedAt = ? WHERE UserId = ?";
+
+        db.query(sqlUpdate, [hash, userUpdatedAt, userId], (err, result) => {
+        if(err){
+            console.log("User password change sql error: " + err);
+        }
         });
     });
 });

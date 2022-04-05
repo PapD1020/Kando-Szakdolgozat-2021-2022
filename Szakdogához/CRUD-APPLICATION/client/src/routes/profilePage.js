@@ -9,7 +9,6 @@ export default function ProfileUpdate(){
     //Id vigygálata, átadása
     //Validációja a beviteli mezőknek
 
-    const [UserUnUpd, setUserUnUpd] = useState('');
     const [UserPPUpd, setUserPPUpd] = useState('');
     const [UserPwUpd, setUserPwUpd] = useState('');
     const [UserFNUpd, setUserFNUpd] = useState('');
@@ -18,8 +17,6 @@ export default function ProfileUpdate(){
     const [UsersNameList, setUsersNameList] = useState([]);
 
     const [LoginStatus, setLoginStatus] = useState('');
-
-    const [UserUpdList, setUserUpdList] = useState([]);
 
     const GotUserId = useRef(null);
 
@@ -41,6 +38,7 @@ export default function ProfileUpdate(){
 
     const onSubmitPw = async data => {
         alert(JSON.stringify(data));
+        changePassword();
     };
 
     const password = useRef({});
@@ -73,27 +71,36 @@ export default function ProfileUpdate(){
     }, []);
 
     //POST - USERS
-    const submitUserDataUpd = (userId) => {
+    const submitUserDataUpd = () => {
   
     //postName - backend variable name
         Axios.put(`http://localhost:3001/api/update/user/userId`, { //URL for our api (node.js backend)
         //userUn must be the same as in back-end index.js req.body.userUn !!!
         userId: GotUserId.current,
-        userUn: UserUnUpd,
         userPP: UserPPUpd,
-        userPw: UserPwUpd,
         userFN: UserFNUpd,
         userSN: UserSNUpd,
         userEmail: UserEmailUpd,
-        userCreatedAt: date,
         userUpdatedAt: date
 
         }).then((response) => 
             console.log("Update user response: " + JSON.stringify(response))
         );
-        alert("Successfully updated as maga a változó: " + GotUserId.current);
-        alert("Successfully updated as: " + userId);
+        //alert("Successfully updated as maga a változó: " + GotUserId.current);
+        alert("Successfully updated as: " + GotUserId.current);
     };
+
+    const changePassword = () => {
+        Axios.put('http://localhost:3001/api/update/user/password', {
+            userId: GotUserId.current,
+            userPw: UserPwUpd,
+            userUpdatedAt: date
+        }).then((response) => 
+            console.log("Updated user password response: " + response)
+        );
+        alert("Successfully changed password. Id: " + GotUserId.current);
+
+    }
 
     const [ModalState, setModalState] = useState(false);
 
@@ -137,7 +144,7 @@ export default function ProfileUpdate(){
                                                 ...register("firstPw", {
                                                     required: true,
                                                     minLength: 8,
-                                                    maxLength: 16,
+                                                    maxLength: 16
                                                 })
                                             }/>
 
