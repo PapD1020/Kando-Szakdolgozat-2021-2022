@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Outlet, Link} from 'react-router-dom';
-import { Button, Nav, Navbar, Container } from "react-bootstrap";
+import {Outlet} from 'react-router-dom';
+import {Nav, Navbar, Container } from "react-bootstrap";
 import Axios from 'axios';
 import React, {useEffect, useState} from "react";
 
@@ -26,7 +26,7 @@ export default function App(){
     <div className='App'>
       <Navbar bg="primary" variant="dark">
         <Container>
-          <Navbar.Brand>IdeaShare</Navbar.Brand>
+          <Navbar.Brand className=''>IdeaShare</Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
 
