@@ -86,10 +86,10 @@ export default function Login(){
         
         <div>
             {!LoginStatus && (
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form className="m-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
-                    <label>User name:</label>
-                    <input type="text" className="form-control"{
+                    <label className="display-6 mb-3">User name:</label>
+                    <input type="text" className="p-2 mb-5 form-control"{
                         ...register("userName", {
                             required: true,
                             minLength: 3,
@@ -100,15 +100,15 @@ export default function Login(){
                         setUserUnLogin(e.target.value);
                     }}/>
                     
-                    {errors?.userName?.type === "required" && <div><h5>This field is required!</h5><p>Your must enter your user name.</p></div>}
-                    {errors?.userName?.type === "minLength" && <div><h5>Your user name is too short.</h5><p>Your user name length must be between 3 and 30 characters.</p></div>}
-                    {errors?.userName?.type === "maxLength" && <div><h5>Your user name is too long.</h5><p>Your user name length must be between 3 and 30 characters.</p></div>}
-                    {errors?.userName?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                    {<div className={" " + (errors?.userName?.type === "required" ? "" : "hidden")}><h5>This field is required!</h5><p>Your must enter your user name.</p></div>}
+                    {errors?.userName?.type === "minLength" && <div className=""><h5>Your user name is too short.</h5><p>Your user name length must be between 3 and 30 characters.</p></div>}
+                    {errors?.userName?.type === "maxLength" && <div className=""><h5>Your user name is too long.</h5><p>Your user name length must be between 3 and 30 characters.</p></div>}
+                    {errors?.userName?.type === "pattern" && <div className=""><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
                 </div>
 
                 <div className="form-group">
-                    <label>Password: </label>
-                    <input type="password" className="form-control"{
+                    <label className="display-6 mb-3">Password: </label>
+                    <input type="password" className="form-control mb-3"{
                         ...register("userPw", {
                             required: true,
                             minLength: 8,
@@ -127,14 +127,10 @@ export default function Login(){
             </form>
             )}
 
-                {LoginStatus && (
-                    <button onClick={userAuthenticated}>Check if authenticated</button>
-                )}
+            {LoginStatus && (
+                <button onClick={userAuthenticated}>Check if authenticated</button>
+            )}
                 
-
-                {LoginStatus && (
-                    <h1>Majd headerbe megy {LoginStatus}</h1>
-                )}
 
             {LoginStatus && (
                 <Alert show={showState} variant="success">
