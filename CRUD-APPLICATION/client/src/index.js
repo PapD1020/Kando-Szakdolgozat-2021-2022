@@ -7,6 +7,7 @@ import Login from "./routes/login";
 import UsersList from "./routes/userlist";
 import PostList from "./routes/articleslist";
 import ProfileUpdate from "./routes/profilePage";
+import AdminEditArticle from "./routes/adminEditArticle";
 
 
 const rootElement = document.getElementById("root");
@@ -18,6 +19,8 @@ render(
         <Route path="registration" element={<Registration />}></Route>
         
         <Route path="articleslist" element={<PostList />}></Route>
+
+        <Route path="adminEditArticle" element={<AdminEditArticle />}></Route>
      
      
         <Route path="userlist" element={<UsersList />}></Route>

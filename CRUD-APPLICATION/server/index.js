@@ -139,7 +139,7 @@ app.get('/api/get/articleall', (req, res) => {
             console.log("Article GET error: " + err);
         }
 
-        console.log("Result:" + result);                //valamiért Object-et kapok terminálban
+        console.log("Result FIGYELD:" + result);                //valamiért Object-et kapok terminálban
         res.send(result);
     });
 });
@@ -193,10 +193,10 @@ app.post('/api/insert/article', (req, res) => {
 });
 
 //DELETE - Article
-app.delete('/api/delete/article/:articleName', (req, res) => {
-    const name = req.params.articleName;
-    const sqlDelete = "DELETE FROM Articles WHERE ArticleName = ?";
-    db.query(sqlDelete, name, (err, result) => {
+app.delete('/api/delete/article/:articleId', (req, res) => {
+    const id = req.params.articleId;
+    const sqlDelete = "DELETE FROM Articles WHERE ArticleId = ? ; DELETE FROM ArticleUser WHERE AId = ?";
+    db.query(sqlDelete, id,id, (err, result) => {
         if(err){
             console.log(err);
         }
@@ -478,6 +478,31 @@ app.put('/api/update/article:articleId', (req, res) => {
         if(err){
             console.log("Artcile update err: " + err);
         }
+    });
+});
+
+//PUT-UPDATE - Article
+app.put('/api/update/article/byUser', (req, res) => {
+
+    //const userId = req.body.userId;
+    const articleId = req.body.articleId;
+    const articleName = req.body.articleName;
+    const articleSmDescr = req.body.articleSmDescr;
+    const articleMDescr = req.body.articleMDescr;
+    const articleImg = req.body.articleImg;
+    const articleType = req.body.articleType;
+    const articleStatus = req.body.articleStatus;
+   // const articleCreatedAt = req.body.articleCreatedAt;
+    const articleUpdatedAt = req.body.articleUpdatedAt;
+
+    const sqlUpdate = "UPDATE Articles SET ArticleName = ?, ArticleSmDescr = ?, ArticleMDescr = ?, ArticleImg = ?, ArticleType = ?, ArticleStatus = ?, ArticleUpdatedAt = ? WHERE ArticleId = ?";
+
+    db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleUpdatedAt, articleId], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+        if(err){
+            console.log(err);
+            res.sendStatus(404);
+        }
+        res.sendStatus(200);
     });
 });
 

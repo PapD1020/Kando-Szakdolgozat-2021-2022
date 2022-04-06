@@ -5,7 +5,7 @@ import { NotificationsNone, Language, Settings, Accessibility,AccountTree} from 
 import { Button,Nav,Navbar, NavDropdown,Container } from "react-bootstrap";
 
 export default function Topbar() {
-  let user=JSON.parse(localStorage.getItem('token'))
+  //let user=JSON.parse(localStorage.getItem('token'))
   function logOut(){
     localStorage.clear();
 
