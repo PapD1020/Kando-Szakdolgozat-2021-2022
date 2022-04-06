@@ -243,7 +243,7 @@ app.put('/api/update/article/byUser', (req, res) => {
     const articleMDescr = req.body.articleMDescr;
     const articleImg = req.body.articleImg;
     const articleType = req.body.articleType;
-    const articleStatus = req.body.articStatus;
+    const articleStatus = req.body.articleStatus;
    // const articleCreatedAt = req.body.articleCreatedAt;
     const articleUpdatedAt = req.body.articleUpdatedAt;
 

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import { useForm } from "react-hook-form";
 import '../App.css';
 import Axios from 'axios';
-import { Alert, Button } from 'react-bootstrap';
 
 export default function Login(){
 
@@ -10,8 +9,6 @@ export default function Login(){
     const [UserPwLogin, setUserPwLogin] = useState('');
 
     const [LoginStatus, setLoginStatus] = useState(false);
-
-    const [ErrorMessage, setErrorMessage] = useState('');
 
     Axios.defaults.withCredentials = true;
 
@@ -36,9 +33,9 @@ export default function Login(){
 
             if(!response.data.auth){ //ha nem vagyunk authentikálva
                 //setLoginStatus(response.data.message);
-                setErrorMessage(response.data.message);
                 setLoginStatus(false);
                 console.log("Login user response.data: " + JSON.stringify(response.data));
+                setErrorMessage(response.data.message);
             }
             else{
                 console.log("Bejelentkezve");
@@ -73,19 +70,8 @@ export default function Login(){
         });
     }, []);
 
-    const [showState, setShowState] = useState(true);
-
-    const [showStateDanger, setShowStateDanger] = useState(true);
-
-    /* Valamiért fölösleges Alert hez
-    const closeAlert = () => setShowState(false);
-
-    const openAlert = () => setShowState(true);
-    */
     return(
-        
         <div>
-            {!LoginStatus && (
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
                     <label>User name:</label>
@@ -121,50 +107,24 @@ export default function Login(){
                     {errors?.userPw?.type === "required" && <div><h5>This field is required!</h5><p>Your must enter your password.</p></div>}
                     {errors?.userPw?.type === "minLength" && <div><h5>Your password is too short.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
                     {errors?.userPw?.type === "maxLength" && <div><h5>Your password is too long.</h5><p>Your password length must be between 8 and 100 characters.</p></div>}
-                    
                 </div>
-                <input type="submit" value={"Login"}/>
-            </form>
-            )}
+
+
+                {/*<h1>{LoginStatus}</h1>*/}
 
                 {LoginStatus && (
                     <button onClick={userAuthenticated}>Check if authenticated</button>
                 )}
                 
+                {!LoginStatus && (
+                    <input type="submit" value={"Login"}/>
+                )}
+                
 
                 {LoginStatus && (
-                    <h1>Majd headerbe megy {LoginStatus}</h1>
+                    <h1>{LoginStatus}</h1>
                 )}
-
-            {LoginStatus && (
-                <Alert show={showState} variant="success">
-                <Alert.Heading>Log in successfull!</Alert.Heading>
-                <p>
-                    Welcome {LoginStatus} !
-                </p>
-                <hr />
-                <div className="d-flex justify-content-end">
-                    <Button onClick={() => setShowState(false)} variant="outline-success">
-                        Ok
-                    </Button>
-                </div>
-                </Alert>
-            )}
-
-            {ErrorMessage && (
-                <Alert show={showStateDanger} variant="danger">
-                <Alert.Heading>Log in unsuccessfull!</Alert.Heading>
-                <p>
-                    {ErrorMessage}
-                </p>
-                <hr />
-                <div className="d-flex justify-content-end">
-                    <Button onClick={() => setShowStateDanger(false)} variant="outline-success">
-                        Close
-                    </Button>
-                </div>
-                </Alert>
-            )}
+            </form>
         </div>
     );
 }

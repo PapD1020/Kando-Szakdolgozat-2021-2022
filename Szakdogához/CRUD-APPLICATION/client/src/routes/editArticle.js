@@ -223,7 +223,17 @@ export default function EditArticle() {
                                       </select>
                                   </div>
 
-                                    <input type="submit"/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
+                                    <input type="submit"
+                                      onClick={() => {
+                            
+                                        if ( ArticleNameUpd === "" ) { setArticleNameUpd(val.ArticleName) }
+                                        if ( ArticleSmDescrUpd === "" ) { setArticleSmDescrUpd(val.ArticleSmDescr)}
+                                        if ( ArticleMDescrUpd === "" ) { setArticleMDescrUpd(val.ArticleMDescr)}
+                                        if ( ArticleImgUpd === "" ) { setArticleImgUpd(val.ArticleImg)}
+                                        if ( ArticleTypeUpd === "" ) { setArticleTypeUpd(val.ArticleType)}
+                                        if ( ArticleStatusUpd === "" ) { setArticleStatusUpd(val.ArticleStatus)}
+                                      }}
+                                    /> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
                                   </form>
                                   ) 
                                 })}
