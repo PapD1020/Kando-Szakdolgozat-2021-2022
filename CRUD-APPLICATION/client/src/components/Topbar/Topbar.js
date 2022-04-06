@@ -13,7 +13,7 @@ export default function Topbar() {
     return (
       <div >
   
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+      <Navbar collapseOnSelect expand="lg" className="navbar">
       <Container>
       <Navbar.Brand href="#home">Admin</Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
