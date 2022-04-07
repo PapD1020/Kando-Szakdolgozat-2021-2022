@@ -96,18 +96,19 @@ export default function Login(){
     
     return(
         
-        <div className="ms-5">
-
-            <h1 className="display-1 m-5">Login</h1>
+        <div className="ms-3">
+            <div className="col-md-auto">
+                <h1 className="display-1 m-3">Login</h1>
+            </div>
 
             {!LoginStatus && (
                 <div className="container">
                     <form className="" onSubmit={handleSubmit(onSubmit)}>
                         <div className="row">
-                            <div className="col">
+                            <div className="col-sm-auto">
                                 <div className="form-group">
-                                    <label className="display-6 mb-3">Username:</label>
-                                    <input className="form-control w-25 p-2 mb-3" type="text" {
+                                    <label className="display-5 mb-3">Username:</label>
+                                    <input className="form-control p-2 mb-3" type="text" {
                                         ...register("userName", {
                                             required: true,
                                             minLength: 3,
@@ -122,8 +123,8 @@ export default function Login(){
                         </div>
 
                         <div className="row">
-                            <div className="col">
-                                <div className="errordiv text-danger mb-2 w-25">
+                            <div className="col-sm-auto">
+                                <div className="errordiv text-danger mb-2">
                                     {errors?.userName?.type === "required" && <div className=""><h5>This field is required!</h5><p>Your must enter your user name.</p></div>}
                                     {errors?.userName?.type === "minLength" && <div className=""><h5>Your user name is too short.</h5><p>Your user name length must be between 3 and 30 characters.</p></div>}
                                     {errors?.userName?.type === "maxLength" && <div className=""><h5>Your user name is too long.</h5><p>Your user name length must be between 3 and 30 characters.</p></div>}
@@ -133,10 +134,10 @@ export default function Login(){
                         </div>
 
                         <div className="row">
-                            <div className="col">
+                            <div className="col-sm-auto">
                                 <div className="form-group">
-                                    <label className="display-6 mb-3 mt-5">Password: </label>
-                                    <input type="password" className="w-25 mb-3 p-2 form-control"{
+                                    <label className="display-5 mb-3 mt-3">Password: </label>
+                                    <input type="password" className="mb-3 p-2 form-control"{
                                         ...register("userPw", {
                                             required: true,
                                             minLength: 8,
@@ -150,7 +151,7 @@ export default function Login(){
                         </div>
 
                         <div className="row">
-                            <div className="col">
+                            <div className="col-sm-auto">
                                 <div className="errordiv text-danger mb-2">
                                     {errors?.userPw?.type === "required" && <div><h5>This field is required!</h5><p>Your must enter your password.</p></div>}
                                     {errors?.userPw?.type === "minLength" && <div><h5>Your password is too short.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
@@ -159,16 +160,16 @@ export default function Login(){
                             </div>
                         </div>
 
-                        <div className="row">
-                            <div className="col col-lg-2">
-                                <input className="btn btn-outline-primary m-3" type="submit" value={"Login"}/>
+                        <div className="row mt-3">
+                            <div className="col-sm-auto">
+                                <input className="btn btn-outline-primary" type="submit" value={"Login"}/>
                             </div>
-                            <div className="col col-lg-2 m-3">
+                            <div className="col-sm-auto">
                                 <div className="fit p-2" ref={target} onClick={() => setShow(!show)}>
                                     Help <AiOutlineQuestionCircle/>
                                 </div>
 
-                                <Overlay target={target.current} show={show} placement="right">
+                                <Overlay target={target.current} show={show} placement="bottom">
                                     {(props) => (
                                         <Tooltip id="overlay-example" {...props}>
                                             <span>Your user name length must be between 3 and 30 characters.<br></br>
