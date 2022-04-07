@@ -195,8 +195,8 @@ app.post('/api/insert/article', (req, res) => {
 //DELETE - Article
 app.delete('/api/delete/article/:articleId', (req, res) => {
     const id = req.params.articleId;
-    const sqlDelete = "DELETE FROM Articles WHERE ArticleId = ? ; DELETE FROM ArticleUser WHERE AId = ?";
-    db.query(sqlDelete, id,id, (err, result) => {
+    const sqlDelete = "DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId WHERE ArticleId = ?";
+    db.query(sqlDelete, id, (err, result) => {
         if(err){
             console.log(err);
         }
@@ -308,6 +308,126 @@ app.put('/api/update/user', (req, res) => {
         if(err){
             console.log("Users UPDATE error: " + err);
         }
+    });
+});
+/**************************************************COMMENT*********************************************************************/
+
+//GET-20-asával lekérdezés
+app.get('/api/get/comment/byId', (req, res) => {
+
+    //const item = req.body.item-1; POST-hoz body kérés
+    const item = req.get("item")-1;
+    const articleId = req.get("articleId");
+    
+    const sqlSelect = "SELECT Users.UserUn,Users.UserPP,ArticleComment.Comment FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId WHERE ArticleComment.ArticleId = " + "'" + articleId + "'" + " ORDER BY CommentCreatedAt ASC LIMIT 20 OFFSET " + item + "";
+    console.log("SQL SELECT: " + sqlSelect);
+    db.query(sqlSelect, [articleId,item], (err, result) => {
+        if(err){
+            console.log("Comment GET error: " + err);
+        }
+        if (result.length == 0){
+            console.log("no result");
+            res.status(404).send('Not found');
+        }else{
+            console.log(result);
+            res.send(result);
+        }
+    });
+});
+//POST-COMMENT
+app.post('/api/insert/comment', (req, res) => {
+
+    const commentId = Nanoid.nanoid();
+    const userId = req.body.userId;
+    const articleId = req.body.articleId;
+    const comment=req.body.comment;
+    const commentCreatedAt = req.body.commentCreatedAt;
+  
+
+    const sqlInsert = "INSERT INTO `ArticleComment`(`CommentId`, `UserId`, `ArticleId`,`Comment`,`CommentCreatedAt`) VALUES (?,?,?,?,?)";
+    db.query(sqlInsert, [commentId,userId,articleId,comment, commentCreatedAt], (err, result) => {
+
+        if(err){
+            console.log("Comment POST error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+        
+        console.log("comment insert: " + sqlInsert);
+        
+    });
+});
+//DELETE-COMMENT
+app.delete('/api/delete/comment/:commentId', (req, res) => {
+    const id = req.params.commentId;
+    const sqlDelete = "DELETE FROM ArticleComment WHERE CommentId = ?";
+    db.query(sqlDelete, id, (err, result) => {
+        if(err){
+            console.log("Comment DELETE error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+        console.log("Comment DELETE result: " + result);
+        
+    });
+});
+/************************************************Favorite**********************************************************************/
+//GET-20-asával lekérdezés
+app.get('/api/get/favorite/byId', (req, res) => {
+
+    //const item = req.body.item-1; POST-hoz body kérés
+    const item = req.get("item")-1;
+    const userId = req.get("userId");
+    
+    //SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = 'W3Zk4vHXzBnAhv9BptcZI' ORDER BY Articles.ArticleId ASC;
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN UserFavorite ON Articles.ArticleId = UserFavorite.ArticleId WHERE UserFavorite.UserId = " + "'" + userId + "'" + " ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET " + item + "";
+    console.log("SQL SELECT: " + sqlSelect);
+    db.query(sqlSelect, [userId,item], (err, result) => {
+        if(err){
+            console.log("Favorite GET error: " + err);
+        }
+        if (result.length == 0){
+            console.log("no result");
+            res.status(404).send('Not found');
+        }else{
+            console.log(result);
+            res.send(result);
+        }
+    });
+});
+
+//POST-Favorite
+app.post('/api/insert/favorite', (req, res) => {
+
+    const favoriteId = Nanoid.nanoid();
+    const userId = req.body.userId;
+    const articleId = req.body.articleId;
+ 
+
+    const sqlInsert = "INSERT INTO `UserFavorite`(`FavoriteId`, `UserId`, `ArticleId`) VALUES (?,?,?)";
+    db.query(sqlInsert, [favoriteId,userId,articleId], (err, result) => {
+
+        if(err){
+            console.log("Favorite POST error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+
+        console.log("Favorite insert: " + sqlInsert);
+        
+    });
+});
+//DELETE-Favorite
+app.delete('/api/delete/favorite/:favoriteId', (req, res) => {
+    const id = req.params.favoriteId;
+    const sqlDelete = "DELETE FROM UserFavorite WHERE FavoriteId = ?";
+    db.query(sqlDelete, id, (err, result) => {
+        if(err){
+            console.log("Favorite DELETE error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+        console.log("Favorite DELETE result: " + result);
     });
 });
 
