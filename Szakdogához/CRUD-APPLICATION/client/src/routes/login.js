@@ -4,6 +4,7 @@ import '../App.css';
 import Axios from 'axios';
 import { Overlay, Tooltip } from 'react-bootstrap';
 import { AiOutlineQuestionCircle } from "react-icons/ai";
+import {useNavigate} from "react-router-dom";
 
 export default function Login(){
 
@@ -50,6 +51,7 @@ export default function Login(){
                 localStorage.setItem("token", response.data.token); //a local storegabe mentjük a tokent, máshogy is lehetne. data.token - meg kell nézni console.loggaé, hogy hogy kell rá hivatkozni.
                 setLoginStatus(true);
                 //alert("Successfully logged in as: " + response.data[0].UserUn); jwt óta nem jó, backendben nem sime res.send(result) van, hanem res.json({auth: true, token: token, result: result});
+                routeChange();
             }
         });
     };
@@ -86,6 +88,11 @@ export default function Login(){
 
     const [show, setShow] = useState(false);
     const target = useRef(null);
+
+    let navigate = useNavigate();
+    const routeChange = () =>{
+      navigate('/articles');
+    }
     
     return(
         
@@ -99,7 +106,7 @@ export default function Login(){
                         <div className="row">
                             <div className="col">
                                 <div className="form-group">
-                                    <label className="display-6 mb-3">User name:</label>
+                                    <label className="display-6 mb-3">Username:</label>
                                     <input className="form-control w-25 p-2 mb-3" type="text" {
                                         ...register("userName", {
                                             required: true,
@@ -169,6 +176,16 @@ export default function Login(){
                                         </Tooltip>
                                     )}
                                 </Overlay>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col">
+                               <div className="text-danger">
+                                {ErrorMessage && (
+                                    <p>{ErrorMessage}</p>
+                                )}
+                               </div>
                             </div>
                         </div>
                     </form>
