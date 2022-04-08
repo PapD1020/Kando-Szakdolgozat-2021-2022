@@ -8,29 +8,26 @@ import React, {useEffect, useState, useRef} from "react";
 export default function App(){
 
   //Authot vagy logint? Tokent vagy cookiet?
-  const [AuthStatus, setAuthStatus] = useState(false);
-  const [LoginName, setLoginName] = useState();
-
   
-  const checkLoginStatus = () => {
+  const [LoginStatus, setLoginStatus] = useState('');
 
-    Axios.get("http://localhost:3001/api/login/user/auth",
-    {headers:{
-      "x-access-token": localStorage.getItem("token")
-    }}).then((response) => {
-      setAuthStatus(response.data.isUserAuth);
-      setLoginName(response.data.UserUn);
-      alert("user auth response: " + JSON.stringify(response.data))
-    });
-  }
+  const AuthStatus = useRef(false);
 
-  useEffect(() => {
-    checkLoginStatus();
-  })
+      //check every time we refresh the page if a user is logged in
+      useEffect(() => {
+        Axios.get('http://localhost:3001/api/login/user').then((response) => {
+            //ellenőrzésre
+            //console.log("Are we logged in: " + JSON.stringify(response));
+            if(response.data.loggedIn === true){
+                setLoginStatus(response.data.user[0].UserUn);
+            }
+        });
+    }, []);
 
 
   const logout = () =>{
-    localStorage.clear();
+    localStorage.removeItem("token");
+    
   }
 
   return(
@@ -50,12 +47,13 @@ export default function App(){
             <Nav.Link href="/profilePage">Profile Page</Nav.Link>
           </Nav>
 
-
-            <NavDropdown title={LoginName} id="basic-nav-dropdown">
+          {LoginStatus && (
+            <NavDropdown title={LoginStatus} id="basic-nav-dropdown">
               <NavDropdown.Item href="profilePage">Profile</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
             </NavDropdown>
+          )}
 
           </Navbar.Collapse>
         </Container>

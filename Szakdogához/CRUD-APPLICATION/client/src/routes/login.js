@@ -11,8 +11,7 @@ export default function Login(){
     const [UserUnLogin, setUserUnLogin] = useState('');
     const [UserPwLogin, setUserPwLogin] = useState('');
 
-    const [AuthStatus, setAuthStatus] = useState(false);
-    const [LoginName, setLoginName] = useState();
+    const [LoginStatus, setLoginStatus] = useState(false);
 
     const [ErrorMessage, setErrorMessage] = useState('');
 
@@ -40,7 +39,7 @@ export default function Login(){
             if(!response.data.auth){ //ha nem vagyunk authentikálva
                 //setLoginStatus(response.data.message);
                 setErrorMessage(response.data.message);
-                setAuthStatus(false);
+                setLoginStatus(false);
                 console.log("Login user response.data: " + JSON.stringify(response.data));
             }
             else{
@@ -50,28 +49,23 @@ export default function Login(){
 
                 console.log("token: " + JSON.stringify(response.data.token));
                 localStorage.setItem("token", response.data.token); //a local storegabe mentjük a tokent, máshogy is lehetne. data.token - meg kell nézni console.loggaé, hogy hogy kell rá hivatkozni.
-                localStorage.setItem("userId", response.data.result[0].UserId);
-                alert(response.data.result[0].UserId);
-                setAuthStatus(true);
+                setLoginStatus(true);
                 //alert("Successfully logged in as: " + response.data[0].UserUn); jwt óta nem jó, backendben nem sime res.send(result) van, hanem res.json({auth: true, token: token, result: result});
                 routeChange();
             }
         });
     };
 
-    const checkLoginStatus = () => {
-
-        Axios.get("http://localhost:3001/api/login/user/auth",
-        {headers:{
-          "x-access-token": localStorage.getItem("token")
+    const userAuthenticated = () => {
+        Axios.get('http://localhost:3001/api/login/user/auth', {headers: {
+            "x-access-token": localStorage.getItem("token"),
+            "userId": GotUserId.current
         }}).then((response) => {
-          setAuthStatus(response.data.isUserAuth);
-          setLoginName(response.data.UserUn);
-          alert("user auth response: " + JSON.stringify(response.data))
+            alert("Authenticated");
+            console.log("isUserAuth response: " + JSON.stringify(response.data));
         });
-      }
+    };
 
-    /*
     //check every time we refresh the page if a user is logged in
     useEffect(() => {
         Axios.get('http://localhost:3001/api/login/user').then((response) => {
@@ -82,7 +76,6 @@ export default function Login(){
             }
         });
     }, []);
-    */
 
     const [showState, setShowState] = useState(true);
 
@@ -109,7 +102,7 @@ export default function Login(){
                 <h1 className="display-1 m-3">Login</h1>
             </div>
 
-            {!AuthStatus && (
+            {!LoginStatus && (
                 <div className="container">
                     <form className="" onSubmit={handleSubmit(onSubmit)}>
                         <div className="row">
