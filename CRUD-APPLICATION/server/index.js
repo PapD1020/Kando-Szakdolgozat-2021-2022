@@ -195,25 +195,16 @@ app.post('/api/insert/article', (req, res) => {
 //DELETE - Article
 app.delete('/api/delete/article/:articleId', (req, res) => {
     const id = req.params.articleId;
-    /*DELETE articles FROM articles 
-         JOIN articleuser ON articles.ArticleId=articleuUser.AId WHERE ArticleId = 0CaIwAncmpgZtxjBTM4pF;
-     DELETE articles FROM articles 
-        JOIN articlecomment ON articles.ArticleId=articlecomment.ArticleId WHERE ArticleId = 0CaIwAncmpgZtxjBTM4pF;
-     DELETE articles FROM articles 
-        JOIN userfavorite ON articles.ArticleId=userfavorite.ArticleId WHERE ArticleId = 0CaIwAncmpgZtxjBTM4pF;*/ 
-
-    /*DELETE Articles FROM Articles 
-        INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId 
-        INNER JOIN ArticleComment ON Articles.ArticleId=ArticleComment.ArticleId 
-        INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId
-        WHERE ArticleId = ?*/
-
+   
         //"DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId WHERE ArticleId = ?" ez jó
-
-    const sqlDelete = "DELETE Articles FROM Articles INNER JOIN ArticleComment ON Articles.ArticleId=ArticleComment.ArticleId WHERE ArticleId = ?;  DELETE Articles FROM Articles  INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE ArticleId = ?;DELETE Articles FROM Articles INNER JOIN Articleuser ON Articles.ArticleId=articleuUser.AId WHERE ArticleId = ?;";
-    db.query(sqlDelete, id,id,id, (err, result) => {
+        //DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId INNER JOIN ArticleComment ON Articles.ArticleId=ArticleComment.ArticleId INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE Articles.ArticleId = ? jó
+    
+        const sqlDelete = "DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId WHERE Articles.ArticleId = ?;DELETE Articles FROM Articles INNER JOIN ArticleComment ON Articles.ArticleId=ArticleComment.ArticleId WHERE Articles.ArticleId = ?;DELETE Articles FROM Articles INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE Articles.ArticleId = ?";
+    db.query(sqlDelete, id, (err, res) => {
         if(err){
             console.log(err);
+        }else{
+            res.sendStatus(200);
         }
     });
 });
@@ -294,10 +285,10 @@ app.post('/api/insert/user', (req, res) => {
 });
 
 //DELETE - USERS
-app.delete('/api/delete/user/:userUn', (req, res) => {
-    const name = req.params.userUn;
-    const sqlDelete = "DELETE FROM users WHERE UserUn = ?";
-    db.query(sqlDelete, name, (err, result) => {
+app.delete('/api/delete/user/:userId', (req, res) => {
+    const id = req.params.userId;
+    const sqlDelete = "DELETE Users FROM Users INNER JOIN ArticleUser ON Users.UserId=ArticleUser.UId WHERE Users.UserId = ?;DELETE Users FROM Users INNER JOIN ArticleComment ON Users.UserId=ArticleComment.UserId WHERE Users.UserId = ?;DELETE Users FROM Users INNER JOIN UserFavorite ON Users.UserId=UserFavorite.UserId WHERE Users.UserId = ?";
+    db.query(sqlDelete, id, (err, result) => {
         if(err){
             console.log("Users DELETE error: " + err);
         }
