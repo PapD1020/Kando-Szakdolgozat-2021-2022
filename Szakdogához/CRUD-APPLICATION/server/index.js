@@ -481,7 +481,7 @@ app.post('/api/login/user', (req, res) => {
             bcrypt.compare(userPw, result[0].UserPw, (err, response) => {
                 
                 if(response){
-
+                    
                     //JWT - create web token every time the a user loggs in
 
                     const id = result[0].UserId;

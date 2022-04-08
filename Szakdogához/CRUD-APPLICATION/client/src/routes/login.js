@@ -11,7 +11,8 @@ export default function Login(){
     const [UserUnLogin, setUserUnLogin] = useState('');
     const [UserPwLogin, setUserPwLogin] = useState('');
 
-    const [LoginStatus, setLoginStatus] = useState(false);
+    const [AuthStatus, setAuthStatus] = useState(false);
+    const [LoginName, setLoginName] = useState();
 
     const [ErrorMessage, setErrorMessage] = useState('');
 
@@ -39,7 +40,7 @@ export default function Login(){
             if(!response.data.auth){ //ha nem vagyunk authentikálva
                 //setLoginStatus(response.data.message);
                 setErrorMessage(response.data.message);
-                setLoginStatus(false);
+                setAuthStatus(false);
                 console.log("Login user response.data: " + JSON.stringify(response.data));
             }
             else{
@@ -49,22 +50,26 @@ export default function Login(){
 
                 console.log("token: " + JSON.stringify(response.data.token));
                 localStorage.setItem("token", response.data.token); //a local storegabe mentjük a tokent, máshogy is lehetne. data.token - meg kell nézni console.loggaé, hogy hogy kell rá hivatkozni.
-                setLoginStatus(true);
+                localStorage.setItem("userId", response.data.result[0].UserId);
+                alert(response.data.result[0].UserId);
+                setAuthStatus(true);
                 //alert("Successfully logged in as: " + response.data[0].UserUn); jwt óta nem jó, backendben nem sime res.send(result) van, hanem res.json({auth: true, token: token, result: result});
                 routeChange();
             }
         });
     };
 
-    const userAuthenticated = () => {
-        Axios.get('http://localhost:3001/api/login/user/auth', {headers: {
-            "x-access-token": localStorage.getItem("token"),
-            "userId": GotUserId.current
+    const checkLoginStatus = () => {
+
+        Axios.get("http://localhost:3001/api/login/user/auth",
+        {headers:{
+          "x-access-token": localStorage.getItem("token")
         }}).then((response) => {
-            alert("Authenticated");
-            console.log("isUserAuth response: " + JSON.stringify(response.data));
+          setAuthStatus(response.data.isUserAuth);
+          setLoginName(response.data.UserUn);
+          alert("user auth response: " + JSON.stringify(response.data))
         });
-    };
+      }
 
     /*
     //check every time we refresh the page if a user is logged in
@@ -104,7 +109,7 @@ export default function Login(){
                 <h1 className="display-1 m-3">Login</h1>
             </div>
 
-            {!LoginStatus && (
+            {!AuthStatus && (
                 <div className="container">
                     <form className="" onSubmit={handleSubmit(onSubmit)}>
                         <div className="row">

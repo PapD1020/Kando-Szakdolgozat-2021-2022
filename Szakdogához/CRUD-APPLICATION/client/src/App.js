@@ -11,7 +11,7 @@ export default function App(){
   const [AuthStatus, setAuthStatus] = useState(false);
   const [LoginName, setLoginName] = useState();
 
-  /*
+  
   const checkLoginStatus = () => {
 
     Axios.get("http://localhost:3001/api/login/user/auth",
@@ -27,10 +27,10 @@ export default function App(){
   useEffect(() => {
     checkLoginStatus();
   })
-  */
+
 
   const logout = () =>{
-    localStorage.removeItem("token");
+    localStorage.clear();
   }
 
   return(
@@ -50,13 +50,12 @@ export default function App(){
             <Nav.Link href="/profilePage">Profile Page</Nav.Link>
           </Nav>
 
-          {AuthStatus && (
+
             <NavDropdown title={LoginName} id="basic-nav-dropdown">
               <NavDropdown.Item href="profilePage">Profile</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
             </NavDropdown>
-          )}
 
           </Navbar.Collapse>
         </Container>
