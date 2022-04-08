@@ -66,6 +66,7 @@ export default function Login(){
         });
     };
 
+    /*
     //check every time we refresh the page if a user is logged in
     useEffect(() => {
         Axios.get('http://localhost:3001/api/login/user').then((response) => {
@@ -76,6 +77,7 @@ export default function Login(){
             }
         });
     }, []);
+    */
 
     const [showState, setShowState] = useState(true);
 

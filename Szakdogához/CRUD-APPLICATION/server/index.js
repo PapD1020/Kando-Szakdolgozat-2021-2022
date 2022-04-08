@@ -7,8 +7,6 @@ const { json } = require('body-parser');
 const Nanoid = require('nanoid');
 const bcrypt = require('bcrypt');
 const { response } = require('express');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
 
 const saltRounds = 10;
 
@@ -34,47 +32,19 @@ const db = mysql.createPool({
 });
 */
 //Middleware
-//app.use(cors());  without express-session
+//app.use(cors());  //without express-session
 
 //for express-session
+
 app.use(cors({
     origin: ["http://localhost:3000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true //enables cookies
+    credentials: true
 }));
-app.use(cookieParser());
+
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
-//initialize session
-app.use(session({
-    key: "userId",
-    secret: "secret", //lehet meg kell változtatni
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: 60 * 60 * 24 * 2 //ez 24 óra = 60 * 60 * 24
-    },
-}));
-
-
-/*
-app.get('/', (req, res)=>{      //req is used to get information from the frontend
-    res.send("Hello world");    //sending this information to frontend (not yet to react)
-})
-*/
-
-/*
-app.get("/", (req, res) => {
-    //Test to see if the database connection works
-
-    const sqlInsert = "INSERT INTO `Articles`(`ArticleName`, `ArticleDate`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleStatus`) VALUES ('Első Poszt neve','2022-02-10','kicsi leírás','nagy lerás','kép','1')";
-    db.query(sqlInsert, (err, result) => {
-
-        res.send("Hello");
-    });
-});
-*/
 
 /*
 * POST CRUD
@@ -125,23 +95,6 @@ app.get('/api/get/article/oneById', (req, res) => {
     });
 });
 
-/*
-//Egyenkénti lekérdezés
-app.get('/api/get/article', (req, res) => {
-
-    //const item = req.body.item-1; POST-hoz body kérés
-    const item = req.get("item")-1;
-    console.log(item);
-    const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 1 OFFSET " + item + "";
-    db.query(sqlSelect, (err, result) => {
-        if(err){
-            console.log("Article GET error: " + err);
-        }
-
-        //console.log(result[0].ArticleId);                //valamiért Object-et kapok terminálban
-        res.send(result);
-    });
-});*/
 
 //20-asával lekérdezés
 app.get('/api/get/article', (req, res) => {
@@ -451,6 +404,7 @@ app.post('/api/register/user', (req, res) => {
 
 //ELLENŐRIZNI
 //Session check
+/*
 app.get('/api/login/user', (req, res) => {
     if(req.session.user){ //megnézzük, hogy van-e már egy ilyen "user"-ünk
         res.send({loggedIn: true, user: req.session.user});
@@ -459,6 +413,7 @@ app.get('/api/login/user', (req, res) => {
         res.send({loggedIn: false});
     }
 });
+*/
 
 //verifyJWT
 const verifyJWT = (req, res, next) => {
@@ -483,7 +438,7 @@ const verifyJWT = (req, res, next) => {
 //Authentication
 app.get('/api/login/user/auth', verifyJWT, (req, res) => {
     if(verifyJWT){
-        /*
+        
         const userId = req.body.get("userId");
         const sqlSelect = "SELECT * FROM Users WHERE UserId = " + "'" + userId +"'";
 
@@ -492,10 +447,8 @@ app.get('/api/login/user/auth', verifyJWT, (req, res) => {
                 res.send(err);
                 console.log("auth err: " + err);
             }
-            res.send(result);
-        }
-        */
-        res.send({isUserAuth: true, message: "You are authenticated!"});
+            res.send({isUserAuth: true, message: "You are authenticated!", result: result});
+        } 
     }
     else{
         res.send({isUserAuth: false, message: "You are NOT authenticated!"});
@@ -528,7 +481,6 @@ app.post('/api/login/user', (req, res) => {
             bcrypt.compare(userPw, result[0].UserPw, (err, response) => {
                 
                 if(response){
-                    req.session.user = result;
 
                     //JWT - create web token every time the a user loggs in
 
@@ -537,10 +489,7 @@ app.post('/api/login/user', (req, res) => {
                         expiresIn: 300, //5 mins
                     }); //creating token based on the user's id, secretet meg kell változtatni, azaz .inv file/variable vagy mivel
 
-                    req.session.user = result;
-
                     //ellenőrzés
-                    console.log("Session ellenőrzés: " + JSON.stringify(req.session.user));
                     //res.send(result); //all the information from the data base of the user !!! mivel ez ki van kommeztezve, a frontenden a response.data[0].UserUn nem működik
                     res.json({auth: true, token: token, result: result});
                 }
@@ -600,25 +549,6 @@ app.put('/api/update/user/password', (req, res) => {
 
 /**********************************************Article - Update********************************************/
 //ARTICLE - Edit Article (data update)
-/*
-app.put('/api/update/article/articleById', (req, res) => {
-
-    const articleName = req.body.articleName;
-    const articleSmDescr = req.body.articleSmDescr;
-    const articleMDescr = req.body.articleMDescr;
-    const articleImg = req.body.articleImg;
-    const articleType = req.body.articleType;
-    const articleUpdatedAt = req.body.articleUpdatedAt;
-    
-    const sqlUpdate = "UPDATE Articles SET ArticleName = ?, ArticleSmDescr = ?, ArticleMDescr = ?, ArticleImg = ?, ArticleType = ?, ArticleUpdatedAt = ? WHERE ArticleId = ?";
-
-    db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleUpdatedAt, articleId], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
-        if(err){
-            console.log("Artcile update err: " + err);
-        }
-    });
-});
-*/
 
 //Get user by Id for profilePage default data
 app.get("/api/get/userById", (req, res) => {

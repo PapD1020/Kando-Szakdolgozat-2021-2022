@@ -8,7 +8,7 @@ import Login from "./routes/login";
 import ProfilePage from "./routes/profilePage";
 import Articles from "./routes/articles";
 import ProtectedRoutes from "./ProtectedRoutes";
-import ChooseArticles from "./routes/chooseArticles"
+import ChooseArticles from "./routes/chooseArticles";
 
 
 const rootElement = document.getElementById("root");
