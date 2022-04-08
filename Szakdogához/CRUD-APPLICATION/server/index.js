@@ -465,8 +465,11 @@ app.get('/api/login/user', (req, res) => {
 //Session and cookie destroy
 app.get('/api/user/logout', (req,res) =>{
     if(req.session.user){ //megnézzük, hogy van-e már egy ilyen "user"-ünk
-        req.session.destroy;
-        cookies.remove("userId");
+        //req.session.destroy;
+        req.session = null;
+        //req.session.user = null;
+        Cookies.remove("userId");
+        req.session.
         res.send({cookiesDestroyed: true});
     }
     else{
