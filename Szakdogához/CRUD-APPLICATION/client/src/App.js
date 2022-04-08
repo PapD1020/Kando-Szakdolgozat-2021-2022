@@ -11,6 +11,7 @@ export default function App(){
   const [AuthStatus, setAuthStatus] = useState(false);
   const [LoginName, setLoginName] = useState();
 
+  /*
   const checkLoginStatus = () => {
 
     Axios.get("http://localhost:3001/api/login/user/auth",
@@ -26,6 +27,7 @@ export default function App(){
   useEffect(() => {
     checkLoginStatus();
   })
+  */
 
   const logout = () =>{
     localStorage.removeItem("token");
