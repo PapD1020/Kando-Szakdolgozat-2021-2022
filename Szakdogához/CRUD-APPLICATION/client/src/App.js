@@ -1,30 +1,38 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Outlet} from 'react-router-dom';
-import {Nav, Navbar, Container } from "react-bootstrap";
+import {Nav, Navbar, Container, NavDropdown} from "react-bootstrap";
 import Axios from 'axios';
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 
 export default function App(){
 
   //Authot vagy logint? Tokent vagy cookiet?
   
   const [LoginStatus, setLoginStatus] = useState('');
-  
-  useEffect(() => {
-    Axios.get('http://localhost:3001/api/login/user').then((response) => {
-        //ellenőrzésre
-        //console.log("Are we logged in: " + JSON.stringify(response));
-        if(response.data.loggedIn === true){
-            setLoginStatus(response.data.user[0].UserUn);
-        }
-    });
-}, []);
-  
+
+  const AuthStatus = useRef(false);
+
+      //check every time we refresh the page if a user is logged in
+      useEffect(() => {
+        Axios.get('http://localhost:3001/api/login/user').then((response) => {
+            //ellenőrzésre
+            //console.log("Are we logged in: " + JSON.stringify(response));
+            if(response.data.loggedIn === true){
+                setLoginStatus(response.data.user[0].UserUn);
+            }
+        });
+    }, []);
+
+
+  const logout = () =>{
+    localStorage.removeItem("token");
+    
+  }
 
   return(
     <div className='App'>
-      <Navbar bg="primary" variant="dark">
+      <Navbar bg="dark" variant="dark">
         <Container>
           <Navbar.Brand className=''>IdeaShare</Navbar.Brand>
           <Navbar.Toggle />
@@ -39,11 +47,14 @@ export default function App(){
             <Nav.Link href="/profilePage">Profile Page</Nav.Link>
           </Nav>
 
-            {LoginStatus && (
-                <Navbar.Text>
-                  Signed in as: {LoginStatus}
-              </Navbar.Text>
-            )}
+          {LoginStatus && (
+            <NavDropdown title={LoginStatus} id="basic-nav-dropdown">
+              <NavDropdown.Item href="profilePage">Profile</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+            </NavDropdown>
+          )}
+
           </Navbar.Collapse>
         </Container>
       </Navbar>

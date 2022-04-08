@@ -483,6 +483,18 @@ const verifyJWT = (req, res, next) => {
 //Authentication
 app.get('/api/login/user/auth', verifyJWT, (req, res) => {
     if(verifyJWT){
+        /*
+        const userId = req.body.get("userId");
+        const sqlSelect = "SELECT * FROM Users WHERE UserId = " + "'" + userId +"'";
+
+        db.query(sqlSelect, [userId]), (err, result) => {
+            if(err){
+                res.send(err);
+                console.log("auth err: " + err);
+            }
+            res.send(result);
+        }
+        */
         res.send({isUserAuth: true, message: "You are authenticated!"});
     }
     else{
@@ -499,7 +511,7 @@ app.post('/api/login/user', (req, res) => {
     const userPw = req.body.userPw;
 
     //const sqlInsert = "SELECT UserUn, UserPw FROM Users WHERE UserUn = ? AND UserPw = ?"; - pw hash nélkül
-    const sqlInsert = "SELECT UserId, UserUn, UserPw FROM Users WHERE UserUn = ?";
+    const sqlInsert = "SELECT UserId, UserPP, UserUn, UserPw FROM Users WHERE UserUn = ?";
     db.query(sqlInsert, [userUn], (err, result) => {
 
         if(err){

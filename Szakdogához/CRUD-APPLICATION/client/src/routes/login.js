@@ -15,6 +15,8 @@ export default function Login(){
 
     const [ErrorMessage, setErrorMessage] = useState('');
 
+    const GotUserId = useRef('');
+
     Axios.defaults.withCredentials = true;
 
     const{
@@ -24,13 +26,11 @@ export default function Login(){
     } = useForm();
 
     const onSubmit = () => {
-        //alert(JSON.stringify(data));
         submitUserDataLogin();
-    }; // your form submit function which will invoke after successful validation
+    };
 
     const submitUserDataLogin = () => {
   
-        //postName - backend variable name
         Axios.post('http://localhost:3001/api/login/user', { //URL for our api (node.js backend)
         //userUn must be the same as in back-end index.js req.body.userUn !!!
         userUn: UserUnLogin, userPw: UserPwLogin
@@ -58,7 +58,8 @@ export default function Login(){
 
     const userAuthenticated = () => {
         Axios.get('http://localhost:3001/api/login/user/auth', {headers: {
-            "x-access-token": localStorage.getItem("token")
+            "x-access-token": localStorage.getItem("token"),
+            "userId": GotUserId.current
         }}).then((response) => {
             alert("Authenticated");
             console.log("isUserAuth response: " + JSON.stringify(response.data));
