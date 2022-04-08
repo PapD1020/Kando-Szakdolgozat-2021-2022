@@ -47,6 +47,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //initialize session
+
 app.use(session({
     key: "userId",
     secret: "secret", //lehet meg kell változtatni
@@ -56,6 +57,7 @@ app.use(session({
         expires: 60 * 60 * 24 * 2 //ez 24 óra = 60 * 60 * 24
     },
 }));
+
 
 
 /*
@@ -459,6 +461,18 @@ app.get('/api/login/user', (req, res) => {
         res.send({loggedIn: false});
     }
 });
+
+//Session and cookie destroy
+app.get('/api/user/logout', (req,res) =>{
+    if(req.session.user){ //megnézzük, hogy van-e már egy ilyen "user"-ünk
+        req.session.destroy;
+        cookies.remove("userId");
+        res.send({cookiesDestroyed: true});
+    }
+    else{
+        res.send({loggedIn: false});
+    }
+})
 
 //verifyJWT
 const verifyJWT = (req, res, next) => {
