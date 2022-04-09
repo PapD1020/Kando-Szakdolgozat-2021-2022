@@ -7,6 +7,7 @@ const { json } = require('body-parser');
 const Nanoid = require('nanoid');
 const bcrypt = require('bcrypt');
 const { response } = require('express');
+const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
 const saltRounds = 10;
@@ -41,13 +42,12 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true //enables cookies
 }));
-
+app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //initialize session
 
-app.set('trust proxy', 1);
 app.use(session({
     key: "userId",
     secret: "secret", //lehet meg kell változtatni
@@ -462,38 +462,20 @@ app.get('/api/login/user', (req, res) => {
     }
 });
 
-/*
 //Session and cookie destroy
 app.get('/api/user/logout', (req,res) =>{
     if(req.session.user){ //megnézzük, hogy van-e már egy ilyen "user"-ünk
-        req.session.destroy(function(err){
-            if(err){
-                res.send(err);
-                console.log("req.session.destroy err: " + err);
-            }
-        })
-        //req.session = null;
+        //req.session.destroy;
+        req.session = null;
         //req.session.user = null;
-        //Cookies.remove("userId");
-        //req.session.
-
+        Cookies.remove("userId");
+        req.session.
         res.send({cookiesDestroyed: true});
     }
     else{
         res.send({loggedIn: false});
     }
 })
-*/
-
-
-//Destroy cookie 2.0
-app.get('/api/user/logout', (req, res) => {
-    console.log("itt vagyok!");
-    req.session.destroy((err) => { //destroy is kell, hogy ne maradjon meg
-       
-    });
-    res.clearCookie("userId").send({cookiesDestroyed: true}); //EZ MűKÖDik !!!!!!!
-  });
 
 //verifyJWT
 const verifyJWT = (req, res, next) => {

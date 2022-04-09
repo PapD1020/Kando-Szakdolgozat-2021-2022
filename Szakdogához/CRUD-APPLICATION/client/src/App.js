@@ -31,7 +31,10 @@ export default function App(){
       if(response.data.cookiesDestroyed === true){
         localStorage.removeItem("token");
         //cookies.remove("userId"); lehet import kell hozzá, most back endben próbálom
-        alert("cookies destroyed muhahahahahahahah!!!!")
+        alert("cookies destroyed muhahahahahahahah!!!!");
+      }
+      else{
+        alert("not destroyed.");
       }
     })
   }
