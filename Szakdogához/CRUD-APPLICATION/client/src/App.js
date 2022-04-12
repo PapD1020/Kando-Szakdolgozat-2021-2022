@@ -12,18 +12,27 @@ export default function App(){
   const [LoginStatus, setLoginStatus] = useState('');
 
   const AuthStatus = useRef(false);
-
       //check every time we refresh the page if a user is logged in
       useEffect(() => {
         Axios.get('http://localhost:3001/api/login/user').then((response) => {
             //ellenőrzésre
             //console.log("Are we logged in: " + JSON.stringify(response));
             if(response.data.loggedIn === true){
+                alert("Login status: " + response.data.loggedIn);
                 setLoginStatus(response.data.user[0].UserUn);
             }
         });
     }, []);
 
+  const checkLoginStatus = () =>{
+    Axios.get('http://localhost:3001/api/login/user').then((response) => {
+        //ellenőrzésre
+        //console.log("Are we logged in: " + JSON.stringify(response));
+        if(response.data.loggedIn === true){
+            setLoginStatus(response.data.user[0].UserUn);
+        }
+    });
+  }
 
   const logout = () =>{
 
@@ -41,35 +50,39 @@ export default function App(){
 
   return(
     <div>
-      <div className='App'>
-          <Navbar bg="dark" variant="dark">
-            <Container>
-              <Navbar.Brand className=''>IdeaShare</Navbar.Brand>
-              <Navbar.Toggle />
-              <Navbar.Collapse className="justify-content-end">
+      <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
+        <Container>
+        <Navbar.Brand href="#home">IdeaShare</Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="/login">Login</Nav.Link>
+            <Nav.Link href="/registration">Registration</Nav.Link>
+            <Nav.Link href="/articles">Articles</Nav.Link>
+            <Nav.Link href="/createArticle">Create Article</Nav.Link>
+            <Nav.Link href="/chooseArticle">Edit Article</Nav.Link>
+            <Nav.Link href="/profilePage">Profile Page</Nav.Link>
 
-              <Nav className="me-auto">
-                <Nav.Link href="/login">Login</Nav.Link>
-                <Nav.Link href="/registration">Registration</Nav.Link>
-                <Nav.Link href="/articles">Articles</Nav.Link>
-                <Nav.Link href="/createArticle">Create Article</Nav.Link>
-                <Nav.Link href="/chooseArticle">Edit Article</Nav.Link>
-                <Nav.Link href="/profilePage">Profile Page</Nav.Link>
-              </Nav>
+            <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
+              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+          <Nav>
+          {LoginStatus && (
+            <NavDropdown title={LoginStatus} id="basic-nav-dropdown">
+              <NavDropdown.Item href="profilePage">Profile</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+            </NavDropdown>
+          )}
+          </Nav>
+        </Navbar.Collapse>
+        </Container>
+      </Navbar>
 
-              {LoginStatus && (
-                <NavDropdown title={LoginStatus} id="basic-nav-dropdown">
-                  <NavDropdown.Item href="profilePage">Profile</NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
-                </NavDropdown>
-              )}
-
-              </Navbar.Collapse>
-            </Container>
-          </Navbar>
-          <Outlet />
-        </div>
+      <Outlet />
     </div>
   );
 };

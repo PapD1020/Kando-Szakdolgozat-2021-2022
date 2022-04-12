@@ -43,7 +43,7 @@ export default function App(){
     <div className=''>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand className=''>IdeaShare</Navbar.Brand>
+          <Navbar.Brand className='navbar-brand'>IdeaShare</Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
 

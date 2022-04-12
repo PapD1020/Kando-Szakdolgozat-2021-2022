@@ -15,8 +15,8 @@ export default function Article(){
     const [LoginStatus, setLoginStatus] = useState(false);
 
         //check every time we refresh the page if a user is logged in
-        useEffect(() => {
-          Axios.get('http://localhost:3001/api/login/user').then((response) => {
+      useEffect(() => {
+        Axios.get('http://localhost:3001/api/login/user').then((response) => {
               //ellenőrzésre
               //console.log("Are we logged in: " + JSON.stringify(response));
               if(response.data.loggedIn === true){
