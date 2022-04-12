@@ -199,12 +199,17 @@ app.get('/api/get/article/byId', (req, res) => {
 //POST - Article by userId
 app.post('/api/insert/article/byId', (req, res) => {
 
+    var articleImg
+    if ( req.body.articleImg == undefined || req.body.articleImg == '' || req.body.articleImg == null ) {
+        articleImg = 'https://www.incimages.com/uploaded_files/image/1920x1080/getty_845301446_385027.jpg';
+    }else{
+        articleImg = req.body.articleImg;
+    }
     const articleId = Nanoid.nanoid();
     const userId = req.body.userId;
     const articleName = req.body.articleName;
     const articleSmDescr = req.body.articleSmDescr;
     const articleMDescr = req.body.articleMDescr;
-    const articleImg = req.body.articleImg;
     const articleType = req.body.articleType;
     const articleStatus = 1;
     const articleCreatedAt = req.body.articleCreatedAt;
@@ -676,6 +681,74 @@ app.get("/api/get/userById", (req, res) => {
     });
 });
 
+
+/**************************************************COMMENT*********************************************************************/
+
+//GET-20-asával lekérdezés
+app.get('/api/get/comments/byId', (req, res) => {
+
+    //const item = req.body.item-1; POST-hoz body kérés
+    const item = req.get("item")-1;
+    const articleId = req.get("articleId");
+    
+    const sqlSelect = "SELECT Users.UserUn,Users.UserPP,ArticleComment.Comment FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId WHERE ArticleComment.ArticleId = " + "'" + articleId + "'" + " ORDER BY CommentCreatedAt ASC LIMIT 20 OFFSET " + item + "";
+    console.log("SQL SELECT: " + sqlSelect);
+    db.query(sqlSelect, [articleId,item], (err, result) => {
+        if(err){
+            console.log("Comment GET error: " + err);
+        }
+        if (result.length == 0){
+            console.log("no result");
+            res.status(404).send('Not found');
+        }else{
+            console.log(result);
+            res.send(result);
+        }
+    });
+});
+//POST-COMMENT
+app.post('/api/insert/comment', (req, res) => {
+
+    const commentId = Nanoid.nanoid();
+    const userId = req.body.userId;
+    const articleId = req.body.articleId;
+    const comment=req.body.comment;
+    const commentCreatedAt = req.body.commentCreatedAt;
+  
+
+    const sqlInsert = "INSERT INTO `ArticleComment`(`CommentId`, `UserId`, `ArticleId`,`Comment`,`CommentCreatedAt`) VALUES (?,?,?,?,?)";
+    db.query(sqlInsert, [commentId,userId,articleId,comment, commentCreatedAt], (err, result) => {
+
+        if(err){
+            console.log("Comment POST error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+        
+        console.log("comment insert: " + sqlInsert);
+        
+    });
+});
+//DELETE-COMMENT
+app.delete('/api/delete/comment/:commentId', (req, res) => {
+    const id = req.params.commentId;
+    const sqlDelete = "DELETE FROM ArticleComment WHERE CommentId = ?";
+    db.query(sqlDelete, id, (err, result) => {
+        if(err){
+            console.log("Comment DELETE error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+        console.log("Comment DELETE result: " + result);
+        
+    });
+});
+
+
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });
+/*
+app.listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  });*/
