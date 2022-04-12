@@ -6,13 +6,15 @@ import { Modal, Button } from "react-bootstrap";
 
 export default function EditUser() {
 
-  const [UserUn, setUserUn] = useState('');
-  const [UserPP, setUserPP] = useState('');
-  const [UserPw, setUserPw] = useState('');
-  const [UserFN, setUserFN] = useState('');
-  const [UserSN, setUserSN] = useState('');
-  const [UserDob, setUserDob] = useState('');
-  const [UserEmail, setUserEmail] = useState('');
+  const [UserUnUpd, setUserUnUpd] = useState('');
+  const [UserPPUpd, setUserPPUpd] = useState('');
+  const [UserPwUpd, setUserPwUpd] = useState('');
+  const [UserFNUpd, setUserFNUpd] = useState('');
+  const [UserSNUpd, setUserSNUpd] = useState('');
+  const [UserDobUpd, setUserDobUpd] = useState('');
+  const [UserPLUpd, setUserPLUpd] = useState('');
+
+  const [UserEmailUpd, setUserEmailUpd] = useState('');
 
   
 
@@ -48,8 +50,8 @@ export default function EditUser() {
   }, []);
 
   useEffect(() => {
-    Axios.get(`http://localhost:3001/api/get/article/${location.state.id}`).then((response) => {
-      setOneArticleList(response.data);
+    Axios.get(`http://localhost:3001/api/get/user/${location.state.id}`).then((response) => {
+      setOneUserList(response.data);
       modalOpen();
       console.log("One article get: " + JSON.stringify(response));
     })
@@ -73,7 +75,7 @@ export default function EditUser() {
 
   let navigate = useNavigate();
   const routeChange = () => {
-    navigate('/articleslist');
+    navigate('/userlist');
   }
 
   const {
@@ -84,30 +86,35 @@ export default function EditUser() {
 
   const onSubmit = (data) => {
       alert(JSON.stringify(data));
-      submitArticleData();
+      submitUserData();
   };
 
-  const submitArticleData = () => {
+  const submitUserData = () => {
 
     //articleName - backend variable name
-    Axios.put('http://localhost:3001/api/update/article/byUser', { //URL for our api (node.js backend)
-      articleId: location.state.id,
-      articleName: ArticleNameUpd,
-      articleSmDescr: ArticleSmDescrUpd,
-      articleMDescr: ArticleMDescrUpd,
-      articleImg: ArticleImgUpd,
-      articleType: ArticleTypeUpd,
-      articleStatus: ArticleStatusUpd,
-      articleUpdatedAt: date
+    Axios.put('http://localhost:3001/api/update/user/byUser', { //URL for our api (node.js backend)
+      userId: location.state.id,
+      userUn: UserUnUpd,
+      userPP: UserPPUpd,
+      userPw: UserPwUpd,
+      userFN: UserFNUpd,
+      userSN: UserSNUpd,
+      userDob: UserDobUpd,
+      userPL:UserPLUpd,
+      userEmail:UserEmailUpd,
+      userUpdatedAt: date
     });
   };
-  const ArticleStatusView=(ArticleStatus)=>{
-    if(ArticleStatus==-2){ArticleStatus = "Törölt"}
-    if(ArticleStatus==-1){ArticleStatus = "Felfüggesztett"}
-    if(ArticleStatus==0){ArticleStatus = "Inaktív"}
-    if(ArticleStatus==1){ArticleStatus = "Aktív"}
+
+  const UserPLView=(UserPL)=>{
+    if(UserPL==-2){UserPL = "Törölt"}
+    if(UserPL==-1){UserPL = "Felfüggesztett"}
+    if(UserPL==0){UserPL = "Inaktív"}
+    if(UserPL==1){UserPL = "Aktív"}
+    if(UserPL==9){UserPL = "Admin"}
+
   
-    return ArticleStatus;
+    return UserPL;
   }
 
   return (
@@ -116,134 +123,135 @@ export default function EditUser() {
       <h1>Sent ArticleId from chooseArticles.js page: {location.state.id}</h1>
         <button>Get choosen article by id</button>
         <div>
-          {OneArticleList.map((val) => {
+          {OneUserList.map((val) => {
             return(
               <div>
                     <Modal show={ModalState} onHide={modalClose}>
                       <Modal.Header closeButton>
-                        <Modal.Title>You are editing {val.ArticleName} article</Modal.Title>
+                        <Modal.Title>You are editing {val.UserUn} article</Modal.Title>
                       </Modal.Header>
 
                       <Modal.Body>
-                        {OneArticleList.map((val) => {
+                        {OneUserList.map((val) => {
                                 return(
                                   <form onSubmit={handleSubmit(onSubmit)}>
-                                    <div className="form-group">
-                                      <label>Article type:</label>
-                                      <select id="types" className="form-control" required {
-                                          ...register("articleType", {
-                                              required: false,
-                                          })
-                                      } onChange={(e) => {
-                                          setArticleTypeUpd(e.target.value);
-                                      }}>
-                                          <option defaultValue={val.ArticleType}>{val.ArticleType}</option>
-                                          <option value="Programming">Programming</option>
-                                          <option value="Other">Other</option>
-                                      </select>
-                                      <div className="invalid-feedback">You must select a article type.</div>
-                                  </div>
-
+        
                                   <div className="form-group">
-                                      <label>Article name:</label>
-                                      <input type="text" className="form-control" defaultValue={val.ArticleName} {
-                                          ...register("articleName", {
+                                      <label>User name:</label>
+                                      <input type="text" className="form-control" placeholder={val.UserUn}{
+                                          ...register("userUnUpd", {
                                               minLength: 6,
                                               maxLength: 20,
                                               pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
                                           })
                                       }onChange={(e) => {
-                                          setArticleNameUpd(e.target.value);
+                                          setUserUnUpd(e.target.value);
                                       }}/>
                                       
-                                      {errors?.articleName?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a name.</p></div>}
-                                      {errors?.articleName?.type === "minLength" && <div><h5>Your article's name is too short.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
-                                      {errors?.articleName?.type === "maxLength" && <div><h5>Your article's name is too long.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
-                                      {errors?.articleName?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                                      {errors?.userUnUpd?.type === "minLength" && <div><h5>Your user name is too short.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
+                                      {errors?.userUnUpd?.type === "maxLength" && <div><h5>Your user name is too long.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
+                                      {errors?.userUnUpd?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
                                   </div>
                                   
                                   <div className="form-group">
-                                      <label>Article small description:</label>
-                                      <input type="text" className="form-control" defaultValue={val.ArticleSmDescr} {
-                                          ...register("articleSmDescr", {
+                                      <label>User profile picture:</label>
+                                      <input type="url" className="form-control" placeholder={val.UserPP}{
+                                          ...register("userPPUpd", {
                                               minLength: 8,
                                               maxLength: 100,
-                                              pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
                                           })
                                       }onChange={(e) => {
-                                          setArticleSmDescrUpd(e.target.value);
+                                          setUserPPUpd(e.target.value);
                                       }}/>
-
-                                      {errors?.articleSmDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a small description of your article.</p></div>}
-                                      {errors?.articleSmDescr?.type === "minLength" && <div><h5>Your article's small description is too short.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
-                                      {errors?.articleSmDescr?.type === "maxLength" && <div><h5>Your article's small description is too long.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
-                                      {errors?.articleSmDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                      
+                                      {errors?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 8 and 100 characters.</p></div>}
+                                      {errors?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 8 and 100 characters.</p></div>}
+                                  </div>
+                      
+                                  <div className="form-group">
+                                      <label>User password: </label>
+                                      <input type="password" className="form-control" placeholder={val.UserPw}{
+                                          ...register("userPwUpd", {
+                                              minLength: 8,
+                                              maxLength: 16,
+                                          })
+                                      }onChange={(e) => {
+                                          setUserPwUpd(e.target.value);
+                                      }}/>
+                      
+                                      {errors?.userPwUpd?.type === "minLength" && <div><h5>Your password is too short.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
+                                      {errors?.userPwUpd?.type === "maxLength" && <div><h5>Your password is too long.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
+                                  </div>
+                      
+                                  <div className="form-group">
+                                      <label>User first name:</label>
+                                      <input type="text" className="form-control" placeholder={val.UserFN}{
+                                          ...register("userFNUpd", {
+                                              minLength: 3, //Mennyi legyen?
+                                              maxLength: 20, //Mennyi legyen?
+                                          })
+                                      }onChange={(e) => {
+                                          setUserFNUpd(e.target.value);
+                                      }}/>
+                      
+                                      {errors?.userFNUpd?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
+                                      {errors?.userFNUpd?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
+                                  </div>
+                      
+                                  <div className="form-group">
+                                      <label>User second name:</label>
+                                      <input type="text" className="form-control" placeholder={val.UserSN}{
+                                          ...register("userSNUpd", {
+                                              minLength: 3, //Mennyi legyen?
+                                              maxLength: 20, //Mennyi legyen?
+                                          })
+                                      }onChange={(e) => {
+                                          setUserSNUpd(e.target.value);
+                                      }}/>
+                      
+                                      {errors?.userSNUpd?.type === "minLength" && <div><h5>Your second name is too short.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
+                                      {errors?.userSNUpd?.type === "maxLength" && <div><h5>Your second name is too long.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
+                                  </div>
+                      
+                                  <div className="form-group">
+                                      <label>User email: </label>
+                                      <input type="email" className="form-control" placeholder={val.UserEmail}{
+                                          ...register("userEmailUpd", {
+                                              //vmi must contain @ ellenőrzés stb
+                                          })
+                                      }onChange={(e) => {
+                                          setUserEmailUpd(e.target.value);
+                                      }}/>
                                   </div>
 
                                   <div className="form-group">
-                                      <label>Article main description:</label>
-                                      <input type="text" className="form-control" defaultValue={val.ArticleMDescr} {
-                                          ...register("articleMDescr", {
-                                              minLength: 3,
-                                              maxLength: 500,
-                                              pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
-                                          })
-                                      }onChange={(e) => {
-                                          setArticleMDescrUpd(e.target.value);
-                                      }}/>
-
-                                      {errors?.articleMDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a main description of your article.</p></div>}
-                                      {errors?.articleMDescr?.type === "minLength" && <div><h5>Your article's main description is too short.</h5><p>Your article's main description length must be between 150 and 500 characters.</p></div>}
-                                      {errors?.articleMDescr?.type === "maxLength" && <div><h5>Your article's main description is too long.</h5><p>Your article's main description length must be between 150 and 500 characters.</p></div>}
-                                      {errors?.articleMDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
-                                  </div>
-
-                                  <div className="form-group">
-                                      <label>Article image:</label>
-                                      <input type="url" className="form-control" defaultValue={val.ArticleImg} {
-                                          ...register("articleImg", {
-                                              minLength: 20, //Mennyi legyen?
-                                              maxLength: 500, //Mennyi legyen?
-                                          })
-                                      }onChange={(e) => {
-                                          setArticleImgUpd(e.target.value);
-                                      }}/>
-
-                                      {errors?.articleImg?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a picture</p></div>}
-                                      {errors?.articleImg?.type === "minLength" && <div><h5>Your article's picture URL is too short.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
-                                      {errors?.articleImg?.type === "maxLength" && <div><h5>Your article's picture URL is too long.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
-                                    </div>
-
-                                    <div className="form-group">
-                                      <label>Article status:</label>
+                                      <label>User PermissonL:</label>
                                       <select id="status" className="form-control" required {
                                           ...register("articleStatus", {
                                               required: true,
                                           })
                                       } onBlur={(e) => {
-                                          setArticleStatusUpd(e.target.value);
+                                        setUserPLUpd(e.target.value);
                                       }}>
-                                          <option defaultValue={val.ArticleStatus}>{ArticleStatusView(val.ArticleStatus)}</option>
+                                          <option defaultValue={val.UserPL}>{UserPLView(val.UserPL)}</option>
                                           <option value="-2">Törlés</option>
                                           <option value="-1">Felfüggesztett</option>
                                           <option value="0">Inaktív</option>
                                           <option value="1">Aktív</option>
+                                          <option value="9">Admin</option>
                                       </select>
                                   </div>
-
-                                    <input type="submit"
-                                    onClick={() => {
-                            
-                                      if ( ArticleNameUpd === "" ) { setArticleNameUpd(val.ArticleName) }
-                                      if ( ArticleSmDescrUpd === "" ) { setArticleSmDescrUpd(val.ArticleSmDescr)}
-                                      if ( ArticleMDescrUpd === "" ) { setArticleMDescrUpd(val.ArticleMDescr)}
-                                      if ( ArticleImgUpd === "" ) { setArticleImgUpd(val.ArticleImg)}
-                                      if ( ArticleTypeUpd === "" ) { setArticleTypeUpd(val.ArticleType)}
-                                      if ( ArticleStatusUpd === "" ) { setArticleStatusUpd(val.ArticleStatus)}
-                                    }}
-                                    
-                                    /> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
-                                  </form>
+                      
+                                  <input type="submit" onClick={() => {
+                                      if(UserUnUpd === ""){UserUnUpd = val.UserUnUpd}
+                                      if(UserPPUpd === ""){UserPPUpd = val.UserPPUpd}
+                                      if(UserPwUpd === ""){UserPwUpd = val.UserPwUpd}
+                                      if(UserFNUpd === ""){UserFNUpd = val.UserFNUpd}
+                                      if(UserSNUpd === ""){UserSNUpd = val.UserSNUpd}
+                                      if(UserEmailUpd === ""){UserEmailUpd = val.UserEmailUpd}
+                                  }}/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
+                              </form>
+                      
                                   ) 
                                 })}
                       </Modal.Body>
