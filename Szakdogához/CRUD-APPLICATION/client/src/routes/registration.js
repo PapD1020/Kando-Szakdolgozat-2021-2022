@@ -95,7 +95,7 @@ export default function Registration(){
                                             required: true,
                                             minLength: 3,
                                             maxLength: 30,
-                                            pattern: /^([A-ZÁÉÚŐÓÜÖÍ]([a-záéúőóüöí.]+\s?)){2,}$/
+                                            //pattern: /^([A-ZÁÉÚŐÓÜÖÍ]([a-záéúőóüöí.]+\s?)){2,}$/
                                         })
                                     } onChange={(e) =>{
                                         setUserUnReg(e.target.value);
@@ -113,7 +113,7 @@ export default function Registration(){
                             <div className="col-lg-4">
                                 <div className="form-group">
                                     <label className="display-5 mb-3">Password:</label>
-                                    <input className="form-control p-2 mb-3" type="text" {
+                                    <input className="form-control p-2 mb-3" type="password" {
                                         ...register("userPwReg", {
                                             required: true,
                                             minLength: 8,

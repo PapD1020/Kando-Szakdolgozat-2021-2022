@@ -118,37 +118,19 @@ export default function ProfileUpdate(){
         <div>
           {UsersNameList.map((val) => {
                       return(
-                        <div className="text-center">
+                        <div className="card">
+                          <h1>User name: {val.UserUn}</h1>
+                          <h1>Password: 
+                            <div
+                                className="d-flex align-items-center justify-content-center"
+                                style={{ height: "10vh" }}
+                                >
 
-                            <div className="card text-center border-primary m-5">
-                            <div className="card-header mb-3">{val.UserUn}'s profile</div>
-                            <div className="card-text">Profile picture: <img className="card-img-top w-25" src={val.UserPP} alt="User profile pic"></img></div>
-                            
-                                <div className="card-body text-primary">
-                                    <h5 className="card-title">User name: {val.UserUn}</h5>
-                                    <p className="card-text">User first name: {val.UserFN}</p>
-                                    <p className="card-text">User second name: {val.UserSN}</p>
-                                    <p className="card-text">User date of birth: {val.UserDob}</p>
-                                    <p className="card-text">User email: {val.UserEmail}</p>
-                                    <p className="card-text">User created at: {val.UserCreatedAt}</p>
-                                    <p className="card-text">User updated at: {val.UserUpdatedAt}</p>
-                                </div>
-                                <div className="card-footer">
-                                        <div className="mb-3">
-                                            <Button variant="primary" onClick={modalOpenPw}>
-                                                Change password
-                                            </Button>
-                                        </div>
+                                <Button variant="primary" onClick={modalOpenPw}>
+                                    Change password
+                                </Button>
 
-                                        <div>
-                                            <Button variant="primary" onClick={modalOpen}>
-                                                Edit your profile
-                                            </Button>
-                                        </div>
-                                    </div>
-                            </div>
-
-                            <Modal show={ModalStatePw} onHide={modalClosePw}>
+                                <Modal show={ModalStatePw} onHide={modalClosePw}>
                                     <Modal.Header closeButton>
                                         <Modal.Title>Changeing password</Modal.Title>
                                     </Modal.Header>
@@ -196,8 +178,26 @@ export default function ProfileUpdate(){
                                         </Button>
                                     </Modal.Footer>
                                 </Modal>
+                            </div>
+                          </h1>
+                          <h2>User profile picture: {val.UserPP}</h2>
+                          <p>User first name: {val.UserFN}</p>
+                          <p>User second name: {val.UserSN}</p>
+                          <p>User date of birth: {val.UserDob}</p>
+                          <p>User email: {val.UserEmail}</p>
+                          <p>User created at: {val.UserCreatedAt}</p>
+                          <p>User updated at: {val.UserUpdatedAt}</p>
 
-                                <Modal show={ModalState} onHide={modalClose}>
+                          <div
+                              className="d-flex align-items-center justify-content-center"
+                              style={{ height: "10vh" }}
+                            >
+                              
+                              <Button variant="primary" onClick={modalOpen}>
+                                  Edit your profile
+                              </Button>
+
+                              <Modal show={ModalState} onHide={modalClose}>
                                 <Modal.Header closeButton>
                                   <Modal.Title>Editing {val.UserUn}'s profile</Modal.Title>
                                 </Modal.Header>
@@ -285,10 +285,14 @@ export default function ProfileUpdate(){
                                 </Button>
                             </Modal.Footer>
                           </Modal>
+                          </div>
+
                           
                         </div>
                       )
                   })}
+
+            <h1>{LoginStatus}</h1>
         </div>
     );
 }
