@@ -546,7 +546,7 @@ app.post('/api/login/user', (req, res) => {
     const userPw = req.body.userPw;
 
     //const sqlInsert = "SELECT UserUn, UserPw FROM Users WHERE UserUn = ? AND UserPw = ?"; - pw hash nélkül
-    const sqlInsert = "SELECT UserId, UserPP, UserUn, UserPw FROM Users WHERE UserUn = ?";
+    const sqlInsert = "SELECT UserId, UserPP, UserUn, UserPw FROM Users WHERE UserUn LIKE BINARY ?";
     db.query(sqlInsert, [userUn], (err, result) => {
 
         if(err){

@@ -114,7 +114,7 @@ export default function Login(){
                                             required: true,
                                             minLength: 3,
                                             maxLength: 30,
-                                            pattern: /^([A-ZÁÉÚŐÓÜÖÍ]([a-záéúőóüöí.]+\s?)){2,}$/
+                                            //pattern: /^([A-ZÁÉÚŐÓÜÖÍ]([a-záéúőóüöí.]+\s?)){2,}$/
                                         })
                                     } onChange={(e) =>{
                                         setUserUnLogin(e.target.value);
