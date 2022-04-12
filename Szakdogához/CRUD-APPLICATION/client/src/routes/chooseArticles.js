@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 import {useNavigate} from "react-router-dom";
 import Axios from 'axios';
+import { Card } from 'react-bootstrap';
 
 export default function CreateArticle(props){
   
@@ -49,13 +50,20 @@ export default function CreateArticle(props){
           {ArticleNameList.map((val) => {
                       return(
                         <div className="card">
-                          <h1>Article name: {val.ArticleName}</h1>
-                          <h2>Article small description: {val.ArticleSmDescr}</h2>
-                          <p>Article main description: {val.ArticleMDescr}</p>
-                          <p>Article image: {val.ArticleImg}</p>
-                          <p>Article status: {val.ArticleStatus}</p>
-                          <p>Article created at: {val.ArticleCreatedAt}</p>
-                          <p>Article updated at: {val.ArticleUpdatedAt}</p>
+                          <Card style={{backgroundImage: `url(${val.ArticleImg})`, backgroundPosition: 'center',
+                          backgroundSize: 'cover',
+                          backgroundRepeat: 'no-repeat',
+                          color: 'white'
+                          }} className="text-center m-5 bg-dark">
+                            <Card.Header className="bg-dark bg-opacity-50">{val.ArticleName}</Card.Header>
+                            <Card.Body className="bg-dark bg-opacity-25">
+                              <Card.Title>{val.ArticleSmDescr}</Card.Title>
+                              <Card.Text>
+                                {val.ArticleMDescr}
+                              </Card.Text>
+                            </Card.Body>
+                            <Card.Footer className="bg-dark bg-opacity-25">Created at: {val.ArticleCreatedAt}</Card.Footer>
+                          </Card>
 
                           <button onClick={() => {routeChange(val.ArticleId)}}>Select article for editing</button>
 
