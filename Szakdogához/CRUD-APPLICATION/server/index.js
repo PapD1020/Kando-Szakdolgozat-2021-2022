@@ -423,13 +423,13 @@ app.post('/api/register/user', (req, res) => {
 
     console.log("Register users req.body: "+ JSON.stringify(req.body)); //ez jó
     
-    var userPP
+    var userPP;
     if ( req.body.userPP == undefined || req.body.userPP == '' || req.body.userPP == null ) {
-        articleImg = 'https://molsoft.hu/wp-content/uploads/2020/12/blank-profile-picture-973460_1280.png';
+        userPP = 'https://molsoft.hu/wp-content/uploads/2020/12/blank-profile-picture-973460_1280.png';
     }else{
         userPP = req.body.userPP;
     }
-    
+
     const userId = Nanoid.nanoid();
     const userUn = req.body.userUn;
     const userPw = req.body.userPw;
