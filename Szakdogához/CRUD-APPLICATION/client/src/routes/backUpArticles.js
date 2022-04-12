@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import '../App.css';
 import Axios from 'axios';
-import { Card } from 'react-bootstrap';
 
 var articleData = [];
 var found = false;
@@ -72,7 +71,7 @@ export default function Article(){
     };
 
     return(
-      <div className="infiniteScrollContainer">
+      <div className="cardContainer">
         <hr />
         <InfiniteScroll
           dataLength={getData.length}
@@ -82,7 +81,7 @@ export default function Article(){
         >
            { found === true ?
               getData.map((index, i) => (
-                <CardContainer key={index} item={index} data={articleData[i]}/>
+                <Card key={index} item={index} data={articleData[i]}/>
               ))
           : null}
         </InfiniteScroll>
@@ -92,25 +91,19 @@ export default function Article(){
 
 
 //PureComponent - jobb optimalizáció, pl. nincsenek felesleges újra renderelések
-class CardContainer extends React.PureComponent {    
+class Card extends React.PureComponent {    
 
   render() {
       const {data} = this.props;
       return(
-          <Card style={{backgroundImage: `url(${data.ArticleImg})`, backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          color: 'white'
-          }} className="text-center m-5 bg-dark">
-            <Card.Header className="bg-dark bg-opacity-50">{data.ArticleName}</Card.Header>
-            <Card.Body className="bg-dark bg-opacity-25">
-              <Card.Title>{data.ArticleSmDescr}</Card.Title>
-              <Card.Text>
-                {data.ArticleMDescr}
-              </Card.Text>
-            </Card.Body>
-            <Card.Footer className="bg-dark bg-opacity-25">Created at: {data.ArticleCreatedAt}</Card.Footer>
-          </Card>
+        <div className="card">
+          <div>
+            {data.ArticleName}
+            {data.ArticleSmDescr}
+            {data.ArticleMDescr}
+            {data.ArticleImg}
+          </div> 
+        </div>
       )
   }
 }
