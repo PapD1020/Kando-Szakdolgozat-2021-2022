@@ -503,8 +503,8 @@ app.get('/api/user/logout', (req, res) => {
     console.log("itt vagyok!");
     req.session.destroy((err) => { //destroy is kell, hogy ne maradjon meg
        
-    });
-    res.clearCookie("userId").send({cookiesDestroyed: true}); //EZ MűKÖDik !!!!!!!
+    }); //EZ MűKÖDik !!!!!!!
+    res.clearCookie("userId").send({loggedIn: false, cookiesDestroyed: true});
   });
 
 //verifyJWT

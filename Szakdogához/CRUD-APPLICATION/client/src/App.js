@@ -4,6 +4,7 @@ import {Outlet} from 'react-router-dom';
 import {Nav, Navbar, Container, NavDropdown} from "react-bootstrap";
 import Axios from 'axios';
 import React, {useEffect, useState, useRef} from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function App(){
 
@@ -11,6 +12,18 @@ export default function App(){
   
   const [LoginStatus, setLoginStatus] = useState('');
 
+      //check every time we refresh the page if a user is logged in
+      useEffect(() => {
+        Axios.get('http://localhost:3001/api/login/user').then((response) => {
+            //ellenőrzésre
+            //console.log("Are we logged in: " + JSON.stringify(response));
+            if(response.data.loggedIn === true){
+                setLoginStatus(response.data.user[0].UserUn);
+            }
+        });
+    }, []);
+
+    /*
   const AuthStatus = useRef(false);
       //check every time we refresh the page if a user is logged in
       useEffect(() => {
@@ -23,6 +36,7 @@ export default function App(){
             }
         });
     }, []);
+    */
 
   const checkLoginStatus = () =>{
     Axios.get('http://localhost:3001/api/login/user').then((response) => {
@@ -41,11 +55,21 @@ export default function App(){
         localStorage.removeItem("token");
         //cookies.remove("userId"); lehet import kell hozzá, most back endben próbálom
         alert("cookies destroyed muhahahahahahahah!!!!");
+        if(response.data.loggedIn === false){
+          setLoginStatus(false);
+          routeChange();
+        }
       }
       else{
         alert("not destroyed.");
       }
     })
+  }
+
+  let navigate = useNavigate();
+  const routeChange = () =>{
+    checkLoginStatus();
+    navigate('/login');
   }
 
   return(
@@ -58,10 +82,15 @@ export default function App(){
           <Nav className="me-auto">
             <Nav.Link href="/login">Login</Nav.Link>
             <Nav.Link href="/registration">Registration</Nav.Link>
-            <Nav.Link href="/articles">Articles</Nav.Link>
-            <Nav.Link href="/createArticle">Create Article</Nav.Link>
-            <Nav.Link href="/chooseArticle">Edit Article</Nav.Link>
-            <Nav.Link href="/profilePage">Profile Page</Nav.Link>
+
+            {LoginStatus && (
+              <Nav>
+                <Nav.Link href="/articles">Articles</Nav.Link>
+                <Nav.Link href="/createArticle">Create Article</Nav.Link>
+                <Nav.Link href="/chooseArticle">Edit Article</Nav.Link>
+                <Nav.Link href="/profilePage">Profile Page</Nav.Link>
+              </Nav>
+            )}
 
             <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
