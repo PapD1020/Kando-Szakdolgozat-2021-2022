@@ -56,6 +56,8 @@ export default function Login(){
         });
     };
 
+
+    //MGE KELL NÉNZI
     const userAuthenticated = () => {
         Axios.get('http://localhost:3001/api/login/user/auth', {headers: {
             "x-access-token": localStorage.getItem("token"),

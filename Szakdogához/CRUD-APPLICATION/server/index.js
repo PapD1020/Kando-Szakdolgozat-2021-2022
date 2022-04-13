@@ -32,9 +32,8 @@ const db = mysql.createPool({
     database: 'ideashare'
 });
 */
-//Middleware
-//app.use(cors());  without express-session
 
+//Middleware
 //for express-session
 app.use(cors({
     origin: ["http://localhost:3000"],
@@ -46,55 +45,27 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //initialize session
-
 app.set('trust proxy', 1);
 app.use(session({
     key: "userId",
-    secret: "secret", //lehet meg kell változtatni
+    secret: "secret",
     resave: false,
     saveUninitialized: false,
     cookie: {
-        expires: 24 * 60 * 60 * 1000 //ez 24 óra = 60 * 60 * 24
+        expires: 24 * 60 * 60 * 1000 //ez 24 óra
     },
 }));
-
-
-
-/*
-app.get('/', (req, res)=>{      //req is used to get information from the frontend
-    res.send("Hello world");    //sending this information to frontend (not yet to react)
-})
-*/
-
-/*
-app.get("/", (req, res) => {
-    //Test to see if the database connection works
-
-    const sqlInsert = "INSERT INTO `Articles`(`ArticleName`, `ArticleDate`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleStatus`) VALUES ('Első Poszt neve','2022-02-10','kicsi leírás','nagy lerás','kép','1')";
-    db.query(sqlInsert, (err, result) => {
-
-        res.send("Hello");
-    });
-});
-*/
 
 /*
 * POST CRUD
 */
-
-
-
-
-
 //GET - Article
-
-
+//Dani - chooseArticles.js
 app.get('/api/get/article/allById', (req, res) => {
 
     const userId = req.get("userId");
     console.log("userId: " + userId);
     
-    //SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = 'g8lgdpeaghN1r9vRmRqDh' AND ArticleStatus != -1
     const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = " + "'" + userId + "' AND ArticleStatus != -1";
     console.log("SQL SELECT: " + sqlSelect);
 
@@ -108,6 +79,7 @@ app.get('/api/get/article/allById', (req, res) => {
     });
 });
 
+//Dani - editArticle.js
 app.get('/api/get/article/oneById', (req, res) => {
 
     const articleId = req.get("articleId");
@@ -127,44 +99,23 @@ app.get('/api/get/article/oneById', (req, res) => {
     });
 });
 
-/*
-//Egyenkénti lekérdezés
-app.get('/api/get/article', (req, res) => {
-
-    //const item = req.body.item-1; POST-hoz body kérés
-    const item = req.get("item")-1;
-    console.log(item);
-    const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 1 OFFSET " + item + "";
-    db.query(sqlSelect, (err, result) => {
-        if(err){
-            console.log("Article GET error: " + err);
-        }
-
-        //console.log(result[0].ArticleId);                //valamiért Object-et kapok terminálban
-        res.send(result);
-    });
-});*/
-
 //20-asával lekérdezés
+//Dani - articles.js
+//Márk - home/articles.js
 app.get('/api/get/article', (req, res) => {
 
-    //const item = req.body.item-1; POST-hoz body kérés
     const item = req.get("item")-1;
-    console.log(item);
-    //const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 1 OFFSET " + item + "";
-    //const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleId ASC LIMIT 20  OFFSET " + item + "";
+
     const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 ORDER BY ArticleId ASC LIMIT 20  OFFSET " + item + "";
     
     db.query(sqlSelect, (err, result) => {
         if(err){
             console.log("Article GET error: " + err);
         }
+
         if (result.length == 0){
-            console.log("no result");
             res.status(404).send('Not found');
         }else{
-            //console.log(result[0].ArticleId);                //valamiért Object-et kapok terminálban
-            console.log(result);
             res.send(result);
         }
     });
@@ -172,6 +123,7 @@ app.get('/api/get/article', (req, res) => {
 
 /**Article kiválasztása editeléshez - bejelentkezett user id-ja alapján kilistásázásuk**/
 //20-asával lekérdezés
+//Márk - usersArticles/articles.js
 app.get('/api/get/article/byId', (req, res) => {
 
     //const item = req.body.item-1; POST-hoz body kérés
@@ -197,14 +149,21 @@ app.get('/api/get/article/byId', (req, res) => {
 });
 
 //POST - Article by userId
+//Dani - createArticle.js
+//Márk - newArticle/articleDataForm.js
 app.post('/api/insert/article/byId', (req, res) => {
 
     var articleImg
-    if ( req.body.articleImg == undefined || req.body.articleImg == '' || req.body.articleImg == null ) {
+
+    if ( req.body.articleImg == undefined || req.body.articleImg == '' || req.body.articleImg == null ) 
+    {
         articleImg = 'https://www.incimages.com/uploaded_files/image/1920x1080/getty_845301446_385027.jpg';
-    }else{
+    }
+    else
+    {
         articleImg = req.body.articleImg;
     }
+
     const articleId = Nanoid.nanoid();
     const userId = req.body.userId;
     const articleName = req.body.articleName;
@@ -229,21 +188,11 @@ app.post('/api/insert/article/byId', (req, res) => {
     });
 });
 
-//DELETE - Article
-app.delete('/api/delete/article/:articleName', (req, res) => {
-    const name = req.params.articleName;
-    const sqlDelete = "DELETE FROM Articles WHERE ArticleName = ?";
-    db.query(sqlDelete, name, (err, result) => {
-        if(err){
-            console.log(err);
-        }
-    });
-});
-
 //PUT-UPDATE - Article
+//Dani - editArticle.js
+//Márk - usersArticles/articles.js
 app.put('/api/update/article/byUser', (req, res) => {
 
-    //const userId = req.body.userId;
     const articleId = req.body.articleId;
     const articleName = req.body.articleName;
     const articleSmDescr = req.body.articleSmDescr;
@@ -251,12 +200,12 @@ app.put('/api/update/article/byUser', (req, res) => {
     const articleImg = req.body.articleImg;
     const articleType = req.body.articleType;
     const articleStatus = req.body.articleStatus;
-   // const articleCreatedAt = req.body.articleCreatedAt;
     const articleUpdatedAt = req.body.articleUpdatedAt;
 
     const sqlUpdate = "UPDATE Articles SET ArticleName = ?, ArticleSmDescr = ?, ArticleMDescr = ?, ArticleImg = ?, ArticleType = ?, ArticleStatus = ?, ArticleUpdatedAt = ? WHERE ArticleId = ?";
 
     db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleUpdatedAt, articleId], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+        
         if(err){
             console.log(err);
             res.sendStatus(404);
@@ -265,168 +214,26 @@ app.put('/api/update/article/byUser', (req, res) => {
     });
 });
 
-
-/*
-* Admin CRUD
-*/
-
-//GET - ADMIN
-app.get('/api/get/admin', (req, res) => {
-
-    const sqlSelect = "SELECT * FROM Admins";
-    db.query(sqlSelect, (err, result) => {
-        if(err){
-            console.log("Admin GET error: " + err);
-        }
-
-        console.log(result.data); //still not working properly
-        res.send(result);
-    });
-});
-
-//POST - ADMIN
-app.post('/api/insert/admin', (req, res) => {
-
-    console.log(JSON.stringify(req.body)); //ez jó
-    const adminId = Nanoid.nanoid();
-    const adminUn = req.body.adminUn;
-    const adminPw = req.body.adminPw;
-    const adminFN = req.body.adminFN;
-    const adminSN = req.body.adminSN;
-    const adminPermL = req.body.adminPermL;
-    const adminEmail = req.body.adminEmail;
-    const adminCreatedAt = req.body.adminCreatedAt;
-    const adminUpdatedAt = req.body.adminUpdatedAt;
-
-    const sqlInsert = "INSERT INTO `Admins`(`AdminId`, `AdminUn`, `AdminPw`, `AdminFN`, `AdminSN`, `AdminPermL`, `AdminEmail`, `AdminCreatedAt`, `AdminUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)";
-    db.query(sqlInsert, [adminId, adminUn, adminPw, adminFN, adminSN, adminPermL, adminEmail, adminCreatedAt, adminUpdatedAt], (err, result) => {
-
-        if(err){
-            console.log("Admin POST error: " + err);
-        }
-
-        setTimeout(function(){
-            console.log("AdminUn: " + JSON.stringify(adminUn));
-            console.log("AdminPw: " + adminPw);
-
-            /*
-            var x = JSON.parse(JSON.stringify(result));
-            console.log("Result Admin POST: " + x);
-            */
-        }, 100);
-        
-        res.send(result);
-    });
-});
-
-//DELETE - ADMIN
-app.delete('/api/delete/admin/:adminUn', (req, res) => {
-    const name = req.params.adminUn;
-    const sqlDelete = "DELETE FROM Admins WHERE AdminUn = ?";
-    db.query(sqlDelete, name, (err, result) => {
-        if(err){
-            console.log("Admin DELETE error: " + err);
-        }
-    });
-});
-
-//PUT - ADMIN
-app.put('/api/update/admin', (req, res) => {
-
-    const name = req.body.adminUn;
-    const permL = req.body.adminPermL;
-    const updated = req.body.adminUpdatedAt;
-    const sqlUpdate = "UPDATE Admins SET AdminPermL = ?, AdminUpdatedAt = ? WHERE AdminUn = ?";
-
-    db.query(sqlUpdate, [permL, updated, name], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
-        if(err){
-            console.log("Admin UPDATE error: " + err);
-        }
-    });
-});
-
 /*
 * USERS CRUD
 */
 
-//GET - USERS
-app.get('/api/get/user', (req, res) => {
-    
-    const sqlSelect = "SELECT * FROM Users";
-
-    db.query(sqlSelect, (err, result) => {
-        if(err){
-            console.log("Users GET error: " + err);
-        }
-
-        console.log("Users GET result: " + result.data); //still not working properly
-        res.send(result);
-    });
-});
-
-//POST - USERS
-app.post('/api/insert/user', (req, res) => {
-
-    const userId = Nanoid.nanoid();
-    const userUn = req.body.userUn;
-    const userPP = req.body.userPP;
-    const userPw = req.body.userPw;
-    const userFN = req.body.userFN;
-    const userSN = req.body.userSN;
-    const userDob = req.body.userDob;
-    const userEmail = req.body.userEmail;
-    const userCreatedAt = req.body.userCreatedAt;
-    const userUpdatedAt = req.body.userUpdatedAt;
-
-    const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?,?)"
-    db.query(sqlInsert, [userId, userUn, userPP, userPw, userFN, userSN, userDob, userEmail, userCreatedAt, userUpdatedAt], (err, result) => {
-
-        console.log("Users INSERT INTO error: " + err);
-        console.log("Users INSERT INTO result: " + result);
-        console.log("userCreatedAt: " + userCreatedAt);
-        console.log(JSON.stringify(req.body));
-        res.send(result);
-    });
-});
-
-//DELETE - USERS
-app.delete('/api/delete/user/:userUn', (req, res) => {
-    const name = req.params.userUn;
-    const sqlDelete = "DELETE FROM users WHERE UserUn = ?";
-    db.query(sqlDelete, name, (err, result) => {
-        if(err){
-            console.log("Users DELETE error: " + err);
-        }
-        console.log("Users DELETE result: " + result);
-    });
-});
-
-//PUT - USERS
-app.put('/api/update/user', (req, res) => {
-
-    const name = req.body.userUn;
-    const userE = req.body.userEmail;
-    const updated = req.body.userUpdatedAt;
-    const sqlUpdate = "UPDATE users SET UserEmail = ?, UserUpdatedAt = ? WHERE UserUn = ?";
-
-    db.query(sqlUpdate, [userE, updated, name], (err, result) => {                       //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
-        if(err){
-            console.log("Users UPDATE error: " + err);
-        }
-    });
-});
 
 /************************************************REGISTRATION - LOGIN**********************************************************/
 
 //REGISTER - USERS
+//Dani - login.js
+//Márk - authScreen.js
 app.post('/api/register/user', (req, res) => {
 
-    console.log("Register users req.body: "+ JSON.stringify(req.body)); //ez jó
-    
     var userPP;
-    if ( req.body.userPP == undefined || req.body.userPP == '' || req.body.userPP == null ) {
+
+    if ( req.body.userPP == undefined || req.body.userPP == '' || req.body.userPP == null ) 
+    {
         userPP = 'https://molsoft.hu/wp-content/uploads/2020/12/blank-profile-picture-973460_1280.png';
-    }else{
+    }
+    else
+    {
         userPP = req.body.userPP;
     }
 
@@ -443,21 +250,18 @@ app.post('/api/register/user', (req, res) => {
 
     bcrypt.hash(userPw, saltRounds, (err, hash) => {
 
-        const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserPL`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-
         if(err){
             console.log("Registration - bcrypt error: " + err);
         }
 
-        db.query(sqlInsert, [userId, userUn, userPP, hash, userFN, userSN, userDob, userEmail, userPL, userCreatedAt, userUpdatedAt], (err, result) => {
+        const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserPL`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 
-            console.log("UserUn: " + JSON.stringify(req.body.UserUn));
+        db.query(sqlInsert, [userId, userUn, userPP, hash, userFN, userSN, userDob, userEmail, userPL, userCreatedAt, userUpdatedAt], (err, result) => {
 
             if(err){
                 console.log("Users REGISTER INTO error: " + err);
             }
 
-            //console.log("Users REGISTER INTO result: " + result);
             res.send(result);
         });
     });
@@ -465,8 +269,9 @@ app.post('/api/register/user', (req, res) => {
 
 //ELLENŐRIZNI
 //Session check
+//Dani - majdnem minden oldalon
 app.get('/api/login/user', (req, res) => {
-    if(req.session.user){ //megnézzük, hogy van-e már egy ilyen "user"-ünk
+    if(req.session.user){
         res.send({loggedIn: true, user: req.session.user});
     }
     else{
@@ -501,13 +306,15 @@ app.get('/api/user/logout', (req,res) =>{
 //Destroy cookie 2.0
 app.get('/api/user/logout', (req, res) => {
     console.log("itt vagyok!");
-    req.session.destroy((err) => { //destroy is kell, hogy ne maradjon meg
-       
-    }); //EZ MűKÖDik !!!!!!!
+    req.session.destroy((err) => {
+        
+    });
+
     res.clearCookie("userId").send({loggedIn: false, cookiesDestroyed: true});
   });
 
 //verifyJWT
+//Dani 
 const verifyJWT = (req, res, next) => {
     const token = req.headers["x-access-token"]; //Grabing the token from the headers
 
@@ -528,20 +335,11 @@ const verifyJWT = (req, res, next) => {
 };
 
 //Authentication
+//MEG KELL NÉZNI
+//Dani
+//Márk - authScreen.js
 app.get('/api/login/user/auth', verifyJWT, (req, res) => {
     if(verifyJWT){
-        /*
-        const userId = req.body.get("userId");
-        const sqlSelect = "SELECT * FROM Users WHERE UserId = " + "'" + userId +"'";
-
-        db.query(sqlSelect, [userId]), (err, result) => {
-            if(err){
-                res.send(err);
-                console.log("auth err: " + err);
-            }
-            res.send(result);
-        }
-        */
         res.send({isUserAuth: true, message: "You are authenticated!"});
     }
     else{
@@ -549,56 +347,45 @@ app.get('/api/login/user/auth', verifyJWT, (req, res) => {
     }
 });
 
-//ELLENŐRIZNI
 //LOGIN - CHECK IF USER EXISTS - USERS
+//Dani - login.js
+//Márk - authScreen.js
 app.post('/api/login/user', (req, res) => {
 
-    console.log("Login users req.body: " + JSON.stringify(req.body)); //ez jó
     const userUn = req.body.userUn;
     const userPw = req.body.userPw;
 
-    //const sqlInsert = "SELECT UserUn, UserPw FROM Users WHERE UserUn = ? AND UserPw = ?"; - pw hash nélkül
     const sqlInsert = "SELECT UserId, UserPP, UserUn, UserPw FROM Users WHERE UserUn LIKE BINARY ?";
     db.query(sqlInsert, [userUn], (err, result) => {
 
         if(err){
-            //Front-end is expecting an object that is why:
-            res.send({err: err}); //sending error to front-end
+            res.send({err: err});
             console.log("Users LOGIN SELECT * error: " + err);
         }
 
-        if(result.length > 0){ //checks if there is a user and password with the sent UserUn and UserPw
-            console.log("result.length: " + result.length);
-            console.log("pw hash: " + result[0].UserPw);
-            console.log("Bejelentkezett user neve: " + result[0].UserUn);
-            console.log("Bejelentkezett user idja: " + result[0].UserId);
+        if(result.length > 0){
+
             bcrypt.compare(userPw, result[0].UserPw, (err, response) => {
                 
                 if(response){
                     req.session.user = result;
 
-                    //JWT - create web token every time the a user loggs in
-
+                    //JWT creation
                     const id = result[0].UserId;
                     const token = jwt.sign({id}, "jwtSecret", { //ezt a secretet kell a verify-nál is megadni (verifyJWT)
-                        expiresIn: 300, //5 mins
-                    }); //creating token based on the user's id, secretet meg kell változtatni, azaz .inv file/variable vagy mivel
+                        expiresIn: 3600, //60 mins, 300 = 5 mins
+                    });
 
                     req.session.user = result;
 
-                    //ellenőrzés
-                    console.log("Session ellenőrzés: " + JSON.stringify(req.session.user));
-                    //res.send(result); //all the information from the data base of the user !!! mivel ez ki van kommeztezve, a frontenden a response.data[0].UserUn nem működik
                     res.json({auth: true, token: token, result: result});
                 }
                 else{
-                    //res.send({message: "Wrong username or password!"}); jwt előtt
                     res.json({auth: false, message: "Wrong username or password."});
                 }
-            }) //pass the password the user inputed and comapre it with the one in the database
+            })
         }
         else{
-            //res.send({message: "The user does not exists"}); jwt előtt
             res.json({auth: false, message: "No user exists."});
         }
     });
@@ -606,6 +393,8 @@ app.post('/api/login/user', (req, res) => {
 
 /************************************************Profile - Udpate********************************************/
 //USER - Profile page (data Update)
+//Dani - profilePage.js
+//Márk - settings/userDataForm
 app.put('/api/update/user/userId', (req, res) => {
 
     const userId = req.body.userId;
@@ -617,7 +406,8 @@ app.put('/api/update/user/userId', (req, res) => {
 
         const sqlUpdate = "UPDATE Users SET UserPP = ?, UserFN = ?, UserSN = ?, UserEmail = ?, UserUpdatedAt = ? WHERE UserId = ?";
 
-        db.query(sqlUpdate, [userPP, userFN, userSN, userEmail, userUpdatedAt, userId], (err, result) => {                       //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
+        db.query(sqlUpdate, [userPP, userFN, userSN, userEmail, userUpdatedAt, userId], (err, result) => {
+
             if(err){
                 console.log("Users Profile data UPDATE error: " + err);
             }
@@ -625,6 +415,7 @@ app.put('/api/update/user/userId', (req, res) => {
 });
 
 //Password change
+//Dani - profilePage.js
 app.put('/api/update/user/password', (req, res) => {
     const userId = req.body.userId;
     const userPw = req.body.userPw;
@@ -645,29 +436,8 @@ app.put('/api/update/user/password', (req, res) => {
     });
 });
 
-/**********************************************Article - Update********************************************/
-//ARTICLE - Edit Article (data update)
-/*
-app.put('/api/update/article/articleById', (req, res) => {
-
-    const articleName = req.body.articleName;
-    const articleSmDescr = req.body.articleSmDescr;
-    const articleMDescr = req.body.articleMDescr;
-    const articleImg = req.body.articleImg;
-    const articleType = req.body.articleType;
-    const articleUpdatedAt = req.body.articleUpdatedAt;
-    
-    const sqlUpdate = "UPDATE Articles SET ArticleName = ?, ArticleSmDescr = ?, ArticleMDescr = ?, ArticleImg = ?, ArticleType = ?, ArticleUpdatedAt = ? WHERE ArticleId = ?";
-
-    db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleUpdatedAt, articleId], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
-        if(err){
-            console.log("Artcile update err: " + err);
-        }
-    });
-});
-*/
-
 //Get user by Id for profilePage default data
+//Dani - profilePage
 app.get("/api/get/userById", (req, res) => {
     
     const userIdUpd = req.get("userIdUpd");
@@ -681,9 +451,6 @@ app.get("/api/get/userById", (req, res) => {
             console.log("User get byId error: " + err);
         }
 
-        console.log("userById result: " + result.data);
-        console.log("userById result: " + result);
-
         res.send(result);
     });
 });
@@ -692,28 +459,29 @@ app.get("/api/get/userById", (req, res) => {
 /**************************************************COMMENT*********************************************************************/
 
 //GET-20-asával lekérdezés
+//Márk - home/comments.js
 app.get('/api/get/comments/byId', (req, res) => {
 
-    //const item = req.body.item-1; POST-hoz body kérés
     const item = req.get("item")-1;
     const articleId = req.get("articleId");
     
     const sqlSelect = "SELECT Users.UserUn,Users.UserPP,ArticleComment.Comment FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId WHERE ArticleComment.ArticleId = " + "'" + articleId + "'" + " ORDER BY CommentCreatedAt ASC LIMIT 20 OFFSET " + item + "";
     console.log("SQL SELECT: " + sqlSelect);
     db.query(sqlSelect, [articleId,item], (err, result) => {
+
         if(err){
             console.log("Comment GET error: " + err);
         }
         if (result.length == 0){
-            console.log("no result");
             res.status(404).send('Not found');
         }else{
-            console.log(result);
             res.send(result);
         }
     });
 });
+
 //POST-COMMENT
+//Márk - home/comments.js
 app.post('/api/insert/comment', (req, res) => {
 
     const commentId = Nanoid.nanoid();
@@ -722,7 +490,6 @@ app.post('/api/insert/comment', (req, res) => {
     const comment=req.body.comment;
     const commentCreatedAt = req.body.commentCreatedAt;
   
-
     const sqlInsert = "INSERT INTO `ArticleComment`(`CommentId`, `UserId`, `ArticleId`,`Comment`,`CommentCreatedAt`) VALUES (?,?,?,?,?)";
     db.query(sqlInsert, [commentId,userId,articleId,comment, commentCreatedAt], (err, result) => {
 
@@ -731,12 +498,11 @@ app.post('/api/insert/comment', (req, res) => {
         }else{
             res.sendStatus(200);
         }
-        
-        console.log("comment insert: " + sqlInsert);
-        
     });
 });
+
 //DELETE-COMMENT
+//na olyan még nincs
 app.delete('/api/delete/comment/:commentId', (req, res) => {
     const id = req.params.commentId;
     const sqlDelete = "DELETE FROM ArticleComment WHERE CommentId = ?";
@@ -755,7 +521,10 @@ app.delete('/api/delete/comment/:commentId', (req, res) => {
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });
+
+//Heroku
 /*
 app.listen(process.env.PORT || 3000, function(){
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-  });*/
+});
+*/
