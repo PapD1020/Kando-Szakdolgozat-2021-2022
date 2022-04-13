@@ -14,6 +14,7 @@ export default function ProfileUpdate(){
     const [UserFNUpd, setUserFNUpd] = useState('');
     const [UserSNUpd, setUserSNUpd] = useState('');
     const [UserEmailUpd, setUserEmailUpd] = useState('');
+
     const [UsersNameList, setUsersNameList] = useState([]);
 
     const [LoginStatus, setLoginStatus] = useState('');
@@ -273,7 +274,8 @@ export default function ProfileUpdate(){
                                         }}/>
                                     </div>
                         
-                                    <input type="submit"/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
+                                    <input type="submit" onClick={() => {
+                                    }}/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
                                 </form>
                                   ) 
                                 })}

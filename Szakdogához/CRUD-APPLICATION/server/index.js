@@ -154,7 +154,6 @@ app.get('/api/get/article/byId', (req, res) => {
 app.post('/api/insert/article/byId', (req, res) => {
 
     var articleImg
-
     if ( req.body.articleImg == undefined || req.body.articleImg == '' || req.body.articleImg == null ) 
     {
         articleImg = 'https://www.incimages.com/uploaded_files/image/1920x1080/getty_845301446_385027.jpg';
@@ -175,17 +174,22 @@ app.post('/api/insert/article/byId', (req, res) => {
     const articleUpdatedAt = req.body.articleUpdatedAt;
 
     const sqlInsert = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleType`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?); INSERT INTO `ArticleUser`(`Uid`, `Aid`) VALUES (?, ?)";
-    db.query(sqlInsert, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleCreatedAt, articleUpdatedAt, userId, articleId], (err, result) => {
 
-        if(err){
-            console.log("Article POST error: " + err);
-        }
+    try{
+        db.query(sqlInsert, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleCreatedAt, articleUpdatedAt, userId, articleId], (err, result) => {
 
-        console.log("Dupla insert: " + sqlInsert);
-        res.send(JSON.stringify(result[0]) + JSON.stringify(result[1]));
-        console.log("Kapcsolótáblás dupla insert 0: " + result[0]);
-        console.log("Kapcsolótáblás dupla insert 1: " + JSON.stringify(result[1]));
-    });
+            if(err){
+                console.log("Article POST error: " + err);
+            }
+    
+            console.log("Dupla insert: " + sqlInsert);
+            res.send(JSON.stringify(result[0]) + JSON.stringify(result[1]));
+            console.log("Kapcsolótáblás dupla insert 0: " + result[0]);
+            console.log("Kapcsolótáblás dupla insert 1: " + JSON.stringify(result[1]));
+        });
+    }catch(error){
+        console.log("insert/article/byId err: " + error);
+    }
 });
 
 //PUT-UPDATE - Article

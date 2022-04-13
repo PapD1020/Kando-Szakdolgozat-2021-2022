@@ -246,7 +246,7 @@ export default function EditArticle() {
                                   ) 
                                 })}
                       </Modal.Body>
-                    
+                
                       <Modal.Footer>
                         <Button variant="secondary" onClick={modalClose}>
                           Close
