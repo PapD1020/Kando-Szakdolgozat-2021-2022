@@ -8,15 +8,11 @@ export default function EditUser() {
 
   const [UserUnUpd, setUserUnUpd] = useState('');
   const [UserPPUpd, setUserPPUpd] = useState('');
-  const [UserPwUpd, setUserPwUpd] = useState('');
   const [UserFNUpd, setUserFNUpd] = useState('');
   const [UserSNUpd, setUserSNUpd] = useState('');
-  const [UserDobUpd, setUserDobUpd] = useState('');
+ 
   const [UserPLUpd, setUserPLUpd] = useState('');
-
   const [UserEmailUpd, setUserEmailUpd] = useState('');
-
-  
 
   const location = useLocation();
 
@@ -53,7 +49,7 @@ export default function EditUser() {
     Axios.get(`http://localhost:3001/api/get/user/${location.state.id}`).then((response) => {
       setOneUserList(response.data);
       modalOpen();
-      console.log("One article get: " + JSON.stringify(response));
+      console.log("One user get: " + JSON.stringify(response));
     })
  
 }, []);
@@ -92,16 +88,15 @@ export default function EditUser() {
   const submitUserData = () => {
 
     //articleName - backend variable name
-    Axios.put('http://localhost:3001/api/update/user/byUser', { //URL for our api (node.js backend)
+    Axios.put('http://localhost:3001/api/update/user', { //URL for our api (node.js backend)
       userId: location.state.id,
       userUn: UserUnUpd,
       userPP: UserPPUpd,
-      userPw: UserPwUpd,
       userFN: UserFNUpd,
       userSN: UserSNUpd,
-      userDob: UserDobUpd,
-      userPL:UserPLUpd,
-      userEmail:UserEmailUpd,
+     
+      userPL: UserPLUpd,
+      userEmail: UserEmailUpd,
       userUpdatedAt: date
     });
   };
@@ -138,7 +133,7 @@ export default function EditUser() {
         
                                   <div className="form-group">
                                       <label>User name:</label>
-                                      <input type="text" className="form-control" placeholder={val.UserUn}{
+                                      <input type="text" className="form-control" defaultValue={val.UserUn}{
                                           ...register("userUnUpd", {
                                               minLength: 6,
                                               maxLength: 20,
@@ -150,42 +145,39 @@ export default function EditUser() {
                                       
                                       {errors?.userUnUpd?.type === "minLength" && <div><h5>Your user name is too short.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
                                       {errors?.userUnUpd?.type === "maxLength" && <div><h5>Your user name is too long.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
-                                      {errors?.userUnUpd?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                                      
                                   </div>
                                   
                                   <div className="form-group">
                                       <label>User profile picture:</label>
-                                      <input type="url" className="form-control" placeholder={val.UserPP}{
+                                      <input type="url" className="form-control" defaultValue={val.UserPP}{
                                           ...register("userPPUpd", {
-                                              minLength: 8,
-                                              maxLength: 100,
+                                            required: true,
                                           })
                                       }onChange={(e) => {
                                           setUserPPUpd(e.target.value);
                                       }}/>
                       
-                                      {errors?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 8 and 100 characters.</p></div>}
-                                      {errors?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 8 and 100 characters.</p></div>}
                                   </div>
                       
-                                  <div className="form-group">
+                                 {/* <div className="form-group">
                                       <label>User password: </label>
-                                      <input type="password" className="form-control" placeholder={val.UserPw}{
+                                      <input type="password" className="form-control" defaultValue={val.UserPw}{
                                           ...register("userPwUpd", {
                                               minLength: 8,
                                               maxLength: 16,
                                           })
-                                      }onChange={(e) => {
+                                      }onBlur={(e) => {
                                           setUserPwUpd(e.target.value);
                                       }}/>
                       
                                       {errors?.userPwUpd?.type === "minLength" && <div><h5>Your password is too short.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
                                       {errors?.userPwUpd?.type === "maxLength" && <div><h5>Your password is too long.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
-                                  </div>
+                                  </div> */}
                       
                                   <div className="form-group">
                                       <label>User first name:</label>
-                                      <input type="text" className="form-control" placeholder={val.UserFN}{
+                                      <input type="text" className="form-control" defaultValue={val.UserFN}{
                                           ...register("userFNUpd", {
                                               minLength: 3, //Mennyi legyen?
                                               maxLength: 20, //Mennyi legyen?
@@ -200,7 +192,7 @@ export default function EditUser() {
                       
                                   <div className="form-group">
                                       <label>User second name:</label>
-                                      <input type="text" className="form-control" placeholder={val.UserSN}{
+                                      <input type="text" className="form-control" defaultValue={val.UserSN}{
                                           ...register("userSNUpd", {
                                               minLength: 3, //Mennyi legyen?
                                               maxLength: 20, //Mennyi legyen?
@@ -215,7 +207,7 @@ export default function EditUser() {
                       
                                   <div className="form-group">
                                       <label>User email: </label>
-                                      <input type="email" className="form-control" placeholder={val.UserEmail}{
+                                      <input type="email" className="form-control" defaultValue={val.UserEmail}{
                                           ...register("userEmailUpd", {
                                               //vmi must contain @ ellenőrzés stb
                                           })
@@ -224,13 +216,15 @@ export default function EditUser() {
                                       }}/>
                                   </div>
 
+                                  
+
                                   <div className="form-group">
                                       <label>User PermissonL:</label>
                                       <select id="status" className="form-control" required {
-                                          ...register("articleStatus", {
+                                          ...register("userPL", {
                                               required: true,
                                           })
-                                      } onBlur={(e) => {
+                                      } onChange={(e) => {
                                         setUserPLUpd(e.target.value);
                                       }}>
                                           <option defaultValue={val.UserPL}>{UserPLView(val.UserPL)}</option>
@@ -243,12 +237,15 @@ export default function EditUser() {
                                   </div>
                       
                                   <input type="submit" onClick={() => {
-                                      if(UserUnUpd === ""){UserUnUpd = val.UserUnUpd}
-                                      if(UserPPUpd === ""){UserPPUpd = val.UserPPUpd}
-                                      if(UserPwUpd === ""){UserPwUpd = val.UserPwUpd}
-                                      if(UserFNUpd === ""){UserFNUpd = val.UserFNUpd}
-                                      if(UserSNUpd === ""){UserSNUpd = val.UserSNUpd}
-                                      if(UserEmailUpd === ""){UserEmailUpd = val.UserEmailUpd}
+                                      if(UserUnUpd === ""){setUserUnUpd(val.UserUn)}
+                                      if(UserPPUpd === ""){setUserPPUpd(val.UserPP)}   
+                                      if(UserFNUpd === ""){setUserFNUpd(val.UserFN)}
+                                      if(UserSNUpd === ""){setUserSNUpd(val.UserSN)}                                    
+                                      if(UserPLUpd === ""){setUserPLUpd(val.UserPL)}
+                                      if(UserEmailUpd === ""){setUserEmailUpd(val.UserEmail)}
+
+                                                        
+                          
                                   }}/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
                               </form>
                       

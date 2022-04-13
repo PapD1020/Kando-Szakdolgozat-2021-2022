@@ -1,15 +1,16 @@
  import React, {useState, useEffect} from "react";
  import '../App.css';
 import Axios from 'axios';
+import { useForm } from "react-hook-form";
  import * as ReactBootStrap from "react-bootstrap";
  import { Button,Modal } from "react-bootstrap";
+ import {useNavigate} from "react-router-dom";
 
  export default function UsersList(){
  
  const [show, setShow] = useState(false);
  const handleClose = () => setShow(false);
 
-  
    
   var UserUn ='';
   var UserPw ='';
@@ -35,6 +36,7 @@ import Axios from 'axios';
 
   Axios.get('http://localhost:3001/api/get/user').then((response) => {
      setUsersNameList(response.data);
+    
     });
     }, []);
 
@@ -57,15 +59,15 @@ import Axios from 'axios';
   
   
    //DELETE - USERS
-  const deleteUser = (user) =>{
-    Axios.delete(`http://localhost:3001/api/delete/user/${user}`); // with altgr+7 you can add variables to it
+  const deleteUser = (userId) =>{
+    Axios.delete(`http://localhost:3001/api/delete/user/${userId}`); // with altgr+7 you can add variables to it
   
    alert("Successfuly deleted. Please click on the refresh button.")
     //kell frissítés, hogy eltünjön a törölt, submitos nem működik
   };
 
    const users = (user) =>{
-    Axios.patch(`http://localhost:3000/users/${user}`); // with altgr+7 you can add variables to it
+    Axios.patch(`http://localhost:3001/users/${user}`); // with altgr+7 you can add variables to it
   
    };
   
@@ -88,81 +90,39 @@ import Axios from 'axios';
     setShow(false);
     refreshUserData();
    };
+   const UserPLView=(UserPL)=>{
+    if(UserPL==-2){UserPL = "Törölt"}
+    if(UserPL==-1){UserPL = "Felfüggesztett"}
+    if(UserPL==0){UserPL = "Inaktív"}
+    if(UserPL==1){UserPL = "Aktív"}
+    if(UserPL==9){UserPL = "Admin"}
 
+  
+    return UserPL;
+  }
+
+   let navigate = useNavigate();
+   const routeChange = (gotId) =>{
+     alert("Második selected got id: " + gotId);
+     navigate('/adminEditUser', {state:{id: gotId}});
+   }
    return(
    <div >
-     <Modal show={show} onHide={handleClose} animation={false}>
-    <Modal.Header closeButton>
-      <Modal.Title>User Settings</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-          {UsersNameSettings.map((val) => {
-                      return(
-                        <div >
-                          
-                           <p>Username:<input type="text" name="userUn" defaultValue={val.UserUn} 
-                           onBlur={(e) => {UserUn=e.target.value }}></input> </p>
-
-                           <p>Password:<input type="password" name="userPw" defaultValue={val.UserPw}
-                            onBlur={(e) => {UserPw=e.target.value }}></input></p>
-                         
-                          <p>First name: <input type="text" name="userFN" defaultValue={val.UserFN} 
-                          onBlur={(e) => {UserFN=e.target.value}}></input></p>
-                          
-                          <p>Second name: <input type="text" name="userSN" defaultValue={val.UserSN} 
-                          onBlur={(e) => {UserSN=e.target.value}}></input> </p>
-
-                          <p>Date of birth:  <input type="date" name="userDob" defaultValue={val.UserDob} 
-                          onBlur={(e) => {UserDob=e.target.value}}></input></p>
-
-                          <p>Image:  <input type="text" name="userPP" defaultValue={val.UserPP} 
-                          onBlur={(e) => {UserPP=e.target.value}}></input></p>
-
-                          <p>Permisson Level:  <input type="number" name="UserPL" defaultValue={val.UserPL} 
-                          onBlur={(e) => {UserPL=e.target.value}}></input></p>
-
-                          <p>Email: <input type="email" name="userEmail" defaultValue={val.UserEmail} 
-                          onBlur={(e) => {UserEmail=e.target.value}}></input></p>
-                           <p>created at: {val.UserCreatedAt}</p>
-                          <p>updated at: {val.UserUpdatedAt}</p>
-
-                          
-                           <Button onClick={() => {
-                             if ( UserUn === "" ) { UserUn = val.UserUn }
-                             if ( UserPw=== "" ) { UserPw = val.UserPw }
-                             if ( UserFN === "" ) { UserFN = val.UserFN }
-                             if ( UserSN === "" ) { UserSN = val.UserSN }
-                             if ( UserDob === "" ) { UserDob= val.UserDob}
-                             if ( UserPL === "" ) { UserPL = val.UserPL}
-                             if ( UserPP === "" ) { UserPP = val.UserPP}
-                             if ( UserEmail === "" ) { UserEmail = val.UserEmail}
-                             
-                             updateUser(val.UserId)
-                             
-                             
-                             }}>Update User</Button>
-                           
-                          
-                         </div>
-                       )
-                  })}
-            </Modal.Body>
-   
-           </Modal>
-            
+     
                     <ReactBootStrap.Table striped bordered hover > 
-                         <thead>
+                         <thead className="tabla">
                                 <tr>
                                     <th>Username</th>
                                     <th>Password</th>
                                     <th>First name</th>
-                                     <th>Second name</th>
+                                    <th>Second name</th>
                                     <th>Date of birth</th>
                                     <th>Permisson</th>
                                     <th>Image</th>
                                     <th>Email</th>
-                                     <th>Created at</th>
-                                     <th>Updated at</th>
+                                    <th>Created at</th>
+                                    <th>Updated at</th>
+                                    <th>Operation</th>
                                  </tr>
                          </thead>
                          
@@ -174,20 +134,20 @@ import Axios from 'axios';
                             <tr>
                               <td>{val.UserUn}</td>    
                               <td >{val.UserPw}</td>  
-                               <td>{val.UserFN}</td>  
-                            <td>{val.UserSN}</td>  
+                              <td>{val.UserFN}</td>  
+                              <td>{val.UserSN}</td>  
                               <td>{val.UserDob}</td>  
-                              <td>{val.UserPL}</td>  
-                               <td><img src={val.UserPP} style={{ width: "80%" }} alt={val.UserPP} /></td>
-                             <td>{val.UserEmail}</td>  
-                            <td>{val.UserCreatedAt}</td>  
-                               <td>{val.UserUpdatedAt}</td> 
+                              <td>{UserPLView(val.UserPL)}</td>  
+                              <td><img src={val.UserPP} style={{ width: "80%" }} alt={val.UserPP} /></td>
+                              <td>{val.UserEmail}</td>  
+                              <td>{val.UserCreatedAt}</td>  
+                              <td>{val.UserUpdatedAt}</td> 
                            
                            <td>
                           
 
-                           <td><Button onClick={() => {UserSetting(val.UserId)}}>Settings</Button></td>
-                           <td><Button onClick={() => {deleteUser(val.UserUn)}}>Delete User</Button></td>
+                           <td><Button variant="primary" onClick={() => {routeChange(val.UserId)}}>Settings</Button></td>
+                           <td><Button onClick={() => {deleteUser(val.UserId)}}>Delete User</Button></td>
                           
                           
                           </td>

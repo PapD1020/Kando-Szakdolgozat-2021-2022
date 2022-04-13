@@ -287,7 +287,8 @@ app.post('/api/insert/user', (req, res) => {
 //DELETE - USERS
 app.delete('/api/delete/user/:userId', (req, res) => {
     const id = req.params.userId;
-    const sqlDelete = "DELETE Users FROM Users INNER JOIN ArticleUser ON Users.UserId=ArticleUser.UId WHERE Users.UserId = ?;DELETE Users FROM Users INNER JOIN ArticleComment ON Users.UserId=ArticleComment.UserId WHERE Users.UserId = ?;DELETE Users FROM Users INNER JOIN UserFavorite ON Users.UserId=UserFavorite.UserId WHERE Users.UserId = ?";
+    console.log(id);
+    const sqlDelete = "DELETE Users FROM Users WHERE UserId=?;DELETE Users FROM Users INNER JOIN ArticleUser ON Users.UserId=ArticleUser.UId WHERE Users.UserId = ?;DELETE Users FROM Users INNER JOIN ArticleComment ON Users.UserId=ArticleComment.UserId WHERE Users.UserId = ?;DELETE Users FROM Users INNER JOIN UserFavorite ON Users.UserId=UserFavorite.UserId WHERE Users.UserId = ?";
     db.query(sqlDelete, id, (err, result) => {
         if(err){
             console.log("Users DELETE error: " + err);
@@ -301,19 +302,20 @@ app.put('/api/update/user', (req, res) => {
     const id=req.body.userId;
     const name = req.body.userUn;
     const pimg = req.body.userPP;
-    const password =req.body.userPw;
     const firstname= req.body.userFN;
-    const secondname= req.body.userSN;
-    const userdob=req.body.userDob;  
+    const secondname= req.body.userSN;  
     const userE = req.body.userEmail;
     const userPL = req.body.userPL;
     const updated = req.body.userUpdatedAt;
-    const sqlUpdate = "UPDATE Users SET UserUn = ?, UserPw = ?,UserPP = ?, UserFN=?, UserSN=?,UserDob = ?, UserEmail = ?,UserPL=?, UserUpdatedAt = ? WHERE UserId = ?";
+    const sqlUpdate = "UPDATE Users SET UserUn = ?,UserPP = ?, UserFN=?, UserSN=?, UserEmail = ?,UserPL=?, UserUpdatedAt = ? WHERE UserId = ?";
 
-    db.query(sqlUpdate, [name, password,pimg, firstname, secondname, userdob, userE,userPL, updated,id ], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+    db.query(sqlUpdate, [name,pimg, firstname, secondname, userE,userPL, updated,id ], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
         if(err){
             console.log("Users UPDATE error: " + err);
         }
+            console.log("Users UPDATE result: " + result);
+            res.sendStatus(200);
+        
     });
 });
 /**************************************************COMMENT*********************************************************************/

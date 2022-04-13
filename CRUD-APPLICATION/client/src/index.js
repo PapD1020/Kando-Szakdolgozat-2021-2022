@@ -8,7 +8,8 @@ import UsersList from "./routes/userlist";
 import PostList from "./routes/articleslist";
 import ProfileUpdate from "./routes/profilePage";
 import AdminEditArticle from "./routes/adminEditArticle";
-
+import AdminEditUser from "./routes/adminEditUser"
+import Commentlist from "./routes/commentlist";
 
 const rootElement = document.getElementById("root");
 render(
@@ -21,6 +22,8 @@ render(
         <Route path="articleslist" element={<PostList />}></Route>
 
         <Route path="adminEditArticle" element={<AdminEditArticle />}></Route>
+        <Route path="adminEditUser" element={<AdminEditUser />}></Route>
+        <Route path="commentlist" element={<Commentlist />}></Route>
      
      
         <Route path="userlist" element={<UsersList />}></Route>

@@ -23,7 +23,7 @@ export default function Topbar() {
                     <Link to="/articleslist"><Button>Articleslist</Button></Link> 
                     
                     <Link to="/userlist"><Button>Userlist</Button></Link> 
-                    
+                    <Link to="/commentlist"><Button>Commentlist</Button></Link> 
               
                     <Link to="/login"><Button>Login</Button></Link> 
                     <Link to="/registration"><Button>Registration</Button></Link>
