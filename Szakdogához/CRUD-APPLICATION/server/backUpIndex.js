@@ -7,7 +7,6 @@ const { json } = require('body-parser');
 const Nanoid = require('nanoid');
 const bcrypt = require('bcrypt');
 const { response } = require('express');
-const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
 const saltRounds = 10;
@@ -42,12 +41,13 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true //enables cookies
 }));
-app.use(cookieParser());
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //initialize session
 
+app.set('trust proxy', 1);
 app.use(session({
     key: "userId",
     secret: "secret", //lehet meg kell változtatni
@@ -199,12 +199,17 @@ app.get('/api/get/article/byId', (req, res) => {
 //POST - Article by userId
 app.post('/api/insert/article/byId', (req, res) => {
 
+    var articleImg
+    if ( req.body.articleImg == undefined || req.body.articleImg == '' || req.body.articleImg == null ) {
+        articleImg = 'https://www.incimages.com/uploaded_files/image/1920x1080/getty_845301446_385027.jpg';
+    }else{
+        articleImg = req.body.articleImg;
+    }
     const articleId = Nanoid.nanoid();
     const userId = req.body.userId;
     const articleName = req.body.articleName;
     const articleSmDescr = req.body.articleSmDescr;
     const articleMDescr = req.body.articleMDescr;
-    const articleImg = req.body.articleImg;
     const articleType = req.body.articleType;
     const articleStatus = 1;
     const articleCreatedAt = req.body.articleCreatedAt;
@@ -417,9 +422,16 @@ app.put('/api/update/user', (req, res) => {
 app.post('/api/register/user', (req, res) => {
 
     console.log("Register users req.body: "+ JSON.stringify(req.body)); //ez jó
+    
+    var userPP;
+    if ( req.body.userPP == undefined || req.body.userPP == '' || req.body.userPP == null ) {
+        userPP = 'https://molsoft.hu/wp-content/uploads/2020/12/blank-profile-picture-973460_1280.png';
+    }else{
+        userPP = req.body.userPP;
+    }
+
     const userId = Nanoid.nanoid();
     const userUn = req.body.userUn;
-    const userPP = req.body.userPP;    
     const userPw = req.body.userPw;
     const userFN = req.body.userFN;
     const userSN = req.body.userSN;
@@ -462,20 +474,38 @@ app.get('/api/login/user', (req, res) => {
     }
 });
 
+/*
 //Session and cookie destroy
 app.get('/api/user/logout', (req,res) =>{
     if(req.session.user){ //megnézzük, hogy van-e már egy ilyen "user"-ünk
-        //req.session.destroy;
-        req.session = null;
+        req.session.destroy(function(err){
+            if(err){
+                res.send(err);
+                console.log("req.session.destroy err: " + err);
+            }
+        })
+        //req.session = null;
         //req.session.user = null;
-        Cookies.remove("userId");
-        req.session.
+        //Cookies.remove("userId");
+        //req.session.
+
         res.send({cookiesDestroyed: true});
     }
     else{
         res.send({loggedIn: false});
     }
 })
+*/
+
+
+//Destroy cookie 2.0
+app.get('/api/user/logout', (req, res) => {
+    console.log("itt vagyok!");
+    req.session.destroy((err) => { //destroy is kell, hogy ne maradjon meg
+       
+    }); //EZ MűKÖDik !!!!!!!
+    res.clearCookie("userId").send({loggedIn: false, cookiesDestroyed: true});
+  });
 
 //verifyJWT
 const verifyJWT = (req, res, next) => {
@@ -528,7 +558,7 @@ app.post('/api/login/user', (req, res) => {
     const userPw = req.body.userPw;
 
     //const sqlInsert = "SELECT UserUn, UserPw FROM Users WHERE UserUn = ? AND UserPw = ?"; - pw hash nélkül
-    const sqlInsert = "SELECT UserId, UserPP, UserUn, UserPw FROM Users WHERE UserUn = ?";
+    const sqlInsert = "SELECT UserId, UserPP, UserUn, UserPw FROM Users WHERE UserUn LIKE BINARY ?";
     db.query(sqlInsert, [userUn], (err, result) => {
 
         if(err){
@@ -658,6 +688,74 @@ app.get("/api/get/userById", (req, res) => {
     });
 });
 
+
+/**************************************************COMMENT*********************************************************************/
+
+//GET-20-asával lekérdezés
+app.get('/api/get/comments/byId', (req, res) => {
+
+    //const item = req.body.item-1; POST-hoz body kérés
+    const item = req.get("item")-1;
+    const articleId = req.get("articleId");
+    
+    const sqlSelect = "SELECT Users.UserUn,Users.UserPP,ArticleComment.Comment FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId WHERE ArticleComment.ArticleId = " + "'" + articleId + "'" + " ORDER BY CommentCreatedAt ASC LIMIT 20 OFFSET " + item + "";
+    console.log("SQL SELECT: " + sqlSelect);
+    db.query(sqlSelect, [articleId,item], (err, result) => {
+        if(err){
+            console.log("Comment GET error: " + err);
+        }
+        if (result.length == 0){
+            console.log("no result");
+            res.status(404).send('Not found');
+        }else{
+            console.log(result);
+            res.send(result);
+        }
+    });
+});
+//POST-COMMENT
+app.post('/api/insert/comment', (req, res) => {
+
+    const commentId = Nanoid.nanoid();
+    const userId = req.body.userId;
+    const articleId = req.body.articleId;
+    const comment=req.body.comment;
+    const commentCreatedAt = req.body.commentCreatedAt;
+  
+
+    const sqlInsert = "INSERT INTO `ArticleComment`(`CommentId`, `UserId`, `ArticleId`,`Comment`,`CommentCreatedAt`) VALUES (?,?,?,?,?)";
+    db.query(sqlInsert, [commentId,userId,articleId,comment, commentCreatedAt], (err, result) => {
+
+        if(err){
+            console.log("Comment POST error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+        
+        console.log("comment insert: " + sqlInsert);
+        
+    });
+});
+//DELETE-COMMENT
+app.delete('/api/delete/comment/:commentId', (req, res) => {
+    const id = req.params.commentId;
+    const sqlDelete = "DELETE FROM ArticleComment WHERE CommentId = ?";
+    db.query(sqlDelete, id, (err, result) => {
+        if(err){
+            console.log("Comment DELETE error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+        console.log("Comment DELETE result: " + result);
+        
+    });
+});
+
+
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });
+/*
+app.listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  });*/
