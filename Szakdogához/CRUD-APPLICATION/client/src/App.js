@@ -53,8 +53,6 @@ export default function App(){
     Axios.get("http://localhost:3001/api/user/logout").then((response) => {
       if(response.data.cookiesDestroyed === true){
         localStorage.removeItem("token");
-        //cookies.remove("userId"); lehet import kell hozzá, most back endben próbálom
-        alert("cookies destroyed muhahahahahahahah!!!!");
         if(response.data.loggedIn === false){
           setLoginStatus(false);
           routeChange();
@@ -68,7 +66,6 @@ export default function App(){
 
   let navigate = useNavigate();
   const routeChange = () =>{
-    checkLoginStatus();
     navigate('/login');
   }
 

@@ -5,6 +5,7 @@ import Axios from 'axios';
 import { Overlay, Tooltip } from 'react-bootstrap';
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import {useNavigate} from "react-router-dom";
+import App from "../App";
 
 export default function Login(){
 
@@ -31,26 +32,19 @@ export default function Login(){
 
     const submitUserDataLogin = () => {
   
-        Axios.post('http://localhost:3001/api/login/user', { //URL for our api (node.js backend)
-        //userUn must be the same as in back-end index.js req.body.userUn !!!
+        Axios.post('http://localhost:3001/api/login/user', { 
         userUn: UserUnLogin, userPw: UserPwLogin
         }).then((response) => {
 
-            if(!response.data.auth){ //ha nem vagyunk authentikálva
-                //setLoginStatus(response.data.message);
+            if(!response.data.auth){ 
                 setErrorMessage(response.data.message);
                 setLoginStatus(false);
                 console.log("Login user response.data: " + JSON.stringify(response.data));
             }
             else{
-                console.log("Bejelentkezve");
-                console.log(JSON.stringify(response.data));
-                //setLoginStatus("Successfully logged in as: " + response.data[0].UserUn); //it will be an array !!! a jwt óta nem sima res.send(result) van, amivel ez működne, hanem res.json({auth: true, token: token, result: result});
-
-                console.log("token: " + JSON.stringify(response.data.token));
-                localStorage.setItem("token", response.data.token); //a local storegabe mentjük a tokent, máshogy is lehetne. data.token - meg kell nézni console.loggaé, hogy hogy kell rá hivatkozni.
+                localStorage.setItem("token", response.data.token);
                 setLoginStatus(true);
-                //alert("Successfully logged in as: " + response.data[0].UserUn); jwt óta nem jó, backendben nem sime res.send(result) van, hanem res.json({auth: true, token: token, result: result});
+                App.forceUpdate();
                 routeChange();
             }
         });
