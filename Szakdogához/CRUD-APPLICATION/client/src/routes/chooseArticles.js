@@ -57,6 +57,9 @@ export default function CreateArticle(props){
                               <Card.Text>
                                 {val.ArticleMDescr}
                               </Card.Text>
+                              <Card.Text>
+                                Article Status: {val.ArticleStatus}
+                              </Card.Text>
                             </Card.Body>
                             <Card.Footer className="bg-dark bg-opacity-25">
                               <Card.Text>Created at: {val.ArticleCreatedAt}</Card.Text>
@@ -69,8 +72,6 @@ export default function CreateArticle(props){
                         </div>
                       )
                   })}
-
-            <h1>{LoginStatus}</h1>
         </div>
     );
 }

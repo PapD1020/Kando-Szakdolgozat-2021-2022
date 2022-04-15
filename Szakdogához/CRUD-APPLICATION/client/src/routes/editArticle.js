@@ -104,6 +104,9 @@ export default function EditArticle() {
                       <Card.Text>
                         {val.ArticleMDescr}
                       </Card.Text>
+                      <Card.Text>
+                        Article Status: {val.ArticleStatus}
+                      </Card.Text>
                     </Card.Body>
                     <Card.Footer className="bg-dark bg-opacity-25">Created at: {val.ArticleCreatedAt}</Card.Footer>
                   </Card>
