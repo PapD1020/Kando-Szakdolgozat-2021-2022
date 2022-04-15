@@ -267,7 +267,7 @@ export default function ProfileUpdate(){
                                         <label>User email: </label>
                                         <input type="email" className="form-control" defaultValue={val.UserEmail}{
                                             ...register("userEmailUpd", {
-                                                //vmi must contain @ ellenőrzés stb
+        
                                             })
                                         }onChange={(e) => {
                                             setUserEmailUpd(e.target.value);
@@ -275,7 +275,11 @@ export default function ProfileUpdate(){
                                     </div>
                         
                                     <input type="submit" onClick={() => {
-                                    }}/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
+                                        if(UserPPUpd === ""){setUserPPUpd(val.UserPP)}
+                                        if(UserFNUpd === ""){setUserFNUpd(val.UserFN)}
+                                        if(UserSNUpd === ""){setUserSNUpd(val.UserSN)}
+                                        if(UserEmailUpd === ""){setUserEmailUpd(val.UserEmail)}
+                                    }}/>
                                 </form>
                                   ) 
                                 })}
