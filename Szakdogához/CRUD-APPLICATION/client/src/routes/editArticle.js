@@ -67,9 +67,9 @@ export default function EditArticle() {
     formState: {errors}
   } = useForm();
 
-  const onSubmit = (data) => {
-      alert(JSON.stringify(data));
-      submitArticleData();
+  const onSubmit = () => {
+    submitArticleData();
+    routeChange();
   };
 
   const submitArticleData = () => {
@@ -89,9 +89,6 @@ export default function EditArticle() {
 
   return (
     <div>
-      <h1>Logged in as: {LoginStatus}</h1>
-      <h1>Sent ArticleId from chooseArticles.js page: {location.state.id}</h1>
-
         <div>
           {OneArticleList.map((val) => {
             return(
@@ -116,7 +113,7 @@ export default function EditArticle() {
                     style={{ height: "10vh" }}
                   >
 
-                    <Button variant="primary" onClick={modalOpen}>
+                    <Button variant="outline-primary" onClick={modalOpen}>
                       Edit
                     </Button>
                   </div>
@@ -231,7 +228,7 @@ export default function EditArticle() {
                                       </select>
                                   </div>
 
-                                    <input type="submit"
+                                    <Button className='mt-5' variant='primary' type="submit"
                                       onClick={() => {
                             
                                         if ( ArticleNameUpd === "" ) { setArticleNameUpd(val.ArticleName) }
@@ -240,15 +237,16 @@ export default function EditArticle() {
                                         if ( ArticleImgUpd === "" ) { setArticleImgUpd(val.ArticleImg)}
                                         if ( ArticleTypeUpd === "" ) { setArticleTypeUpd(val.ArticleType)}
                                         if ( ArticleStatusUpd === "" ) { setArticleStatusUpd(val.ArticleStatus)}
-                                      }}
-                                    /> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
+                                      }}>
+                                        Submit
+                                    </Button>
                                   </form>
                                   ) 
                                 })}
                       </Modal.Body>
                 
                       <Modal.Footer>
-                        <Button variant="secondary" onClick={modalClose}>
+                        <Button variant="outline-secondary" onClick={modalClose}>
                           Close
                         </Button>
                       </Modal.Footer>
@@ -258,8 +256,9 @@ export default function EditArticle() {
             })}
           </div>
 
-          <button onClick={routeChange}>Back to selection page</button>
+          <div className='ms-5'>
+            <Button variant='primary' onClick={routeChange}>Back to selection page</Button>
+          </div> 
     </div>
-
   )
 }

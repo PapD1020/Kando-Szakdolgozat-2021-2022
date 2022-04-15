@@ -21,7 +21,6 @@ export default function CreateArticle(props){
           //console.log("Are we logged in: " + JSON.stringify(response));
               if(response.data.loggedIn === true){
                   setLoginStatus(response.data.user[0].UserUn);
-                  //GotArticleId.current = response.data.article[0].ArticleId;
                   GotUserId.current = response.data.user[0].UserId;
               }
           }).then(() => {
@@ -31,9 +30,7 @@ export default function CreateArticle(props){
             'userId': GotUserId.current
           }
         }).then((response) => {
-          
           setArticleNameList(response.data);
-          console.log("Új articles get: " + response);
         });
           });
       }, []);
@@ -41,7 +38,6 @@ export default function CreateArticle(props){
       
       let navigate = useNavigate();
       const routeChange = (gotId) =>{
-        alert("Második selected got id: " + gotId);
         navigate('/editArticle', {state:{id: gotId}});
       }
       

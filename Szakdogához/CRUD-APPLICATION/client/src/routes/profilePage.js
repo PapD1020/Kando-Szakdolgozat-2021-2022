@@ -66,8 +66,6 @@ export default function ProfileUpdate(){
             }).then((response) => {
                 setUsersNameList(response.data)
             });
-
-            alert("frontend userId: " + GotUserId.current);
         });
     }, []);
 
@@ -136,13 +134,13 @@ export default function ProfileUpdate(){
                                 </div>
                                 <div className="card-footer">
                                         <div className="mb-3">
-                                            <Button variant="primary" onClick={modalOpenPw}>
+                                            <Button variant="outline-primary" onClick={modalOpenPw}>
                                                 Change password
                                             </Button>
                                         </div>
 
                                         <div>
-                                            <Button variant="primary" onClick={modalOpen}>
+                                            <Button variant="outline-primary" onClick={modalOpen}>
                                                 Edit your profile
                                             </Button>
                                         </div>
@@ -186,13 +184,14 @@ export default function ProfileUpdate(){
                                     
                                         </div>
 
-                                            <input type="submit" />
-
+                                        <div className="mt-5">
+                                            <Button type="submit">Submit</Button>
+                                        </div>
                                         </form>
                                     </Modal.Body>
 
                                     <Modal.Footer>
-                                        <Button variant="secondary" onClick={modalClosePw}>
+                                        <Button variant="outline-secondary" onClick={modalClosePw}>
                                             Close
                                         </Button>
                                     </Modal.Footer>
@@ -274,24 +273,25 @@ export default function ProfileUpdate(){
                                         }}/>
                                     </div>
                         
-                                    <input type="submit" onClick={() => {
-                                        if(UserPPUpd === ""){setUserPPUpd(val.UserPP)}
-                                        if(UserFNUpd === ""){setUserFNUpd(val.UserFN)}
-                                        if(UserSNUpd === ""){setUserSNUpd(val.UserSN)}
-                                        if(UserEmailUpd === ""){setUserEmailUpd(val.UserEmail)}
-                                    }}/>
+                                    <div className="mt-5">
+                                        <Button type="submit" onClick={() => {
+                                            if(UserPPUpd === ""){setUserPPUpd(val.UserPP)}
+                                            if(UserFNUpd === ""){setUserFNUpd(val.UserFN)}
+                                            if(UserSNUpd === ""){setUserSNUpd(val.UserSN)}
+                                            if(UserEmailUpd === ""){setUserEmailUpd(val.UserEmail)}
+                                        }}>Submit</Button>
+                                    </div>
                                 </form>
                                   ) 
                                 })}
                               </Modal.Body>
                             
                               <Modal.Footer>
-                                <Button variant="secondary" onClick={modalClose}>
+                                <Button variant="outline-secondary" onClick={modalClose}>
                                   Close
                                 </Button>
                             </Modal.Footer>
                           </Modal>
-                          
                         </div>
                       )
                   })}
