@@ -103,6 +103,8 @@ export default function Login(){
             <div className="col-md-auto">
                 <h1 className="display-1 m-3">Login</h1>
             </div>
+
+            {!LoginStatus && (
                 <div className="container">
                     <form className="" onSubmit={handleSubmit(onSubmit)}>
                         <div className="row">
@@ -192,6 +194,7 @@ export default function Login(){
                         </div>
                     </form>
                 </div>
+            )}
         </div>
     );
 }
