@@ -74,14 +74,18 @@ export default function App(){
 
   return(
     <div>
-      <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
+      <Navbar sticky='top' collapseOnSelect expand="lg" bg="primary" variant="dark">
         <Container>
-        <Navbar.Brand href="#home">IdeaShare</Navbar.Brand>
+        <Navbar.Brand>IdeaShare</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/login">Login</Nav.Link>
-            <Nav.Link href="/registration">Registration</Nav.Link>
+            {!LoginStatus && (
+            <Nav>
+              <Nav.Link href="/login">Login</Nav.Link>
+              <Nav.Link href="/registration">Registration</Nav.Link>
+            </Nav>
+            )}
 
             {LoginStatus && (
               <Nav>
@@ -98,6 +102,7 @@ export default function App(){
               <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
             </NavDropdown>
           </Nav>
+
           <Nav>
           {LoginStatus && (
             <NavDropdown title={LoginStatus} id="basic-nav-dropdown">

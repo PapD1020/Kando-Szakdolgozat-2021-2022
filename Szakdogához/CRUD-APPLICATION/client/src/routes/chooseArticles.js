@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 import {useNavigate} from "react-router-dom";
 import Axios from 'axios';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 
 export default function CreateArticle(props){
   
@@ -62,11 +62,14 @@ export default function CreateArticle(props){
                                 {val.ArticleMDescr}
                               </Card.Text>
                             </Card.Body>
-                            <Card.Footer className="bg-dark bg-opacity-25">Created at: {val.ArticleCreatedAt}</Card.Footer>
+                            <Card.Footer className="bg-dark bg-opacity-25">
+                              <Card.Text>Created at: {val.ArticleCreatedAt}</Card.Text>
+                            </Card.Footer>
                           </Card>
 
-                          <button onClick={() => {routeChange(val.ArticleId)}}>Select article for editing</button>
-
+                          <div className="text-center">
+                            <Button variant="primary" onClick={() => {routeChange(val.ArticleId)}}>Select article for editing</Button>
+                          </div>
                         </div>
                       )
                   })}
