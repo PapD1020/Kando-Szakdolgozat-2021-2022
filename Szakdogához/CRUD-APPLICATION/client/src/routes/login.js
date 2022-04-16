@@ -14,8 +14,7 @@ export default function Login(){
     const [LoginStatus, setLoginStatus] = useState(false);
 
     const [ErrorMessage, setErrorMessage] = useState('');
-
-    const GotUserId = useRef('');
+    const [SuccessfullMessage, setSuccessfullMessage] = useState('');
 
     Axios.defaults.withCredentials = true;
 
@@ -27,7 +26,7 @@ export default function Login(){
 
     const onSubmit = () => {
         submitUserDataLogin();
-        routeChange();
+        //routeChange();
     };
 
     const submitUserDataLogin = () => {
@@ -44,6 +43,7 @@ export default function Login(){
             else{
                 localStorage.setItem("token", response.data.token);
                 setLoginStatus(true);
+                setSuccessfullMessage(response.data.message);
             }
         });
     };
@@ -64,7 +64,7 @@ export default function Login(){
 
     let navigate = useNavigate();
     const routeChange = () =>{
-      navigate('/');
+      navigate('/articles');
     }
     
     return(

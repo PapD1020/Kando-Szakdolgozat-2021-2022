@@ -286,33 +286,9 @@ app.get('/api/login/user', (req, res) => {
     }
 });
 
-/*
-//Session and cookie destroy
-app.get('/api/user/logout', (req,res) =>{
-    if(req.session.user){ //megnézzük, hogy van-e már egy ilyen "user"-ünk
-        req.session.destroy(function(err){
-            if(err){
-                res.send(err);
-                console.log("req.session.destroy err: " + err);
-            }
-        })
-        //req.session = null;
-        //req.session.user = null;
-        //Cookies.remove("userId");
-        //req.session.
-
-        res.send({cookiesDestroyed: true});
-    }
-    else{
-        res.send({loggedIn: false});
-    }
-})
-*/
-
 
 //Destroy cookie 2.0
 app.get('/api/user/logout', (req, res) => {
-    console.log("itt vagyok!");
     req.session.destroy((err) => {
         
     });
@@ -385,7 +361,7 @@ app.post('/api/login/user', (req, res) => {
 
                     req.session.user = result;
 
-                    res.json({auth: true, token: token, result: result});
+                    res.json({auth: true, token: token, result: result, message: "Log in successfull!"});
                 }
                 else{
                     res.json({auth: false, message: "Wrong username or password."});
