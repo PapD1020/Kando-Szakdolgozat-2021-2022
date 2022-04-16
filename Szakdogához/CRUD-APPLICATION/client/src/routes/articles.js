@@ -12,21 +12,6 @@ export default function Article(){
 
     const [getData, setData] = useState([]);
 
-    const [LoginStatus, setLoginStatus] = useState(false);
-
-        //check every time we refresh the page if a user is logged in
-      useEffect(() => {
-        Axios.get('http://localhost:3001/api/login/user').then((response) => {
-              //ellenőrzésre
-              //console.log("Are we logged in: " + JSON.stringify(response));
-              if(response.data.loggedIn === true){
-                  setLoginStatus(response.data.user[0].UserUn);
-              }
-          });
-      }, []);
-
-
-    //const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
     useEffect(() => {
       lastFetchedArticleItemId = 1;
     }, []);

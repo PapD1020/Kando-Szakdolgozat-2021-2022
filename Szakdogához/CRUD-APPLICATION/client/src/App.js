@@ -7,8 +7,6 @@ import React, {useEffect, useState, useRef} from "react";
 import {useNavigate} from "react-router-dom";
 
 export default function App(){
-
-  //Authot vagy logint? Tokent vagy cookiet?
   
   const [LoginStatus, setLoginStatus] = useState('');
 
@@ -23,15 +21,6 @@ export default function App(){
         });
     }, []);
 
-  const checkLoginStatus = () =>{
-    Axios.get('http://localhost:3001/api/login/user').then((response) => {
-        //ellenőrzésre
-        //console.log("Are we logged in: " + JSON.stringify(response));
-        if(response.data.loggedIn === true){
-            setLoginStatus(response.data.user[0].UserUn);
-        }
-    });
-  }
 
   const logout = () =>{
 

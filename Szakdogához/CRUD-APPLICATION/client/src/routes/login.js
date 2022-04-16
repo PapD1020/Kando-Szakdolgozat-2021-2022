@@ -27,6 +27,7 @@ export default function Login(){
 
     const onSubmit = () => {
         submitUserDataLogin();
+        //routeChange();
     };
 
     const submitUserDataLogin = () => {
@@ -43,20 +44,7 @@ export default function Login(){
             else{
                 localStorage.setItem("token", response.data.token);
                 setLoginStatus(true);
-                routeChange();
             }
-        });
-    };
-
-
-    //MGE KELL NÉNZI
-    const userAuthenticated = () => {
-        Axios.get('http://localhost:3001/api/login/user/auth', {headers: {
-            "x-access-token": localStorage.getItem("token"),
-            "userId": GotUserId.current
-        }}).then((response) => {
-            alert("Authenticated");
-            console.log("isUserAuth response: " + JSON.stringify(response.data));
         });
     };
 
@@ -70,16 +58,6 @@ export default function Login(){
             }
         });
     }, []);
-
-    const [showState, setShowState] = useState(true);
-
-    const [showStateDanger, setShowStateDanger] = useState(true);
-
-    /* Valamiért fölösleges Alert hez
-    const closeAlert = () => setShowState(false);
-
-    const openAlert = () => setShowState(true);
-    */
 
     const [show, setShow] = useState(false);
     const target = useRef(null);
