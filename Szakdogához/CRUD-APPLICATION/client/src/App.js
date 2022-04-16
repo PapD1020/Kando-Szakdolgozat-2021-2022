@@ -23,21 +23,6 @@ export default function App(){
         });
     }, []);
 
-    /*
-  const AuthStatus = useRef(false);
-      //check every time we refresh the page if a user is logged in
-      useEffect(() => {
-        Axios.get('http://localhost:3001/api/login/user').then((response) => {
-            //ellenőrzésre
-            //console.log("Are we logged in: " + JSON.stringify(response));
-            if(response.data.loggedIn === true){
-                alert("Login status: " + response.data.loggedIn);
-                setLoginStatus(response.data.user[0].UserUn);
-            }
-        });
-    }, []);
-    */
-
   const checkLoginStatus = () =>{
     Axios.get('http://localhost:3001/api/login/user').then((response) => {
         //ellenőrzésre

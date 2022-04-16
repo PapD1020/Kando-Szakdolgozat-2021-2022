@@ -64,10 +64,8 @@ app.use(session({
 app.get('/api/get/article/allById', (req, res) => {
 
     const userId = req.get("userId");
-    console.log("userId: " + userId);
     
     const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = " + "'" + userId + "' AND ArticleStatus != -1";
-    console.log("SQL SELECT: " + sqlSelect);
 
     db.query(sqlSelect, [userId], (err, result) => {
         if(err){
@@ -210,9 +208,14 @@ app.put('/api/update/article/byUser', (req, res) => {
 
     db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleUpdatedAt, articleId], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
         
-        if(err){
+        if(err.errno == 1062){
             console.log(err);
-            res.sendStatus(404);
+            res.send({errorType: "duplicate", errorMessage: err.message});
+        }
+        else if(err){
+            console.log(err);
+            res.sendStatus(500);
+            res.send(err.message);
         }
         res.sendStatus(200);
     });

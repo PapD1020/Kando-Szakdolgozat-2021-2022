@@ -5,7 +5,6 @@ import Axios from 'axios';
 import { Overlay, Tooltip } from 'react-bootstrap';
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import {useNavigate} from "react-router-dom";
-import App from "../App";
 
 export default function Login(){
 
@@ -44,7 +43,6 @@ export default function Login(){
             else{
                 localStorage.setItem("token", response.data.token);
                 setLoginStatus(true);
-                App.forceUpdate();
                 routeChange();
             }
         });

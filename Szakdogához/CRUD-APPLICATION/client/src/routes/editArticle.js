@@ -14,6 +14,9 @@ export default function EditArticle() {
   const [ArticleTypeUpd, setArticleTypeUpd] = useState('');
   const [ArticleStatusUpd, setArticleStatusUpd] = useState('');
 
+  const [DuplicateError, setDuplicateError] = useState('');
+  const [DuplicateErrorMsg, setDuplicateErrorMsg] = useState('');
+
   const location = useLocation();
 
   const [LoginStatus, setLoginStatus] = useState(false);
@@ -84,7 +87,12 @@ export default function EditArticle() {
       articleType: ArticleTypeUpd,
       articleStatus: ArticleStatusUpd,
       articleUpdatedAt: date
-    });
+    }).then((response) => {
+      if(response.data.errorType === "duplicate"){
+        setDuplicateError(true);
+        setDuplicateErrorMsg(response.data.errorMessage);
+      }
+    })
   };
 
   return (
@@ -261,7 +269,13 @@ export default function EditArticle() {
 
           <div className='ms-5'>
             <Button variant='primary' onClick={routeChange}>Back to selection page</Button>
-          </div> 
+          </div>
+
+          {DuplicateError && (
+            <div>
+              Duplicate error: {DuplicateErrorMsg}
+            </div> 
+          )}
     </div>
   )
 }
