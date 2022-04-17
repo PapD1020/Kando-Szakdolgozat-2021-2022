@@ -128,7 +128,7 @@ export default function EditArticle() {
                       Edit
                     </Button>
                   </div>
-                    <Modal show={ModalState} onHide={modalClose}>
+                    <Modal show={ModalState} fullscreen={true} onHide={modalClose}>
                       <Modal.Header closeButton>
                         <Modal.Title>You are editing {val.ArticleName} article</Modal.Title>
                       </Modal.Header>
@@ -136,122 +136,169 @@ export default function EditArticle() {
                       <Modal.Body>
                         {OneArticleList.map((val) => {
                                 return(
-                                  <form onSubmit={handleSubmit(onSubmit)}>
-                                    <div className="form-group">
-                                      <label>Article type:</label>
-                                      <select id="types" className="form-control" required {
-                                          ...register("articleType", {
-                                              required: false,
-                                          })
-                                      } onChange={(e) => {
-                                          setArticleTypeUpd(e.target.value);
-                                      }}>
-                                          <option defaultValue={val.ArticleType}>{val.ArticleType}</option>
-                                          <option value="Programming">Programming</option>
-                                          <option value="Other">Other</option>
-                                      </select>
-                                      <div className="invalid-feedback">You must select a article type.</div>
+                                  <div className="container">
+                                    <form className="" onSubmit={handleSubmit(onSubmit)}>
+                                        <div className="row">
+                                            <div className="col-lg-3">
+                                                <div className="form-group">
+                                                    <label className="display-6 mb-3">Article type:</label>
+                                                    <select id="types" className="form-control p-2 mb-3"{
+                                                        ...register("articleTypeUpd", {
+                                                            required: false,
+                                                        })
+                                                    } onChange={(e) => {
+                                                        setArticleTypeUpd(e.target.value);
+                                                    }}>
+                                                        <option defaultValue={val.ArticleType}>{val.ArticleType}</option>
+                                                        <option value="Programming">Programming</option>
+                                                        <option value="Programming">Other</option>
+                                                    </select>
+                                                    
+                                                </div>
+
+                                                <div className="errordiv text-danger mb-2">
+                                                    {errors?.articleTypeUpd?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a type.</p></div>}
+                                                </div>
+                                            </div>
+
+                                            <div className="col-lg-3">
+                                                <div className="form-group">
+                                                    <label className="display-6 mb-3">Article name:</label>
+                                                    <input type="text" className="mb-3 p-2 form-control" defaultValue={val.ArticleName}{
+                                                        ...register("articleNameUpd", {
+                                                            required: false,
+                                                            minLength: 1,
+                                                            maxLength: 20
+                                                        })
+                                                    } onChange={(e) => {
+                                                        setArticleNameUpd(e.target.value);
+                                                    }}/>
+                                                </div>
+
+                                                <div className="errordiv text-danger mb-2">
+                                                    {errors?.articleNameUpd?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a name.</p></div>}
+                                                    {errors?.articleNameUpd?.type === "minLength" && <div><h5>Your article's name is too short.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
+                                                    {errors?.articleNameUpd?.type === "maxLength" && <div><h5>Your article's name is too long.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
+                                                    {errors?.articleNameUpd?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                                                </div>
+                                            </div>
+
+                                            <div className="col-lg-4">
+                                                <div className="form-group">
+                                                    <label className="display-6 mb-3">Article image:</label>
+                                                    <input type="url" className="mb-3 p-2 form-control" defaultValue={val.ArticleImg}{
+                                                        ...register("articleImgUpd", {
+                                                            required: false,
+                                                            minLength: 1,
+                                                            maxLength: 500
+                                                        })
+                                                    } onChange={(e) => {
+                                                        setArticleImgUpd(e.target.value);
+                                                    }}/>
+                                                </div>
+
+                                                <div className="errordiv text-danger mb-2">
+                                                    {errors?.articleImgUpd?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a picture</p></div>}
+                                                    {errors?.articleImgUpd?.type === "minLength" && <div><h5>Your article's picture URL is too short.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
+                                                    {errors?.articleImgUpd?.type === "maxLength" && <div><h5>Your article's picture URL is too long.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="row">
+                                            <div className="col-lg-5">
+                                                <div className="form-group">
+                                                    <label className="display-5 mb-3 mt-3">Article small description:</label>
+                                                    <textarea rows="3" className="mb-3 p-2 form-control" defaultValue={val.ArticleSmDescr}{
+                                                        ...register("articleSmDescrUpd", {
+                                                            required: false,
+                                                            minLength: 1,
+                                                            maxLength: 100
+                                                        })
+                                                    } onChange={(e) => {
+                                                        setArticleSmDescrUpd(e.target.value);
+                                                    }}/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="row">
+                                            <div className="col-sm-auto">
+                                                <div className="errordiv text-danger mb-2">
+                                                    {errors?.articleSmDescrUpd?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a small description of your article.</p></div>}
+                                                    {errors?.articleSmDescrUpd?.type === "minLength" && <div><h5>Your article's small description is too short.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
+                                                    {errors?.articleSmDescrUpd?.type === "maxLength" && <div><h5>Your article's small description is too long.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
+                                                    {errors?.articleSmDescrUpd?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="row">
+                                            <div className="col-sm-auto">
+                                                <div className="form-group">
+                                                    <label className="display-5 mb-3 mt-3">Article main description:</label>
+                                                    <textarea rows="10" cols="170" className="mb-3 p-2 form-control" defaultValue={val.ArticleMDescr}{
+                                                        ...register("articleMDescrUpd", {
+                                                            required: true,
+                                                            minLength: 3,
+                                                            maxLength: 500
+                                                        })
+                                                    } onChange={(e) => {
+                                                        setArticleMDescrUpd(e.target.value);
+                                                    }}/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="row">
+                                            <div className="col-sm-auto">
+                                                <div className="errordiv text-danger mb-2">
+                                                    {errors?.articleMDescrUpd?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a main description of your article.</p></div>}
+                                                    {errors?.articleMDescrUpd?.type === "minLength" && <div><h5>Your article's main description is too short.</h5><p>Your article's main description length must be between 150 and 500 characters.</p></div>}
+                                                    {errors?.articleMDescrUpd?.type === "maxLength" && <div><h5>Your article's main description is too long.</h5><p>Your article's main description length must be between 150 and 500 characters.</p></div>}
+                                                    {errors?.articleMDescrUpd?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="row">
+                                            <div className="col-sm-auto">
+                                              <div className="form-group">
+                                                  <label>Article status:</label>
+                                                  <select id="status" className="form-control" required {
+                                                      ...register("articleStatus", {
+                                                          required: true,
+                                                      })
+                                                  } onChange={(e) => {
+                                                      setArticleStatusUpd(e.target.value);
+                                                  }}>
+                                                      <option defaultValue={val.ArticleStatus}>{val.ArticleStatus}</option>
+                                                      <option value="1">Aktív</option>
+                                                      <option value="0">Inaktív</option>
+                                                      <option value="-2">Törölt</option>
+                                                  </select>
+                                              </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="row mt-3 mb-5">
+                                            <div className="col-sm-auto">
+                                            <Button className='mt-5' variant='primary' type="submit"
+                                              onClick={() => {
+                                    
+                                                  if ( ArticleNameUpd === "" ) { setArticleNameUpd(val.ArticleName) }
+                                                  if ( ArticleSmDescrUpd === "" ) { setArticleSmDescrUpd(val.ArticleSmDescr)}
+                                                  if ( ArticleMDescrUpd === "" ) { setArticleMDescrUpd(val.ArticleMDescr)}
+                                                  if ( ArticleImgUpd === "" ) { setArticleImgUpd(val.ArticleImg)}
+                                                  if ( ArticleTypeUpd === "" ) { setArticleTypeUpd(val.ArticleType)}
+                                                  if ( ArticleStatusUpd === "" ) { setArticleStatusUpd(val.ArticleStatus)}
+                                                }}>
+                                                Submit
+                                            </Button>
+                                            </div>
+                                        </div>
+                                    </form>
                                   </div>
-
-                                  <div className="form-group">
-                                      <label>Article name:</label>
-                                      <input type="text" className="form-control" defaultValue={val.ArticleName} {
-                                          ...register("articleName", {
-                                              minLength: 6,
-                                              maxLength: 20,
-                                              pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
-                                          })
-                                      }onChange={(e) => {
-                                          setArticleNameUpd(e.target.value);
-                                      }}/>
-                                      
-                                      {errors?.articleName?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a name.</p></div>}
-                                      {errors?.articleName?.type === "minLength" && <div><h5>Your article's name is too short.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
-                                      {errors?.articleName?.type === "maxLength" && <div><h5>Your article's name is too long.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
-                                      {errors?.articleName?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
-                                  </div>
-                                  
-                                  <div className="form-group">
-                                      <label>Article small description:</label>
-                                      <input type="text" className="form-control" defaultValue={val.ArticleSmDescr} {
-                                          ...register("articleSmDescr", {
-                                              minLength: 8,
-                                              maxLength: 100,
-                                              pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
-                                          })
-                                      }onChange={(e) => {
-                                          setArticleSmDescrUpd(e.target.value);
-                                      }}/>
-
-                                      {errors?.articleSmDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a small description of your article.</p></div>}
-                                      {errors?.articleSmDescr?.type === "minLength" && <div><h5>Your article's small description is too short.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
-                                      {errors?.articleSmDescr?.type === "maxLength" && <div><h5>Your article's small description is too long.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
-                                      {errors?.articleSmDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
-                                  </div>
-
-                                  <div className="form-group">
-                                      <label>Article main description:</label>
-                                      <input type="text" className="form-control" defaultValue={val.ArticleMDescr} {
-                                          ...register("articleMDescr", {
-                                              minLength: 3,
-                                              maxLength: 500,
-                                              pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
-                                          })
-                                      }onChange={(e) => {
-                                          setArticleMDescrUpd(e.target.value);
-                                      }}/>
-
-                                      {errors?.articleMDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a main description of your article.</p></div>}
-                                      {errors?.articleMDescr?.type === "minLength" && <div><h5>Your article's main description is too short.</h5><p>Your article's main description length must be between 150 and 500 characters.</p></div>}
-                                      {errors?.articleMDescr?.type === "maxLength" && <div><h5>Your article's main description is too long.</h5><p>Your article's main description length must be between 150 and 500 characters.</p></div>}
-                                      {errors?.articleMDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
-                                  </div>
-
-                                  <div className="form-group">
-                                      <label>Article image:</label>
-                                      <input type="url" className="form-control" defaultValue={val.ArticleImg} {
-                                          ...register("articleImg", {
-                                              minLength: 20, //Mennyi legyen?
-                                              maxLength: 500, //Mennyi legyen?
-                                          })
-                                      }onChange={(e) => {
-                                          setArticleImgUpd(e.target.value);
-                                      }}/>
-
-                                      {errors?.articleImg?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a picture</p></div>}
-                                      {errors?.articleImg?.type === "minLength" && <div><h5>Your article's picture URL is too short.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
-                                      {errors?.articleImg?.type === "maxLength" && <div><h5>Your article's picture URL is too long.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
-                                    </div>
-
-                                    <div className="form-group">
-                                      <label>Article status:</label>
-                                      <select id="status" className="form-control" required {
-                                          ...register("articleStatus", {
-                                              required: true,
-                                          })
-                                      } onChange={(e) => {
-                                          setArticleStatusUpd(e.target.value);
-                                      }}>
-                                          <option defaultValue={val.ArticleStatus}>{val.ArticleStatus}</option>
-                                          <option value="1">Aktív</option>
-                                          <option value="0">Inaktív</option>
-                                          <option value="-2">Törölt</option>
-                                      </select>
-                                  </div>
-
-                                    <Button className='mt-5' variant='primary' type="submit"
-                                      onClick={() => {
-                            
-                                        if ( ArticleNameUpd === "" ) { setArticleNameUpd(val.ArticleName) }
-                                        if ( ArticleSmDescrUpd === "" ) { setArticleSmDescrUpd(val.ArticleSmDescr)}
-                                        if ( ArticleMDescrUpd === "" ) { setArticleMDescrUpd(val.ArticleMDescr)}
-                                        if ( ArticleImgUpd === "" ) { setArticleImgUpd(val.ArticleImg)}
-                                        if ( ArticleTypeUpd === "" ) { setArticleTypeUpd(val.ArticleType)}
-                                        if ( ArticleStatusUpd === "" ) { setArticleStatusUpd(val.ArticleStatus)}
-                                      }}>
-                                        Submit
-                                    </Button>
-                                  </form>
                                   ) 
                                 })}
                       </Modal.Body>
