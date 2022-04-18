@@ -35,6 +35,17 @@ export default function App(){
         });
     }, []);
 
+    const checkLoginStatus = () => {
+        Axios.get('http://localhost:3001/api/login/user').then((response) => {
+          //ellenőrzésre
+          //console.log("Are we logged in: " + JSON.stringify(response));
+          if(response.data.loggedIn === true){
+              setLoginStatus(true);
+              setLoginName(response.data.user[0].UserUn);
+          }
+      });
+    }
+
     const submitUserDataLogin = () => {
   
       Axios.post('http://localhost:3001/api/login/user', { 
@@ -48,8 +59,7 @@ export default function App(){
           }
           else{
               localStorage.setItem("token", response.data.token);
-              setLoginStatus(true);
-              //setLoginName(response.data.user[0].UserUn);
+              checkLoginStatus();
               setSuccessfullMessage(response.data.message);
               handleClose();
               routeChangeArticles();
@@ -105,14 +115,14 @@ const onSubmit = () => {
     <div>
       <Navbar sticky='top' collapseOnSelect expand="lg" bg="primary" variant="dark">
         <Container>
-        <Navbar.Brand>IdeaShare</Navbar.Brand>
+        <Navbar.Brand href="/">IdeaShare</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             {!LoginStatus && (
             <Nav>
               <Nav.Link onClick={handleShow}>Login</Nav.Link>
-              <Nav.Link>Registration</Nav.Link>
+              <Nav.Link href="/registration">Registration</Nav.Link>
             </Nav>
             )}
 
@@ -148,7 +158,7 @@ const onSubmit = () => {
       <div>
         <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Login</Modal.Title>
+            <Modal.Title>Login to your IdeaShare account</Modal.Title>
           </Modal.Header>
           <Modal.Body>
           <div className="ms-3">
@@ -254,9 +264,9 @@ const onSubmit = () => {
         </Modal>
       </div>
 
-      {LoginStatus && (
+
         <Outlet />
-      )}
+
     </div>
   );
 };

@@ -4,7 +4,6 @@ import App from "./App";
 import CreateArticle from "./routes/createArticle";
 import EditArticle from "./routes/editArticle"
 import Registration from "./routes/registration";
-import Login from "./routes/login";
 import ProfilePage from "./routes/profilePage";
 import Articles from "./routes/articles";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -18,7 +17,6 @@ render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />}>
-        <Route path="login" element={<Login />}></Route>
         <Route path="registration" element={<Registration />}></Route>
         <Route element={<ProtectedRoutes/>}>
           <Route path="articles" element={<Articles />}></Route>
