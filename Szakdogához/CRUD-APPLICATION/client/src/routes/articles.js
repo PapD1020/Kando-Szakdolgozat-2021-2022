@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import '../App.css';
 import Axios from 'axios';
-import { Card } from 'react-bootstrap';
+import { Card, Button, Spinner } from 'react-bootstrap';
 
 var articleData = [];
 var found = false;
@@ -63,7 +63,18 @@ export default function Article(){
           dataLength={getData.length}
           next={fetchMoreData()}
           hasMore={found}
-          loader={<h4>Loading...</h4>}
+          loader={<div className="text-center mb-5">
+            <Button variant="primary" disabled>
+            <Spinner
+              as="span"
+              animation="grow"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+            Loading...
+          </Button>
+          </div>}
         >
            { found === true ?
               getData.map((index, i) => (

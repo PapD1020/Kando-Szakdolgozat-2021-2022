@@ -17,8 +17,6 @@ export default function ProfileUpdate(){
 
     const [UsersNameList, setUsersNameList] = useState([]);
 
-    const [LoginStatus, setLoginStatus] = useState('');
-
     const GotUserId = useRef(null);
 
 
@@ -53,7 +51,6 @@ export default function ProfileUpdate(){
             //ellenőrzésre
             //console.log("Are we logged in: " + JSON.stringify(response));
             if(response.data.loggedIn === true){
-                setLoginStatus(response.data.user[0].UserUn);
                 GotUserId.current = response.data.user[0].UserId;
                 //alert("response.data.user[0].UserId: " + response.data.user[0].UserId + " " + "UserId: " + GotUserId.current);
             }
@@ -119,11 +116,11 @@ export default function ProfileUpdate(){
                       return(
                         <div className="text-center">
 
-                            <div className="card text-center border-primary m-5">
+                            <div className="card border-primary m-5">
                             <div className="card-header mb-3">{val.UserUn}'s profile</div>
                             <div className="card-text">Profile picture: <img className="card-img-top w-25" src={val.UserPP} alt="User profile pic"></img></div>
                             
-                                <div className="card-body text-primary">
+                                <div className="card-body">
                                     <h5 className="card-title">User name: {val.UserUn}</h5>
                                     <p className="card-text">User first name: {val.UserFN}</p>
                                     <p className="card-text">User second name: {val.UserSN}</p>
@@ -149,7 +146,7 @@ export default function ProfileUpdate(){
 
                             <Modal show={ModalStatePw} onHide={modalClosePw}>
                                     <Modal.Header closeButton>
-                                        <Modal.Title>Changeing password</Modal.Title>
+                                        <Modal.Title>Changing password</Modal.Title>
                                     </Modal.Header>
 
                                     <Modal.Body>
