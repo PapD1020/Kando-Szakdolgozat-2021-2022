@@ -30,14 +30,14 @@ export default function ProfileUpdate(){
         formState: {errors}
     } = useForm({});
 
-    const onSubmit = async data => {
-        alert(JSON.stringify(data));
+    const onSubmit = () => {
         submitUserDataUpd();
+        modalClose();
     };
 
-    const onSubmitPw = async data => {
-        alert(JSON.stringify(data));
+    const onSubmitPw = () => {
         changePassword();
+        modalClosePw();
     };
 
     const password = useRef({});
@@ -45,14 +45,12 @@ export default function ProfileUpdate(){
 
     Axios.defaults.withCredentials = true;
 
-    //check every time we refresh the page if a user is logged in
+
     useEffect(() => {
         Axios.get('http://localhost:3001/api/login/user').then((response) => {
-            //ellenőrzésre
-            //console.log("Are we logged in: " + JSON.stringify(response));
+
             if(response.data.loggedIn === true){
                 GotUserId.current = response.data.user[0].UserId;
-                //alert("response.data.user[0].UserId: " + response.data.user[0].UserId + " " + "UserId: " + GotUserId.current);
             }
         }).then(() => {
             Axios.get("http://localhost:3001/api/get/userById",{
@@ -66,12 +64,21 @@ export default function ProfileUpdate(){
         });
     }, []);
 
-    //POST - USERS
+    const refreshUserData = () => {
+        Axios.get("http://localhost:3001/api/get/userById",{
+            headers: {
+                'content-type': "application/json",
+                'userIdUpd': GotUserId.current
+                }
+            }).then((response) => {
+                setUsersNameList(response.data)
+            });
+    }
+
+
     const submitUserDataUpd = () => {
   
-    //postName - backend variable name
-        Axios.put(`http://localhost:3001/api/update/user/userId`, { //URL for our api (node.js backend)
-        //userUn must be the same as in back-end index.js req.body.userUn !!!
+        Axios.put(`http://localhost:3001/api/update/user/userId`, { 
         userId: GotUserId.current,
         userPP: UserPPUpd,
         userFN: UserFNUpd,
@@ -80,10 +87,10 @@ export default function ProfileUpdate(){
         userUpdatedAt: date
 
         }).then((response) => 
-            console.log("Update user response: " + JSON.stringify(response))
+            console.log("Update user response: " + JSON.stringify(response)),
+            refreshUserData()
         );
-        //alert("Successfully updated as maga a változó: " + GotUserId.current);
-        alert("Successfully updated as: " + GotUserId.current);
+        //alert("Successfully updated as: " + GotUserId.current);
     };
 
     const changePassword = () => {
@@ -94,8 +101,6 @@ export default function ProfileUpdate(){
         }).then((response) => 
             console.log("Updated user password response: " + response)
         );
-        alert("Successfully changed password. Id: " + GotUserId.current);
-
     }
 
     const [ModalState, setModalState] = useState(false);
@@ -205,7 +210,7 @@ export default function ProfileUpdate(){
                                     <form onSubmit={handleSubmit(onSubmit)}>
         
                                     <div className="form-group">
-                                        <label >User name:</label>
+                                        <label>User name:</label>
                                         <input type="text" className="form-control" disabled={true} placeholder={val.UserUn}></input>
                                     </div>
                                     
@@ -263,7 +268,7 @@ export default function ProfileUpdate(){
                                         <label>User email: </label>
                                         <input type="email" className="form-control" defaultValue={val.UserEmail}{
                                             ...register("userEmailUpd", {
-        
+                                                required: false
                                             })
                                         }onChange={(e) => {
                                             setUserEmailUpd(e.target.value);

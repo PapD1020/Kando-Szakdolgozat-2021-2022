@@ -58,7 +58,6 @@ export default function Article(){
 
     return(
       <div className="infiniteScrollContainer">
-        <hr />
         <InfiniteScroll
           dataLength={getData.length}
           next={fetchMoreData()}
@@ -72,8 +71,8 @@ export default function Article(){
               role="status"
               aria-hidden="true"
             />
-            Loading...
-          </Button>
+              Loading...
+            </Button>
           </div>}
         >
            { found === true ?

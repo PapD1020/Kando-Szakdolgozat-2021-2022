@@ -273,7 +273,7 @@ const onSubmit = () => {
                 <Carousel.Item>
                   <img
                     className="d-block w-25"
-                    src="./pictures/picture1.jpg"
+                    src="C:/Users/papda/OneDrive/Asztali gép/Kandó/Szakdoga/Kando-Szakdolgozat-2021-2022/Szakdogához/CRUD-APPLICATION/client/src/pictures/picture1.jpg"
                     alt="First slide"
                   />
                   <Carousel.Caption>

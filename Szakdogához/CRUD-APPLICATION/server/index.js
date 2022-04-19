@@ -274,7 +274,6 @@ app.post('/api/register/user', (req, res) => {
     });
 });
 
-//ELLENŐRIZNI
 //Session check
 //Dani - majdnem minden oldalon
 app.get('/api/login/user', (req, res) => {
@@ -394,6 +393,9 @@ app.put('/api/update/user/userId', (req, res) => {
             if(err){
                 console.log("Users Profile data UPDATE error: " + err);
             }
+
+            console.log("profile update result: " + result);
+            res.send(result);
         });
 });
 
