@@ -3,6 +3,7 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import {useForm} from 'react-hook-form';
 import Axios from 'axios';
 import { Modal, Button } from "react-bootstrap";
+import { Card } from 'react-bootstrap';
 
 export default function EditUser() {
 
@@ -21,6 +22,9 @@ export default function EditUser() {
   const [OneUserList, setOneUserList] = useState([]);
 
   const [ModalState, setModalState] = useState(false);
+  
+  const [DuplicateError, setDuplicateError] = useState('');
+  const [DuplicateErrorMsg, setDuplicateErrorMsg] = useState('');
 
   const modalClose = () => setModalState(false);
 
@@ -114,13 +118,30 @@ export default function EditUser() {
 
   return (
     <div>
-      <h1>Logged in as: {LoginStatus}</h1>
-      <h1>Sent ArticleId from chooseArticles.js page: {location.state.id}</h1>
-        <button>Get choosen article by id</button>
         <div>
           {OneUserList.map((val) => {
             return(
-              <div>
+              <div className=''>
+                <Card style={{backgroundImage: `url(${val.UserPP})`, backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat',
+                  color: 'white'
+                  }} className="text-center m-5 bg-dark">
+                    <Card.Header className="bg-dark bg-opacity-50">{val.UserUn}</Card.Header>
+                    
+                    <Card.Footer className="bg-dark bg-opacity-25">Created at: {val.UserCreatedAt}</Card.Footer>
+                  </Card>
+
+                  <div
+                    className="d-flex align-items-center justify-content-center"
+                    style={{ height: "10vh" }}
+                  >
+
+                    <Button variant="outline-primary" onClick={modalOpen}>
+                      Edit
+                    </Button>
+                  </div>
+
                     <Modal show={ModalState} onHide={modalClose}>
                       <Modal.Header closeButton>
                         <Modal.Title>You are editing {val.UserUn} article</Modal.Title>
@@ -129,6 +150,7 @@ export default function EditUser() {
                       <Modal.Body>
                         {OneUserList.map((val) => {
                                 return(
+                                  <div className="container">
                                   <form onSubmit={handleSubmit(onSubmit)}>
         
                                   <div className="form-group">
@@ -147,34 +169,7 @@ export default function EditUser() {
                                       {errors?.userUnUpd?.type === "maxLength" && <div><h5>Your user name is too long.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
                                       
                                   </div>
-                                  
-                                  <div className="form-group">
-                                      <label>User profile picture:</label>
-                                      <input type="url" className="form-control" defaultValue={val.UserPP}{
-                                          ...register("userPPUpd", {
-                                            required: true,
-                                          })
-                                      }onChange={(e) => {
-                                          setUserPPUpd(e.target.value);
-                                      }}/>
-                      
-                                  </div>
-                      
-                                 {/* <div className="form-group">
-                                      <label>User password: </label>
-                                      <input type="password" className="form-control" defaultValue={val.UserPw}{
-                                          ...register("userPwUpd", {
-                                              minLength: 8,
-                                              maxLength: 16,
-                                          })
-                                      }onBlur={(e) => {
-                                          setUserPwUpd(e.target.value);
-                                      }}/>
-                      
-                                      {errors?.userPwUpd?.type === "minLength" && <div><h5>Your password is too short.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
-                                      {errors?.userPwUpd?.type === "maxLength" && <div><h5>Your password is too long.</h5><p>Your password length must be between 8 and 16 characters.</p></div>}
-                                  </div> */}
-                      
+                     
                                   <div className="form-group">
                                       <label>User first name:</label>
                                       <input type="text" className="form-control" defaultValue={val.UserFN}{
@@ -204,7 +199,18 @@ export default function EditUser() {
                                       {errors?.userSNUpd?.type === "minLength" && <div><h5>Your second name is too short.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
                                       {errors?.userSNUpd?.type === "maxLength" && <div><h5>Your second name is too long.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
                                   </div>
+                                  
+                                  <div className="form-group">
+                                      <label>User profile picture:</label>
+                                      <input type="url" className="form-control" defaultValue={val.UserPP}{
+                                          ...register("userPPUpd", {
+                                            required: true,
+                                          })
+                                      }onChange={(e) => {
+                                          setUserPPUpd(e.target.value);
+                                      }}/>
                       
+                                  </div>
                                   <div className="form-group">
                                       <label>User email: </label>
                                       <input type="email" className="form-control" defaultValue={val.UserEmail}{
@@ -248,7 +254,7 @@ export default function EditUser() {
                           
                                   }}/> {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
                               </form>
-                      
+                                  </div>
                                   ) 
                                 })}
                       </Modal.Body>
@@ -267,7 +273,15 @@ export default function EditUser() {
               )
             })}
           </div>
+          <div className='ms-5'>
+            <Button variant='primary' onClick={routeChange}>Back to selection page</Button>
+          </div>
 
+          {DuplicateError && (
+            <div>
+              Duplicate error: {DuplicateErrorMsg}
+            </div> 
+          )}
           
     </div>
 
