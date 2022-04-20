@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useRef} from "react";
 import { useForm } from "react-hook-form";
 import Axios from 'axios';
+import { Modal, Button } from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
 
 export default function CreateArticle(){
 
@@ -9,8 +11,6 @@ export default function CreateArticle(){
     const [ArticleMDescr, setArticleMDescr] = useState('');
     const [ArticleImg, setArticleImg] = useState('');
     const [ArticleType, setArticleType] = useState('');
-  
-    const [ArticleNameList, setArticleNameList] = useState([]);
     
     const [LoginStatus, setLoginStatus] = useState('');
 
@@ -29,16 +29,13 @@ export default function CreateArticle(){
         formState: {errors}
     } = useForm();
 
-    const onSubmit = (data) => {
-        alert(JSON.stringify(data));
+    const onSubmit = () => {
         submitArticleData();
     };
 
-    //check every time we refresh the page if a user is logged in
     useEffect(() => {
         Axios.get('http://localhost:3001/api/login/user').then((response) => {
-        //ellenőrzésre
-        //console.log("Are we logged in: " + JSON.stringify(response));
+
             if(response.data.loggedIn === true){
                 setLoginStatus(response.data.user[0].UserUn);
                 GotUserId.current = response.data.user[0].UserId;
@@ -58,21 +55,20 @@ export default function CreateArticle(){
           articleType: ArticleType,
           articleCreatedAt: date,
           articleUpdatedAt: date
-      });
-        
-      setArticleNameList([
-        ...ArticleNameList,
-        {
-          ArticleName: ArticleName,
-          ArticleSmDescr: ArticleSmDescr,
-          ArticleMDescr: ArticleMDescr,
-          ArticleImg: ArticleImg,
-          ArticleType: ArticleType,
-          ArticleCreatedAt: date,
-          ArticleUpdatedAt: date
-        }, //Valamiért mind a kettőt nagy A-vel kell írni, az első értékeket, azaz nem articleName: ArticleName
-      ]);
+      }).then(() => {
+            handleShowSucUpd()
+      })
     };
+
+    const [showSucUpd, setShowSucUpd] = useState(false);
+
+    const handleCloseSucUpd = () => setShowSucUpd(false);
+    const handleShowSucUpd = () => setShowSucUpd(true);
+
+    let navigate = useNavigate();
+    const routeChange = () =>{
+      navigate('/chooseArticle');
+    }
 
     return(
         <div className="ms-3">
@@ -132,7 +128,6 @@ export default function CreateArticle(){
                                     <label className="display-6 mb-3">Article image:</label>
                                     <input type="url" className="mb-3 p-2 form-control"{
                                         ...register("articleImg", {
-                                            required: true,
                                             minLength: 1,
                                             maxLength: 500
                                         })
@@ -142,7 +137,6 @@ export default function CreateArticle(){
                                 </div>
 
                                 <div className="errordiv text-danger mb-2">
-                                    {errors?.articleImg?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a picture</p></div>}
                                     {errors?.articleImg?.type === "minLength" && <div><h5>Your article's picture URL is too short.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
                                     {errors?.articleImg?.type === "maxLength" && <div><h5>Your article's picture URL is too long.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
                                 </div>
@@ -210,19 +204,21 @@ export default function CreateArticle(){
                                 <input className="btn btn-outline-primary" type="submit" value={"Create Article"}/>
                             </div>
                         </div>
-
-                        <div className="row">
-                            <div className="col">
-                               <div className="text-danger">
-                                {ErrorMessage && (
-                                    <p>{ErrorMessage}</p>
-                                )}
-                               </div>
-                            </div>
-                        </div>
                     </form>
                 </div>
             )}
+
+            <Modal show={showSucUpd} onHide={handleCloseSucUpd}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Success</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Successfully created {ArticleName} article</Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={() => {handleCloseSucUpd(); routeChange();}}>
+                    Let's check it
+                </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }

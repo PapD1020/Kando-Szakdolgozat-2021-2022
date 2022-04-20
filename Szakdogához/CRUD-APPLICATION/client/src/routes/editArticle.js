@@ -37,16 +37,8 @@ export default function EditArticle() {
   const current = new Date();
   const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
-  //check every time we refresh the page if a user is logged in
   useEffect(() => {
-    Axios.get('http://localhost:3001/api/login/user').then((response) => {
-      //ellenőrzésre
-      //console.log("Are we logged in: " + JSON.stringify(response));
-      if(response.data.loggedIn === true){
-        setLoginStatus(response.data.user[0].UserUn);
-        getChoosenArticleById();
-      }
-    });
+      getChoosenArticleById();
   }, []);
 
   const getChoosenArticleById = () => {
@@ -58,7 +50,17 @@ export default function EditArticle() {
       }
     }).then((response) => {
       setOneArticleList(response.data);
-      console.log("One article get: " + JSON.stringify(response));
+    })
+  }
+
+  const refreshArticleData = () => {
+    Axios.get('http://localhost:3001/api/get/article/oneById', {
+      headers: {
+        'content-type': "application/json",
+        'articleId': location.state.id
+      }
+    }).then((response) => {
+      setOneArticleList(response.data);
     })
   }
 
@@ -75,6 +77,7 @@ export default function EditArticle() {
 
   const onSubmit = () => {
     submitArticleData();
+    refreshArticleData();
   };
 
   const submitArticleData = () => {
@@ -90,21 +93,14 @@ export default function EditArticle() {
       articleStatus: ArticleStatusUpd,
       articleUpdatedAt: date
     }).then((response) => {
-      if(response.data.errorType === "duplicate"){
-        setDuplicateError(true);
-        setDuplicateErrorMsg(response.data.errorMessage);
-        console.log(response.data.errorMessage);
-      }
-      else if(response.status === 500){
-        setErrorMessage(response.data.errMessage);
-      }
-      else{
-        setSuccessfullMessage(response.data.successfullMessage);
-        console.log(response.data.successfullMessage);
-        routeChange();
-      }
+        handleShowSucUpd()
     })
   };
+
+  const [showSucUpd, setShowSucUpd] = useState(false);
+
+  const handleCloseSucUpd = () => setShowSucUpd(false);
+  const handleShowSucUpd = () => setShowSucUpd(true);
 
   return (
     <div>
@@ -329,23 +325,17 @@ export default function EditArticle() {
             <Button variant='primary' onClick={routeChange}>Back to selection page</Button>
           </div>
 
-          {DuplicateError && (
-            <div>
-              Duplicate error: {DuplicateErrorMsg}
-            </div> 
-          )}
-
-          {ErrorMessage && (
-            <div>
-              Simple error: {ErrorMessage}
-            </div> 
-          )}
-
-          {SuccessfullMessage && (
-            <div>
-              SuccessfullMessage: {SuccessfullMessage}
-            </div> 
-          )}
+          <Modal show={showSucUpd} onHide={handleCloseSucUpd}>
+              <Modal.Header closeButton>
+                  <Modal.Title>Success</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>Successfully updated your article</Modal.Body>
+              <Modal.Footer>
+              <Button variant="secondary" onClick={() => {handleCloseSucUpd(); modalClose();}}>
+                  Ok
+              </Button>
+              </Modal.Footer>
+          </Modal>
     </div>
   )
 }
