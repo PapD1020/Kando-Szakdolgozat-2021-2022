@@ -11,7 +11,6 @@ import Carousel from 'react-bootstrap/Carousel';
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import picture1 from "./pictures/picture1.jpg";
-import picture2 from "./pictures/picture2.jpg";
 import picture3 from "./pictures/picture3.png";
 
 export default function App(){

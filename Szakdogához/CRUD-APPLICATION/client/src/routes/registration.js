@@ -29,8 +29,7 @@ export default function Registration(){
         formState: {errors}
     } = useForm();
 
-    const onSubmit = (data) => {
-        alert(JSON.stringify(data));
+    const onSubmit = () => {
         submitUserDataReg();
     };
 
@@ -73,7 +72,7 @@ export default function Registration(){
 
     let navigate = useNavigate();
     const routeChange = () =>{
-      navigate('/login');
+      navigate('/');
     }
 
     return(

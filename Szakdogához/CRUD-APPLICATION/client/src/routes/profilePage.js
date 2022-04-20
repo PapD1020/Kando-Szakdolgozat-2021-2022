@@ -30,13 +30,21 @@ export default function ProfileUpdate(){
         formState: {errors}
     } = useForm({});
 
+    const {
+        register: register2,
+        handleSubmit: handleSubmit2,
+        formState: {errors: errors2}
+    } = useForm({});
+
     const onSubmit = () => {
-        alert("asd");
+        alert("userupdate");
         submitUserDataUpd();
+        refreshUserData()
         modalClose();
     };
 
     const onSubmitPw = () => {
+        alert("pwchange");
         changePassword();
         modalClosePw();
     };
@@ -89,7 +97,6 @@ export default function ProfileUpdate(){
 
         }).then((response) => 
             console.log("Update user response: " + JSON.stringify(response)),
-            refreshUserData()
         );
         //alert("Successfully updated as: " + GotUserId.current);
     };
@@ -208,7 +215,7 @@ export default function ProfileUpdate(){
                               <Modal.Body>
                               {UsersNameList.map((val) => {
                                 return(
-                                    <form onSubmit={handleSubmit(onSubmit)}>
+                                    <form onSubmit={handleSubmit2(onSubmit)}>
         
                                     <div className="form-group">
                                         <label>User name:</label>
@@ -218,7 +225,7 @@ export default function ProfileUpdate(){
                                     <div className="form-group">
                                         <label>User profile picture:</label>
                                         <input type="url" className="form-control" defaultValue={val.UserPP}{
-                                            ...register("userPPUpd", {
+                                            ...register2("userPPUpd", {
                                                 minLength: 3,
                                                 maxLength: 200,
                                             })
@@ -226,8 +233,8 @@ export default function ProfileUpdate(){
                                             setUserPPUpd(e.target.value);
                                         }}/>
                         
-                                        {errors?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 3 and 200 characters.</p></div>}
-                                        {errors?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 3 and 200 characters.</p></div>}
+                                        {errors2?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 3 and 200 characters.</p></div>}
+                                        {errors2?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 3 and 200 characters.</p></div>}
                                     </div>
                         
                                     <div className="form-group">
@@ -238,7 +245,7 @@ export default function ProfileUpdate(){
                                     <div className="form-group">
                                         <label>User first name:</label>
                                         <input type="text" className="form-control" defaultValue={val.UserFN}{
-                                            ...register("userFNUpd", {
+                                            ...register2("userFNUpd", {
                                                 required: false,
                                                 minLength: 3, //Mennyi legyen?
                                                 maxLength: 20, //Mennyi legyen?
@@ -247,14 +254,14 @@ export default function ProfileUpdate(){
                                             setUserFNUpd(e.target.value);
                                         }}/>
                         
-                                        {errors?.userFNUpd?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
-                                        {errors?.userFNUpd?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
+                                        {errors2?.userFNUpd?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
+                                        {errors2?.userFNUpd?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
                                     </div>
                         
                                     <div className="form-group">
                                         <label>User second name:</label>
                                         <input type="text" className="form-control" defaultValue={val.UserSN}{
-                                            ...register("userSNUpd", {
+                                            ...register2("userSNUpd", {
                                                 required: false,
                                                 minLength: 3, //Mennyi legyen?
                                                 maxLength: 20, //Mennyi legyen?
@@ -263,14 +270,14 @@ export default function ProfileUpdate(){
                                             setUserSNUpd(e.target.value);
                                         }}/>
                         
-                                        {errors?.userSNUpd?.type === "minLength" && <div><h5>Your second name is too short.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
-                                        {errors?.userSNUpd?.type === "maxLength" && <div><h5>Your second name is too long.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
+                                        {errors2?.userSNUpd?.type === "minLength" && <div><h5>Your second name is too short.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
+                                        {errors2?.userSNUpd?.type === "maxLength" && <div><h5>Your second name is too long.</h5><p>Your second name length must be between 3 and 20 characters.</p></div>}
                                     </div>
                         
                                     <div className="form-group">
                                         <label>User email: </label>
                                         <input type="email" className="form-control" defaultValue={val.UserEmail}{
-                                            ...register("userEmailUpd", {
+                                            ...register2("userEmailUpd", {
                                                 required: false
                                             })
                                         }onChange={(e) => {
