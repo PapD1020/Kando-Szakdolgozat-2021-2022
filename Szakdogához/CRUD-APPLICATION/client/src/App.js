@@ -10,6 +10,9 @@ import { Overlay, Tooltip } from 'react-bootstrap';
 import Carousel from 'react-bootstrap/Carousel';
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { useForm } from "react-hook-form";
+import picture1 from "./pictures/picture1.jpg";
+import picture2 from "./pictures/picture2.jpg";
+import picture3 from "./pictures/picture3.png";
 
 export default function App(){
   
@@ -271,9 +274,9 @@ const onSubmit = () => {
             <div className='m-5'>
               <Carousel variant='dark' fade>
                 <Carousel.Item>
-                  <img
-                    className="d-block w-25"
-                    src="C:/Users/papda/OneDrive/Asztali gép/Kandó/Szakdoga/Kando-Szakdolgozat-2021-2022/Szakdogához/CRUD-APPLICATION/client/src/pictures/picture1.jpg"
+                  <img style={{objectFit: 'cover', objectPosition: 'center'}}
+                    className="d-block w-100 h-100"
+                    src={picture1}
                     alt="First slide"
                   />
                   <Carousel.Caption>
@@ -281,22 +284,11 @@ const onSubmit = () => {
                     <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                   </Carousel.Caption>
                 </Carousel.Item>
+                
                 <Carousel.Item>
-                  <img
-                    className="d-block w-100"
-                    src="https://www.cqu.edu.au/__data/assets/image/0022/146407/create-concept.jpg"
-                    alt="Second slide"
-                  />
-  
-                  <Carousel.Caption>
-                    <h3>Second slide label</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100"
-                    src="holder.js/800x400?text=Third slide&bg=20232a"
+                  <img style={{objectFit: 'cover', objectPosition: 'center'}}
+                    className="d-block w-100 h-100"
+                    src={picture3}
                     alt="Third slide"
                   />
   

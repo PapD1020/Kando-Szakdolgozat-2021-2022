@@ -171,21 +171,22 @@ app.post('/api/insert/article/byId', (req, res) => {
 
     const sqlInsert = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleType`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?); INSERT INTO `ArticleUser`(`Uid`, `Aid`) VALUES (?, ?)";
 
-    try{
+
         db.query(sqlInsert, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleCreatedAt, articleUpdatedAt, userId, articleId], (err, result) => {
 
             if(err){
-                console.log("Article POST error: " + err);
+                if(err.errno == 1062){
+                    res.status(409).send({errorMessage: "There's a post with exactly same small or detailed description"});
+                }
+                else{
+                    res.status(500).send({message: err.message});
+                }
             }
-    
-            console.log("Dupla insert: " + sqlInsert);
-            res.send(JSON.stringify(result[0]) + JSON.stringify(result[1]));
-            console.log("Kapcsolótáblás dupla insert 0: " + result[0]);
-            console.log("Kapcsolótáblás dupla insert 1: " + JSON.stringify(result[1]));
+            else{
+               // res.status(200).send(JSON.stringify(result[0]) + JSON.stringify(result[1]));
+               res.status(200).send({message: "Article successfully created."});
+            }
         });
-    }catch(error){
-        console.log("insert/article/byId err: " + error);
-    }
 });
 
 //PUT-UPDATE - Article
@@ -210,11 +211,9 @@ app.put('/api/update/article/byUser', (req, res) => {
             console.log(err);
             if(err.errno == 1062){
                 res.status(409).send({errorMessage: "There's a post with exactly same small or detailed description"});
-                res.send({errorType: "duplicate", errorMessage: err.message});
             }
             else{
                 res.status(500).send({message: err.message});
-                //res.send(err.message);
             }
         }
         else{
@@ -268,10 +267,16 @@ app.post('/api/register/user', (req, res) => {
         db.query(sqlInsert, [userId, userUn, userPP, hash, userFN, userSN, userDob, userEmail, userPL, userCreatedAt, userUpdatedAt], (err, result) => {
 
             if(err){
-                console.log("Users REGISTER INTO error: " + err);
+                if(err.errno == 1062){
+                    res.status(409).send({errorMessage: "This username is already in use."});
+                }
+                else{
+                    res.status(500).send({message: err.message});
+                }
             }
-
-            res.send(result);
+            else{
+                res.status(200).send({result: result, message: "Registration was successfull"});
+            }
         });
     });
 });
@@ -393,11 +398,17 @@ app.put('/api/update/user/userId', (req, res) => {
         db.query(sqlUpdate, [userPP, userFN, userSN, userEmail, userUpdatedAt, userId], (err, result) => {
 
             if(err){
-                console.log("Users Profile data UPDATE error: " + err);
+                if(err.errno == 1062){
+                    res.status(409).send({errorMessage: "There's a post with exactly same small or detailed description"});
+                    res.send({errorType: "duplicate", errorMessage: err.message});
+                }
+                else{
+                    res.status(500).send({message: err.message});
+                }
             }
-
-            console.log("profile update result: " + result);
-            res.send(result);
+            else{
+                res.status(200).send({result: result, message: "Changed successfully"});
+            }
         });
 });
 

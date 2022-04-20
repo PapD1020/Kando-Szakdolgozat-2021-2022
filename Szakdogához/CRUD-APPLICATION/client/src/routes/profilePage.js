@@ -31,6 +31,7 @@ export default function ProfileUpdate(){
     } = useForm({});
 
     const onSubmit = () => {
+        alert("asd");
         submitUserDataUpd();
         modalClose();
     };
@@ -238,6 +239,7 @@ export default function ProfileUpdate(){
                                         <label>User first name:</label>
                                         <input type="text" className="form-control" defaultValue={val.UserFN}{
                                             ...register("userFNUpd", {
+                                                required: false,
                                                 minLength: 3, //Mennyi legyen?
                                                 maxLength: 20, //Mennyi legyen?
                                             })
@@ -253,6 +255,7 @@ export default function ProfileUpdate(){
                                         <label>User second name:</label>
                                         <input type="text" className="form-control" defaultValue={val.UserSN}{
                                             ...register("userSNUpd", {
+                                                required: false,
                                                 minLength: 3, //Mennyi legyen?
                                                 maxLength: 20, //Mennyi legyen?
                                             })
