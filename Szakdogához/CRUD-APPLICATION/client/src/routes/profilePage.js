@@ -6,9 +6,6 @@ import { Modal, Button } from "react-bootstrap";
 
 export default function ProfileUpdate(){
 
-    //Id vigygálata, átadása
-    //Validációja a beviteli mezőknek
-
     const [UserPPUpd, setUserPPUpd] = useState('');
     const [UserPwUpd, setUserPwUpd] = useState('');
     const [UserFNUpd, setUserFNUpd] = useState('');
@@ -37,7 +34,6 @@ export default function ProfileUpdate(){
     } = useForm({});
 
     const onSubmit = () => {
-        alert("userupdate");
         submitUserDataUpd();
         refreshUserData()
         modalClose();
@@ -97,6 +93,7 @@ export default function ProfileUpdate(){
 
         }).then((response) => 
             console.log("Update user response: " + JSON.stringify(response)),
+            handleShowSucUpd()
         );
         //alert("Successfully updated as: " + GotUserId.current);
     };
@@ -107,7 +104,8 @@ export default function ProfileUpdate(){
             userPw: UserPwUpd,
             userUpdatedAt: date
         }).then((response) => 
-            console.log("Updated user password response: " + response)
+            console.log("Updated user password response: " + response),
+            handleShowSucPwUpd()
         );
     }
 
@@ -122,6 +120,16 @@ export default function ProfileUpdate(){
     const modalClosePw = () => setModalStatePw(false);
 
     const modalOpenPw = () => setModalStatePw(true);
+
+    const [showSucUpd, setShowSucUpd] = useState(false);
+
+    const handleCloseSucUpd = () => setShowSucUpd(false);
+    const handleShowSucUpd = () => setShowSucUpd(true);
+
+    const [showSucPwUpd, setShowSucPwUpd] = useState(false);
+
+    const handleCloseSucPwUpd = () => setShowSucPwUpd(false);
+    const handleShowSucPwUpd = () => setShowSucPwUpd(true);
 
     return(
         <div>
@@ -307,6 +315,30 @@ export default function ProfileUpdate(){
                         </div>
                       )
                   })}
+
+            <Modal show={showSucUpd} onHide={handleCloseSucUpd}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Success</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Successfully updated your profile</Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseSucUpd}>
+                    Ok
+                </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showSucPwUpd} onHide={handleCloseSucPwUpd}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Success</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Successfully changed your password</Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseSucPwUpd}>
+                    Ok
+                </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }

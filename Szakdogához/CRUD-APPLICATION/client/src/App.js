@@ -21,9 +21,6 @@ export default function App(){
   const [UserUnLogin, setUserUnLogin] = useState('');
   const [UserPwLogin, setUserPwLogin] = useState('');
 
-  const [ErrorMessage, setErrorMessage] = useState('');
-  const [SuccessfullMessage, setSuccessfullMessage] = useState('');
-
   const [UserUnReg, setUserUnReg] = useState('');
   const [UserPPReg, setUserPPReg] = useState('');
   const [UserPwReg, setUserPwReg] = useState('');
@@ -32,18 +29,18 @@ export default function App(){
   const [UserDobReg, setUserDobReg] = useState('');
   const [UserEmailReg, setUserEmailReg] = useState('');
 
+  const [ErrorMessage, setErrorMessage] = useState('');
+  const [SuccessfullMessage, setSuccessfullMessage] = useState('');
+
+  const [SuccessfullReg, setSuccessfullReg] = useState('');
+
   const current = new Date();
   const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
   Axios.defaults.withCredentials = true;
 
       useEffect(() => {
-        Axios.get('http://localhost:3001/api/login/user').then((response) => {
-            if(response.data.loggedIn === true){
-                setLoginStatus(true);
-                setLoginName(response.data.user[0].UserUn);
-            }
-        });
+        checkLoginStatus()
     }, []);
 
     const checkLoginStatus = () => {
@@ -69,14 +66,13 @@ export default function App(){
           userUpdatedAt: date
           }).then((response) => 
               console.log("Register user response: " + JSON.stringify(response)),
-              alert("Successfully registered as: " + UserUnReg),
-              handleShow()
+              handleShowSucReg()
           );
       };
 
     const submitUserDataLogin = () => {
   
-      Axios.post('http://localhost:3001/api/login/user', { 
+      Axios.post('http://localhost:3001/api/login/user', {
       userUn: UserUnLogin, userPw: UserPwLogin
       }).then((response) => {
 
@@ -139,7 +135,6 @@ export default function App(){
 
   const onSubmitReg = () => {
     submitUserDataReg();
-    handleCloseReg();
   }
 
   const [show, setShow] = useState(false);
@@ -151,6 +146,16 @@ export default function App(){
 
   const handleCloseReg = () => setShowReg(false);
   const handleShowReg = () => setShowReg(true);
+
+  const [showSucReg, setShowSucReg] = useState(false);
+
+  const handleCloseSucReg = () => setShowSucReg(false);
+  const handleShowSucReg = () => setShowSucReg(true);
+
+  const [showLogout, setShowLogout] = useState(false);
+
+  const handleCloseLogout = () => setShowLogout(false);
+  const handleShowLogout = () => setShowLogout(true);
 
   const [showTooltip, setShowTooltip] = useState(false);
   const target = useRef(null);
@@ -191,7 +196,7 @@ export default function App(){
             <NavDropdown title={LoginName} id="basic-nav-dropdown">
               <NavDropdown.Item href="profilePage">Profile</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+              <NavDropdown.Item onClick={handleShowLogout}>Logout</NavDropdown.Item>
             </NavDropdown>
           )}
           </Nav>
@@ -531,8 +536,34 @@ export default function App(){
         </div>
         )}
 
-      <Outlet />
+        <Modal show={showSucReg} onHide={handleCloseSucReg}>
+          <Modal.Header closeButton>
+            <Modal.Title>Successfully registered as</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{UserUnReg}</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => {handleCloseReg(); handleCloseSucReg(); handleShow()}}>
+              Let's go to the login page
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
+        <Modal show={showLogout} onHide={handleCloseLogout}>
+          <Modal.Header closeButton>
+            <Modal.Title>Logout</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Do you want to log out?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => {handleCloseLogout(); logout();}}>
+              Logout
+            </Button>
+            <Button variant="secondary" onClick={() => {handleCloseLogout()}}>
+              Cancel
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+      <Outlet />
     </div>
   );
 };
