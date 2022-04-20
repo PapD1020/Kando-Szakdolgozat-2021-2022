@@ -16,9 +16,11 @@ export default function Registration(){
     const [UserDobReg, setUserDobReg] = useState('');
     const [UserEmailReg, setUserEmailReg] = useState('');
 
+    /*
     const [ErrorMessage, setErrorMessage] = useState('');
 
     const [LoginStatus, setLoginStatus] = useState('');
+    */
 
     const current = new Date();
     const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
@@ -40,7 +42,7 @@ export default function Registration(){
         //ellenőrzésre
         //console.log("Are we logged in: " + JSON.stringify(response));
             if(response.data.loggedIn === true){
-                setLoginStatus(response.data.user[0].UserUn);
+                //setLoginStatus(response.data.user[0].UserUn);
             }
         });
     }, []);
@@ -82,7 +84,6 @@ export default function Registration(){
                 <h1 className="display-1 m-3">Registration</h1>
             </div>
 
-            {!LoginStatus && (
                 <div className="container">
                     <form className="" onSubmit={handleSubmit(onSubmit)}>
                         <div className="row">
@@ -250,19 +251,8 @@ export default function Registration(){
                                 </Overlay>
                             </div>
                         </div>
-
-                        <div className="row">
-                            <div className="col">
-                               <div className="text-danger">
-                                {ErrorMessage && (
-                                    <p>{ErrorMessage}</p>
-                                )}
-                               </div>
-                            </div>
-                        </div>
                     </form>
                 </div>
-            )}
         </div>
     );
 }
