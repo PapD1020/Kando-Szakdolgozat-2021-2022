@@ -174,7 +174,7 @@ app.post('/api/insert/article/byId', (req, res) => {
 
             if(err){
                 if(err.errno == 1062){
-                    res.status(409).send({errorMessage: "There's a post with exactly same small or detailed description"});
+                    res.status(409).send({message: "There's a post with exactly same small or detailed description"});
                 }
                 else{
                     res.status(500).send({message: err.message});
@@ -208,7 +208,7 @@ app.put('/api/update/article/byUser', (req, res) => {
         if(err){
             console.log(err);
             if(err.errno == 1062){
-                res.status(409).send({errorMessage: "There is a post with the exact same small or main description"});
+                res.status(409).send({message: "There is a post with the exact same small or main description"});
             }
             else{
                 res.status(500).send({message: err.message});
@@ -267,7 +267,7 @@ app.post('/api/register/user', (req, res) => {
 
                 if(err){
                     if(err.errno == 1062){
-                        res.status(409).send({errorMessage: "This username is already in use."});
+                        res.status(409).send({message: "This username is already in use."});
                     }
                     else{
                         res.status(500).send({message: err.message});
@@ -397,7 +397,7 @@ app.put('/api/update/user/userId', (req, res) => {
 
             if(err){
                 if(err.errno == 1062){
-                    res.status(409).send({errorMessage: "This email address is already in use."});
+                    res.status(409).send({message: "This email address is already in use."});
                 }
                 else{
                     res.status(500).send({message: err.message});
