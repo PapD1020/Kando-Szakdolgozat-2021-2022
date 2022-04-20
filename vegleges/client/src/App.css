@@ -1,0 +1,16 @@
+
+
+.errordiv{
+  height: 60px;
+}
+
+.fit{
+  width: fit-content; 
+  /* To adjust the height as well */ 
+  height: fit-content;
+}
+.tabla{
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}

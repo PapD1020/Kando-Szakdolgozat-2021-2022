@@ -13,7 +13,8 @@ export default function Article(){
   const handleClose = () => setShow(false);
 
   const GotArticleId = useRef(null);
-
+  const [search,setSearch] =useState('');
+  const [record,setRecord] = useState([]);
   
   var ArticleName = '';
   var ArticleSmDescr = '';
@@ -50,15 +51,16 @@ export default function Article(){
     });
     }, []);
     
-      const ArticleSetting = (articleId) =>{
-        setShow(true);
-      Axios.get(`http://localhost:3001/api/get/article/${articleId}`).then((response) => {
-        GotArticleId.current = response.data.article[0].ArticleId;
-        alert("UseEffectes GotArticleId: " + GotArticleId.current);
-        setArticleNameSetting(response.data);
-        
-        //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
-      })};
+      // Search Records here 
+    const searchRecords = () =>
+    {
+        Axios.get(`http://localhost:3001/api/get/article/search/${search}`) .then(response => {
+          console.log(search);
+          setRecord(response.data);
+          console.log(record);
+        });
+         
+    }
     //GET - POST
     //Refresh Post data
     const refreshArticleData = () => {
@@ -116,10 +118,10 @@ const routeChange = (gotId) =>{
 }
 
     return(
-        <div >
-           
-        
-            <ReactBootStrap.Table striped bordered hover>
+      
+        <div>
+           <input type="text" id="form"  onKeyUp={searchRecords} onChange={(e)=>setSearch(e.target.value)} class="form-control" placeholder="Search" style={{backgroundColor:"#ececec"}}/>
+        <ReactBootStrap.Table responsive bordered hover>
                         <thead className="tabla">
                                 <tr>
                                     <th>Name</th>
@@ -133,8 +135,38 @@ const routeChange = (gotId) =>{
                                     <th>Operation</th>
                                 </tr>
                           </thead>
+  
           
-                  {ArticleNameList.map((val) => {
+                  {search.length==0 ? ArticleNameList.map((val) => {
+                      return(
+
+                          <tbody >
+                            <tr>
+                              <td>{val.ArticleName}</td>    
+                              <td>{val.ArticleSmDescr}</td>  
+                              <td>{val.ArticleMDescr}</td>  
+                              <td><img src={val.ArticleImg} style={{ width: "80%" }} alt={val.ArticleImg} /></td>  
+                              <td>{val.ArticleType}</td>  
+                              <td> {ArticleStatusView(val.ArticleStatus)}</td>  
+                              <td>{val.ArticleCreatedAt}</td>  
+                              <td>{val.ArticleUpdatedAt}</td>  
+
+                            
+                           <td>
+                           
+                           <td><Button variant="primary" onClick={() => {routeChange(val.ArticleId)}}>Setting</Button></td>
+                         
+                              
+                           <td><Button onClick={() => {deleteArticle(val.ArticleId)}}>Delete</Button></td>
+                          
+                            </td>
+                            </tr> 
+                            </tbody>
+                        
+                      )
+                      
+                  })
+                  : search.length !=0 && record.map((val) => {
                       return(
 
                           <tbody >
@@ -163,7 +195,10 @@ const routeChange = (gotId) =>{
                       )
                   })}
                 </ReactBootStrap.Table>
-          
-        </div>
+
+             
+                
+        </div >
+        
     );
 }

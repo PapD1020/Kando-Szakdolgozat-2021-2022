@@ -117,6 +117,22 @@ app.get('/api/get/article', (req, res) => {
         res.send(result);
     });
 });*/
+
+//GET - Article Searching
+app.get('/api/get/article/search/:articleName', (req, res) => {
+    const name = req.params.articleName;
+    console.log(name);
+    const sqlSelect = "SELECT * FROM Articles WHERE ArticleName LIKE ?";
+    db.query(sqlSelect, name, (err, result) => {
+        if(err){
+            console.log("Article GET error: " + err);
+        }
+
+        console.log("Result FIGYELD:" + result);               //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
+
 //GET - Post single
 app.get('/api/get/article/:articleId', (req, res) => {
     const id = req.params.articleId;
@@ -133,7 +149,7 @@ app.get('/api/get/article/:articleId', (req, res) => {
 //GET - Post
 app.get('/api/get/articleall', (req, res) => {
 
-    const sqlSelect = "SELECT * FROM Articles";
+    const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleUpdatedAt DESC";
     db.query(sqlSelect, (err, result) => {
         if(err){
             console.log("Article GET error: " + err);
@@ -231,6 +247,21 @@ console.log(name);
 /*
 * USERS CRUD
 */
+//GET - User Searching
+app.get('/api/get/user/search/:userUn', (req, res) => {
+    const name = req.params.userUn;
+    console.log(name);
+    const sqlSelect = "SELECT * FROM Users WHERE UserUn LIKE ?";
+    db.query(sqlSelect, name, (err, result) => {
+        if(err){
+            console.log("User GET error: " + err);
+        }
+
+        console.log("Result FIGYELD:" + result);               //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
+
 //GET - Post single
 app.get('/api/get/user/:userId', (req, res) => {
     const id = req.params.userId;
@@ -247,7 +278,7 @@ app.get('/api/get/user/:userId', (req, res) => {
 //GET - USERS
 app.get('/api/get/user', (req, res) => {
     
-    const sqlSelect = "SELECT * FROM Users";
+    const sqlSelect = "SELECT * FROM Users ORDER BY UserUpdatedAt DESC" ;
 
     db.query(sqlSelect, (err, result) => {
         if(err){
@@ -319,7 +350,18 @@ app.put('/api/update/user', (req, res) => {
     });
 });
 /**************************************************COMMENT*********************************************************************/
+app.get('/api/get/commentall', (req, res) => {
 
+    const sqlSelect = "SELECT Users.UserId,Articles.ArticleId,Users.UserUn,Articles.ArticleName,ArticleComment.CommentId,ArticleComment.Comment,ArticleComment.CommentCreatedAt FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId INNER JOIN Articles ON Articles.ArticleId = ArticleComment.ArticleId ORDER BY CommentCreatedAt DESC";
+    db.query(sqlSelect, (err, result) => {
+        if(err){
+            console.log("Comment GET error: " + err);
+        }
+
+        console.log("Result FIGYELD:" + result);                //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
 //GET-20-asával lekérdezés
 app.get('/api/get/comment/byId', (req, res) => {
 

@@ -1,7 +1,7 @@
 import React from "react";
 import "./topbar.css";
 import {Outlet, Link} from 'react-router-dom';
-import { NotificationsNone, Language, Settings, Accessibility,AccountTree} from "@material-ui/icons";
+
 import { Button,Nav,Navbar, NavDropdown,Container } from "react-bootstrap";
 
 export default function Topbar() {
@@ -9,7 +9,11 @@ export default function Topbar() {
   function logOut(){
     localStorage.clear();
 
+
   }
+
+  
+
     return (
       <div >
   
@@ -27,7 +31,7 @@ export default function Topbar() {
               
                     <Link to="/login"><Button>Login</Button></Link> 
                     <Link to="/registration"><Button>Registration</Button></Link>
-
+                  
           
         </Nav>
         <Nav>
