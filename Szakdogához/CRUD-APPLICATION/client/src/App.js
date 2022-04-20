@@ -36,6 +36,9 @@ export default function App(){
 
   const [IsAdmin, setIsAdmin] = useState(false);
 
+  const adminFalse = () => setIsAdmin(false);
+  const adminTrue = () => setIsAdmin(true);
+
   const current = new Date();
   const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
@@ -50,6 +53,10 @@ export default function App(){
           if(response.data.loggedIn === true){
               setLoginStatus(true);
               setLoginName(response.data.user[0].UserUn);
+              console.log(response.data.user[0].UserPL)
+              if(response.data.user[0].UserPL){
+                adminTrue();
+              }
           }
       });
     }
@@ -85,7 +92,7 @@ export default function App(){
           else{
               localStorage.setItem("token", response.data.token);
               if(response.data.result[0].UserPL === 9){
-                setIsAdmin(true);
+                adminTrue();
               }
               checkLoginStatus();
               setSuccessfullMessage(response.data.message);
@@ -103,6 +110,7 @@ export default function App(){
         localStorage.removeItem("token");
         if(response.data.loggedIn === false){
           setLoginStatus(false);
+          adminFalse();
           routeChange();
         }
       }
@@ -189,10 +197,12 @@ export default function App(){
             )}
 
             {IsAdmin && (
-              <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+              <NavDropdown title="Admin page" id="collasible-nav-dropdown">
+              <NavDropdown.Item href="/userlist">Users' list</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+              <NavDropdown.Item href="articlelist">Articles' list</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="commentlist">Comments' list</NavDropdown.Item>
             </NavDropdown>
             )}
           </Nav>

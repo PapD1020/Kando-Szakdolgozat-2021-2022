@@ -516,6 +516,222 @@ app.delete('/api/delete/comment/:commentId', (req, res) => {
     });
 });
 
+/******************************************************TOMI**********************************************************/
+//GET - Article
+//Tomi
+//GET - Article Searching
+app.get('/api/get/article/search/:articleName', (req, res) => {
+    const name = "%" +req.params.articleName + "%";
+    console.log(name);
+    const sqlSelect = "SELECT * FROM Articles WHERE ArticleName LIKE ?";
+    db.query(sqlSelect, name, (err, result) => {
+        if(err){
+            console.log("Article GET error: " + err);
+        }
+
+        console.log("Result FIGYELD:" + result);               //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
+
+//GET - All
+//Tomi
+app.get('/api/get/articleall', (req, res) => {
+
+    const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleUpdatedAt DESC";
+    db.query(sqlSelect, (err, result) => {
+        if(err){
+            console.log("Article GET error: " + err);
+        }
+
+        console.log("Result FIGYELD:" + result);                //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
+
+//Tomi
+//GET - Post single
+app.get('/api/get/article/:articleId', (req, res) => {
+    const id = req.params.articleId;
+    const sqlSelect = "SELECT * FROM Articles WHERE ArticleId = ?";
+    db.query(sqlSelect, id, (err, result) => {
+        if(err){
+            console.log("Article GET error: " + err);
+        }
+
+        console.log(result);                //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
+
+//Tomi
+//DELETE - Article
+app.delete('/api/delete/article/:articleId', (req, res) => {
+    const id = req.params.articleId;
+   
+        //"DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId WHERE ArticleId = ?" ez jó
+        //DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId INNER JOIN ArticleComment ON Articles.ArticleId=ArticleComment.ArticleId INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE Articles.ArticleId = ? jó
+    
+        const sqlDelete = "DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId WHERE Articles.ArticleId = ?;DELETE Articles FROM Articles INNER JOIN ArticleComment ON Articles.ArticleId=ArticleComment.ArticleId WHERE Articles.ArticleId = ?;DELETE Articles FROM Articles INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE Articles.ArticleId = ?";
+    db.query(sqlDelete, id, (err, res) => {
+        if(err){
+            console.log(err);
+        }else{
+            res.sendStatus(200);
+        }
+    });
+});
+
+//Tomi
+//GET - User Searching
+app.get('/api/get/user/search/:userUn', (req, res) => {
+    const name = "%"+req.params.userUn+ "%";
+    console.log(name);
+    const sqlSelect = "SELECT * FROM Users WHERE UserUn LIKE ?";
+    db.query(sqlSelect, name, (err, result) => {
+        if(err){
+            console.log("User GET error: " + err);
+        }
+
+        console.log("Result FIGYELD:" + result);               //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
+
+//Tomi
+//GET - Post single
+app.get('/api/get/user/:userId', (req, res) => {
+    const id = req.params.userId;
+    const sqlSelect = "SELECT * FROM Users WHERE UserId = ?";
+    db.query(sqlSelect, id, (err, result) => {
+        if(err){
+            console.log("Article GET error: " + err);
+        }
+
+        console.log(result);                //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
+
+//Tomi
+//GET - USERS
+app.get('/api/get/user', (req, res) => {
+    
+    const sqlSelect = "SELECT * FROM Users ORDER BY UserUpdatedAt DESC" ;
+
+    db.query(sqlSelect, (err, result) => {
+        if(err){
+            console.log("Users GET error: " + err);
+        }
+
+        console.log("Users GET result: " + result.data); //still not working properly
+        res.send(result);
+    });
+});
+
+//PUT - USERS
+//Tomi
+app.put('/api/update/user', (req, res) => {
+    const id=req.body.userId;
+    const name = req.body.userUn;
+    const pimg = req.body.userPP;
+    const firstname= req.body.userFN;
+    const secondname= req.body.userSN;  
+    const userE = req.body.userEmail;
+    const userPL = req.body.userPL;
+    const updated = req.body.userUpdatedAt;
+    const sqlUpdate = "UPDATE Users SET UserUn = ?,UserPP = ?, UserFN=?, UserSN=?, UserEmail = ?,UserPL=?, UserUpdatedAt = ? WHERE UserId = ?";
+
+    db.query(sqlUpdate, [name,pimg, firstname, secondname, userE,userPL, updated,id ], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
+        if(err){
+            console.log("Users UPDATE error: " + err);
+        }
+            console.log("Users UPDATE result: " + result);
+            res.sendStatus(200);
+        
+    });
+});
+
+//Tomi
+//DELETE - USERS
+app.delete('/api/delete/user/:userId', (req, res) => {
+    const id = req.params.userId;
+    console.log(id);
+    const sqlDelete = "DELETE Users FROM Users WHERE UserId=?;DELETE Users FROM Users INNER JOIN ArticleUser ON Users.UserId=ArticleUser.UId WHERE Users.UserId = ?;DELETE Users FROM Users INNER JOIN ArticleComment ON Users.UserId=ArticleComment.UserId WHERE Users.UserId = ?;DELETE Users FROM Users INNER JOIN UserFavorite ON Users.UserId=UserFavorite.UserId WHERE Users.UserId = ?";
+    db.query(sqlDelete, id, (err, result) => {
+        if(err){
+            console.log("Users DELETE error: " + err);
+        }
+        console.log("Users DELETE result: " + result);
+    });
+});
+
+//GET
+// Tomi
+app.get('/api/get/commentall', (req, res) => {
+
+    const sqlSelect = "SELECT Users.UserId,Articles.ArticleId,Users.UserUn,Articles.ArticleName,ArticleComment.CommentId,ArticleComment.Comment,ArticleComment.CommentCreatedAt FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId INNER JOIN Articles ON Articles.ArticleId = ArticleComment.ArticleId ORDER BY CommentCreatedAt DESC";
+    db.query(sqlSelect, (err, result) => {
+        if(err){
+            console.log("Comment GET error: " + err);
+        }
+
+        console.log("Result FIGYELD:" + result);                //valamiért Object-et kapok terminálban
+        res.send(result);
+    });
+});
+
+//DELETE-COMMENT
+//Tomi
+app.delete('/api/delete/comment/:commentId', (req, res) => {
+    const id = req.params.commentId;
+    const sqlDelete = "DELETE FROM ArticleComment WHERE CommentId = ?";
+    db.query(sqlDelete, id, (err, result) => {
+        if(err){
+            console.log("Comment DELETE error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+        console.log("Comment DELETE result: " + result);
+        
+    });
+});
+
+//POST-Favorite
+app.post('/api/insert/favorite', (req, res) => {
+
+    const favoriteId = Nanoid.nanoid();
+    const userId = req.body.userId;
+    const articleId = req.body.articleId;
+ 
+
+    const sqlInsert = "INSERT INTO `UserFavorite`(`FavoriteId`, `UserId`, `ArticleId`) VALUES (?,?,?)";
+    db.query(sqlInsert, [favoriteId,userId,articleId], (err, result) => {
+
+        if(err){
+            console.log("Favorite POST error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+
+        console.log("Favorite insert: " + sqlInsert);
+        
+    });
+});
+
+//DELETE-Favorite
+app.delete('/api/delete/favorite/:favoriteId', (req, res) => {
+    const id = req.params.favoriteId;
+    const sqlDelete = "DELETE FROM UserFavorite WHERE FavoriteId = ?";
+    db.query(sqlDelete, id, (err, result) => {
+        if(err){
+            console.log("Favorite DELETE error: " + err);
+        }else{
+            res.sendStatus(200);
+        }
+        console.log("Favorite DELETE result: " + result);
+    });
+});
 
 app.listen(3001, () => {
     console.log("Running on port 3001");
