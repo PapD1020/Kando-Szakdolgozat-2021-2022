@@ -69,11 +69,12 @@ app.get('/api/get/article/allById', (req, res) => {
 
     db.query(sqlSelect, [userId], (err, result) => {
         if(err){
-            console.log("Article GET error: " + err);
+            res.status(500).send({message: err.message});
+        }else if (result.length == 0){
+            res.status(404).send({message:'Not found'});
+        }else{
+            res.status(200).send(result);
         }
-
-        console.log(result);
-        res.send(result);
     });
 });
 
@@ -89,11 +90,12 @@ app.get('/api/get/article/oneById', (req, res) => {
     db.query(sqlSelect, [articleId], (err, result) => {
 
         if(err){
-            console.log("One article get error: " + err);
+            res.status(500).send({message: err.message});
+        }else if (result.length == 0){
+            res.status(404).send({message:'Not found'});
+        }else{
+            res.status(200).send(result);
         }
-
-        console.log("One article get: " + result);
-        res.send(result);
     });
 });
 
@@ -108,13 +110,11 @@ app.get('/api/get/article', (req, res) => {
     
     db.query(sqlSelect, (err, result) => {
         if(err){
-            console.log("Article GET error: " + err);
-        }
-
-        if (result.length == 0){
+            res.status(500).send({message: err.message});
+        }else if (result.length == 0){
             res.status(404).send({message:'Not found'});
         }else{
-            res.send(result);
+            res.status(200).send(result);
         }
     });
 });
@@ -127,19 +127,17 @@ app.get('/api/get/article/byId', (req, res) => {
     //const item = req.body.item-1; POST-hoz body kérés
     const item = req.get("item")-1;
     const userId = req.get("userId");
-    console.log("item: " + item);
-    console.log("userId: " + userId);
-    //SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = 'W3Zk4vHXzBnAhv9BptcZI' ORDER BY Articles.ArticleId ASC;
+
     const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = " + "'" + userId + "'" + " ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET " + item + "";
-    console.log("SQL SELECT: " + sqlSelect);
+    
     db.query(sqlSelect, [userId], (err, result) => {
         if(err){
-            console.log("Article GET error: " + err);
+            res.status(500).send({message: err.message});
         }
         if (result.length == 0){
             res.status(404).send({message: 'Not found'});
         }else{
-            res.send(result);
+            res.status(200).send(result);
         }
     });
 });
@@ -259,25 +257,27 @@ app.post('/api/register/user', (req, res) => {
     bcrypt.hash(userPw, saltRounds, (err, hash) => {
 
         if(err){
-            console.log("Registration - bcrypt error: " + err);
-        }
+            res.status(500).send({message: err.message});
+            //console.log("Registration - bcrypt error: " + err);
+        }else{
 
-        const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserPL`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+            const sqlInsert = "INSERT INTO `Users` (`UserId`, `UserUn`, `UserPP`, `UserPw`, `UserFN`, `UserSN`, `UserDob`, `UserEmail`, `UserPL`, `UserCreatedAt`, `UserUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 
-        db.query(sqlInsert, [userId, userUn, userPP, hash, userFN, userSN, userDob, userEmail, userPL, userCreatedAt, userUpdatedAt], (err, result) => {
+            db.query(sqlInsert, [userId, userUn, userPP, hash, userFN, userSN, userDob, userEmail, userPL, userCreatedAt, userUpdatedAt], (err, result) => {
 
-            if(err){
-                if(err.errno == 1062){
-                    res.status(409).send({errorMessage: "This username is already in use."});
+                if(err){
+                    if(err.errno == 1062){
+                        res.status(409).send({errorMessage: "This username is already in use."});
+                    }
+                    else{
+                        res.status(500).send({message: err.message});
+                    }
                 }
                 else{
-                    res.status(500).send({message: err.message});
+                    res.status(200).send({result: result, message: "Registration was successfull"});
                 }
-            }
-            else{
-                res.status(200).send({result: result, message: "Registration was successfull"});
-            }
-        });
+            });
+        }
     });
 });
 
@@ -286,8 +286,7 @@ app.post('/api/register/user', (req, res) => {
 app.get('/api/login/user', (req, res) => {
     if(req.session.user){
         res.send({loggedIn: true, user: req.session.user});
-    }
-    else{
+    }else{
         res.send({loggedIn: false});
     }
 });
@@ -330,8 +329,7 @@ const verifyJWT = (req, res, next) => {
 app.get('/api/login/user/auth', verifyJWT, (req, res) => {
     if(verifyJWT){
         res.send({isUserAuth: true, message: "You are authenticated!"});
-    }
-    else{
+    }else{
         res.send({isUserAuth: false, message: "You are NOT authenticated!"});
     }
 });
@@ -348,11 +346,10 @@ app.post('/api/login/user', (req, res) => {
     db.query(sqlInsert, [userUn], (err, result) => {
 
         if(err){
-            res.send({err: err});
-            console.log("Users LOGIN SELECT * error: " + err);
-        }
-
-        if(result.length > 0){
+            res.status(500).send({message: err.message});
+            /*res.send({err: err});
+            console.log("Users LOGIN SELECT * error: " + err);*/
+        }else if(result.length > 0){
 
             bcrypt.compare(userPw, result[0].UserPw, (err, response) => {
                 
@@ -368,9 +365,11 @@ app.post('/api/login/user', (req, res) => {
                     req.session.user = result;
 
                     res.json({auth: true, token: token, result: result, message: "Log in successfull!"});
-                }
-                else{
+
+                }else{
+
                     res.json({auth: false, message: "Wrong username or password."});
+                
                 }
             })
         }
@@ -385,7 +384,6 @@ app.post('/api/login/user', (req, res) => {
 //Dani - profilePage.js
 //Márk - settings/userDataForm
 app.put('/api/update/user/userId', (req, res) => {
-
     const userId = req.body.userId;
     const userPP = req.body.userPP;
     const userFN = req.body.userFN;
@@ -421,21 +419,25 @@ app.put('/api/update/user/password', (req, res) => {
 
     bcrypt.hash(userPw, saltRounds, (err, hash) => {
         if(err){
-            console.log("Change password - bcrypt error: " + err);
-        }
+            res.status(500).send({message: err.message});
+            //console.log("Change password - bcrypt error: " + err);
+        }else{
 
         const sqlUpdate = "UPDATE Users SET UserPw = ?, UserUpdatedAt = ? WHERE UserId = ?";
 
         db.query(sqlUpdate, [hash, userUpdatedAt, userId], (err, result) => {
         if(err){
-            console.log("User password change sql error: " + err);
+            res.status(500).send({message: err.message});
+            //console.log("User password change sql error: " + err);
         }
         });
+    }
     });
 });
 
 //Get user by Id for profilePage default data
 //Dani - profilePage
+//Márk - Home/Articles.js (profile picture onPress, modal)
 app.get("/api/get/userById", (req, res) => {
     
     const userIdUpd = req.get("userIdUpd");
@@ -446,10 +448,11 @@ app.get("/api/get/userById", (req, res) => {
 
     db.query(sqlSelect, userIdUpd, (err, result) => {
         if(err){
-            console.log("User get byId error: " + err);
+            res.status(500).send({message: err.message});
+            //console.log("User get byId error: " + err);
+        }else{
+            res.send(result);
         }
-
-        res.send(result);
     });
 });
 
@@ -464,16 +467,14 @@ app.get('/api/get/comments/byId', (req, res) => {
     const articleId = req.get("articleId");
     
     const sqlSelect = "SELECT Users.UserUn,Users.UserPP,ArticleComment.Comment FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId WHERE ArticleComment.ArticleId = " + "'" + articleId + "'" + " ORDER BY CommentCreatedAt ASC LIMIT 20 OFFSET " + item + "";
-    console.log("SQL SELECT: " + sqlSelect);
+
     db.query(sqlSelect, [articleId,item], (err, result) => {
 
         if(err){
-            console.log("Comment GET error: " + err);
+            res.status(500).send({message: err.message});
         }
-        if (result.length == 0){
-            res.status(404).send('Not found');
-        }else{
-            res.send(result);
+        else{
+            res.status(200).send(result);
         }
     });
 });
@@ -492,8 +493,9 @@ app.post('/api/insert/comment', (req, res) => {
     db.query(sqlInsert, [commentId,userId,articleId,comment, commentCreatedAt], (err, result) => {
 
         if(err){
-            console.log("Comment POST error: " + err);
-        }else{
+            res.status(500).send({message: err.message});
+        }
+        else{
             res.sendStatus(200);
         }
     });
