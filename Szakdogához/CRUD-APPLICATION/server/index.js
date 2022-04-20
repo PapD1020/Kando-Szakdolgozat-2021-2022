@@ -104,7 +104,7 @@ app.get('/api/get/article', (req, res) => {
 
     const item = req.get("item")-1;
 
-    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 ORDER BY ArticleId ASC LIMIT 20  OFFSET " + item + "";
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 ORDER BY ArticleId ASC LIMIT 20  OFFSET " + item + "";
     
     db.query(sqlSelect, (err, result) => {
         if(err){
@@ -112,7 +112,7 @@ app.get('/api/get/article', (req, res) => {
         }
 
         if (result.length == 0){
-            res.status(404).send('Not found');
+            res.status(404).send({message:'Not found'});
         }else{
             res.send(result);
         }
@@ -137,10 +137,8 @@ app.get('/api/get/article/byId', (req, res) => {
             console.log("Article GET error: " + err);
         }
         if (result.length == 0){
-            console.log("no result");
-            res.status(404).send('Not found');
+            res.status(404).send({message: 'Not found'});
         }else{
-            console.log(result);
             res.send(result);
         }
     });
@@ -211,15 +209,16 @@ app.put('/api/update/article/byUser', (req, res) => {
         if(err){
             console.log(err);
             if(err.errno == 1062){
+                res.status(409).send({errorMessage: "There's a post with exactly same small or detailed description"});
                 res.send({errorType: "duplicate", errorMessage: err.message});
             }
             else{
-                res.status(500).send({errMessage: err.message});
+                res.status(500).send({message: err.message});
                 //res.send(err.message);
             }
         }
         else{
-            res.status(200).send({result: result, successfullMessage: "Sikeresen megváltoztatta!"});
+            res.status(200).send({result: result, message: "Changed successfully"});
         }
     });
 });
