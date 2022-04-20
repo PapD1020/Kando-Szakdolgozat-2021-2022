@@ -1,7 +1,7 @@
 import  Axios  from "axios";
 import { useEffect, useState} from "react";
 import { Outlet } from "react-router-dom";
-import Login from "./routes/login";
+import App from "./App";
 
 
 export default function ProtectedRoutes(){
@@ -30,5 +30,5 @@ export default function ProtectedRoutes(){
         });
     }, []);
 
-    return AuthStatus ? <Outlet/> : <Login />;
+    return AuthStatus ? <Outlet/> : <App />;
 }

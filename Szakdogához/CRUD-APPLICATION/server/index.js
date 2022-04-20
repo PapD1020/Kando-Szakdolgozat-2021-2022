@@ -342,7 +342,7 @@ app.post('/api/login/user', (req, res) => {
     const userUn = req.body.userUn;
     const userPw = req.body.userPw;
 
-    const sqlInsert = "SELECT UserId, UserPP, UserUn, UserPw FROM Users WHERE UserUn LIKE BINARY ?";
+    const sqlInsert = "SELECT UserId, UserPP, UserUn, UserPw, UserPL FROM Users WHERE UserUn LIKE BINARY ?";
     db.query(sqlInsert, [userUn], (err, result) => {
 
         if(err){

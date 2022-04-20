@@ -34,6 +34,8 @@ export default function App(){
 
   const [SuccessfullReg, setSuccessfullReg] = useState('');
 
+  const [IsAdmin, setIsAdmin] = useState(false);
+
   const current = new Date();
   const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
@@ -79,10 +81,12 @@ export default function App(){
           if(!response.data.auth){ 
               setErrorMessage(response.data.message);
               setLoginStatus(false);
-              console.log("Login user response.data: " + JSON.stringify(response.data));
           }
           else{
               localStorage.setItem("token", response.data.token);
+              if(response.data.result[0].UserPL === 9){
+                setIsAdmin(true);
+              }
               checkLoginStatus();
               setSuccessfullMessage(response.data.message);
               handleClose();
@@ -184,11 +188,13 @@ export default function App(){
               </Nav>
             )}
 
-            <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
+            {IsAdmin && (
+              <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
             </NavDropdown>
+            )}
           </Nav>
 
           <Nav>
