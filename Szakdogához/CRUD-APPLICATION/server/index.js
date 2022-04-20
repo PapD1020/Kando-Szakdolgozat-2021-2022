@@ -5,7 +5,7 @@ const app = express();
 const mysql = require('mysql');
 const { json } = require('body-parser');
 const Nanoid = require('nanoid');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { response } = require('express');
 const session = require('express-session');
 
@@ -208,16 +208,19 @@ app.put('/api/update/article/byUser', (req, res) => {
 
     db.query(sqlUpdate, [articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleUpdatedAt, articleId], (err, result) => { //Fontos a sorrend, első a ArticleStatus, aztán a ArticleName, gondolom az sql szintaktika miatt
         
-        if(err.errno == 1062){
+        if(err){
             console.log(err);
-            res.send({errorType: "duplicate", errorMessage: err.message});
+            if(err.errno == 1062){
+                res.send({errorType: "duplicate", errorMessage: err.message});
+            }
+            else{
+                res.status(500).send({errMessage: err.message});
+                //res.send(err.message);
+            }
         }
-        else if(err){
-            console.log(err);
-            res.sendStatus(500);
-            res.send(err.message);
+        else{
+            res.status(200).send({result: result, successfullMessage: "Sikeresen megváltoztatta!"});
         }
-        res.sendStatus(200);
     });
 });
 

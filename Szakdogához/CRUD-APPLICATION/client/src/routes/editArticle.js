@@ -16,6 +16,9 @@ export default function EditArticle() {
 
   const [DuplicateError, setDuplicateError] = useState('');
   const [DuplicateErrorMsg, setDuplicateErrorMsg] = useState('');
+  const [SuccessfullMessage, setSuccessfullMessage] = useState('');
+  const [ErrorMessage, setErrorMessage] = useState('');
+
 
   const location = useLocation();
 
@@ -72,7 +75,6 @@ export default function EditArticle() {
 
   const onSubmit = () => {
     submitArticleData();
-    routeChange();
   };
 
   const submitArticleData = () => {
@@ -91,6 +93,15 @@ export default function EditArticle() {
       if(response.data.errorType === "duplicate"){
         setDuplicateError(true);
         setDuplicateErrorMsg(response.data.errorMessage);
+        console.log(response.data.errorMessage);
+      }
+      else if(response.status === 500){
+        setErrorMessage(response.data.errMessage);
+      }
+      else{
+        setSuccessfullMessage(response.data.successfullMessage);
+        console.log(response.data.successfullMessage);
+        routeChange();
       }
     })
   };
@@ -321,6 +332,18 @@ export default function EditArticle() {
           {DuplicateError && (
             <div>
               Duplicate error: {DuplicateErrorMsg}
+            </div> 
+          )}
+
+          {ErrorMessage && (
+            <div>
+              Simple error: {ErrorMessage}
+            </div> 
+          )}
+
+          {SuccessfullMessage && (
+            <div>
+              SuccessfullMessage: {SuccessfullMessage}
             </div> 
           )}
     </div>
