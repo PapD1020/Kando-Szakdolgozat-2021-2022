@@ -65,7 +65,7 @@ app.get('/api/get/article/allById', (req, res) => {
 
     const userId = req.get("userId");
     
-    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = " + "'" + userId + "' AND ArticleStatus != -1";
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = ? AND ArticleStatus != -1";
 
     db.query(sqlSelect, [userId], (err, result) => {
         if(err){
@@ -84,7 +84,7 @@ app.get('/api/get/article/oneById', (req, res) => {
     const articleId = req.get("articleId");
     console.log("articleId: " + articleId);
 
-    const sqlSelect = "SELECT * FROM Articles WHERE articleId = " + "'" + articleId + "'";
+    const sqlSelect = "SELECT * FROM Articles WHERE articleId = ?";
     console.log("oneById select: " + sqlSelect);
 
     db.query(sqlSelect, [articleId], (err, result) => {
@@ -106,9 +106,9 @@ app.get('/api/get/article', (req, res) => {
 
     const item = req.get("item")-1;
 
-    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 ORDER BY ArticleId ASC LIMIT 20  OFFSET " + item + "";
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 ORDER BY ArticleId ASC LIMIT 20  OFFSET ?";
     
-    db.query(sqlSelect, (err, result) => {
+    db.query(sqlSelect, [item],(err, result) => {
         if(err){
             res.status(500).send({message: err.message});
         }else if (result.length == 0){
@@ -128,9 +128,51 @@ app.get('/api/get/article/byId', (req, res) => {
     const item = req.get("item")-1;
     const userId = req.get("userId");
 
-    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = " + "'" + userId + "'" + " ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET " + item + "";
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = ? ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET ?";
     
-    db.query(sqlSelect, [userId], (err, result) => {
+    db.query(sqlSelect, [userId,item], (err, result) => {
+        if(err){
+            res.status(500).send({message: err.message});
+        }
+        if (result.length == 0){
+            res.status(404).send({message: 'Not found'});
+        }else{
+            res.status(200).send(result);
+        }
+    });
+});
+
+
+//Márk
+//GET - Article Searching
+app.get('/api/get/article/search/', (req, res) => {
+    const searchedString = "%" + req.get("searchedString") + "%";
+    const item = req.get("item")-1;
+
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 WHERE ArticleName LIKE ? ORDER BY ArticleId ASC LIMIT 20 OFFSET ?";
+    //const sqlSelect = "SELECT * FROM Articles WHERE ArticleName LIKE ?";
+    db.query(sqlSelect, [searchedString,item], (err, result) => {
+        if(err){
+            res.status(500).send({message: err.message});
+        }
+        if (result.length == 0){
+            res.status(404).send({message: 'Not found'});
+        }else{
+            res.status(200).send(result);
+        }
+    });
+});
+
+//Márk
+//GET - UsersArticle Searching
+app.get('/api/get/article/search/byId', (req, res) => {
+    const searchedString = "%" + req.get("searchedString") + "%";
+    const item = req.get("item")-1;
+    const userId = req.get("userId");
+
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = ? AND ArticleName LIKE ? ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET ?";
+    //const sqlSelect = "SELECT * FROM Articles WHERE ArticleName LIKE ?";
+    db.query(sqlSelect, [userId, searchedString, item, ], (err, result) => {
         if(err){
             res.status(500).send({message: err.message});
         }
@@ -465,7 +507,7 @@ app.get('/api/get/comments/byId', (req, res) => {
     const item = req.get("item")-1;
     const articleId = req.get("articleId");
     
-    const sqlSelect = "SELECT Users.UserUn,Users.UserPP,ArticleComment.Comment FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId WHERE ArticleComment.ArticleId = " + "'" + articleId + "'" + " ORDER BY CommentCreatedAt ASC LIMIT 20 OFFSET " + item + "";
+    const sqlSelect = "SELECT Users.UserUn,Users.UserPP,ArticleComment.Comment FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId WHERE ArticleComment.ArticleId = ? ORDER BY CommentCreatedAt ASC LIMIT 20 OFFSET ?";
 
     db.query(sqlSelect, [articleId,item], (err, result) => {
 
@@ -513,6 +555,74 @@ app.delete('/api/delete/comment/:commentId', (req, res) => {
         }
         console.log("Comment DELETE result: " + result);
         
+    });
+});
+
+/**************************************************FAVORITE*********************************************************************/
+
+//Favories
+//20-asával lekérdezés
+//Márk - usersFavorites/articles.js
+app.get('/api/get/article/favorite/byId', (req, res) => {
+
+    //const item = req.body.item-1; POST-hoz body kérés
+    const item = req.get("item")-1;
+    const userId = req.get("userId");
+console.log(item + userId);
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP, UserFavorite.FavoriteId FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE UserFavorite.UserId = ? ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET ?";
+    
+    db.query(sqlSelect, [userId,item], (err, result) => {
+        if(err){
+            console.log(sqlSelect)
+            res.status(500).send({message: err.message});
+        }
+        else if (result.length == 0){
+            res.status(404).send({message: 'Not found'});
+        }else{
+            res.status(200).send(result);
+        }
+        console.log(result);
+    });
+});
+
+
+//POST-Favorite
+//Tomi
+//Márk - Home/Articles.js
+app.post('/api/insert/favorite', (req, res) => {
+
+    const favoriteId = Nanoid.nanoid();
+    const userId = req.body.userId;
+    const articleId = req.body.articleId;
+ 
+
+    const sqlInsert = "INSERT INTO `UserFavorite`(`FavoriteId`, `UserId`, `ArticleId`) VALUES (?,?,?)";
+    db.query(sqlInsert, [favoriteId,userId,articleId], (err, result) => {
+
+        if(err){
+            res.status(500).send({message: err.message});
+        }
+        else{
+            res.status(200).send({message: "Added to favorites"});
+        }
+        
+    });
+});
+
+//DELETE-Favorite
+//Tomi
+//Márk - UsersFavorites/Articles.js
+app.delete('/api/delete/favorite/:favoriteId', (req, res) => {
+    const id = req.params.favoriteId;
+    console.log(id);
+    const sqlDelete = "DELETE FROM UserFavorite WHERE FavoriteId = ?";
+    db.query(sqlDelete, id, (err, result) => {
+        if(err){
+            res.status(500).send({message: err.message});
+        }
+        else{
+            res.status(200).send({message: "Removed from favorites"});
+        }
     });
 });
 
@@ -697,45 +807,12 @@ app.delete('/api/delete/comment/:commentId', (req, res) => {
     });
 });
 
-//POST-Favorite
-app.post('/api/insert/favorite', (req, res) => {
 
-    const favoriteId = Nanoid.nanoid();
-    const userId = req.body.userId;
-    const articleId = req.body.articleId;
- 
-
-    const sqlInsert = "INSERT INTO `UserFavorite`(`FavoriteId`, `UserId`, `ArticleId`) VALUES (?,?,?)";
-    db.query(sqlInsert, [favoriteId,userId,articleId], (err, result) => {
-
-        if(err){
-            console.log("Favorite POST error: " + err);
-        }else{
-            res.sendStatus(200);
-        }
-
-        console.log("Favorite insert: " + sqlInsert);
-        
-    });
-});
-
-//DELETE-Favorite
-app.delete('/api/delete/favorite/:favoriteId', (req, res) => {
-    const id = req.params.favoriteId;
-    const sqlDelete = "DELETE FROM UserFavorite WHERE FavoriteId = ?";
-    db.query(sqlDelete, id, (err, result) => {
-        if(err){
-            console.log("Favorite DELETE error: " + err);
-        }else{
-            res.sendStatus(200);
-        }
-        console.log("Favorite DELETE result: " + result);
-    });
-});
 
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });
+
 
 //Heroku
 /*
