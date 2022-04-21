@@ -507,7 +507,7 @@ app.get('/api/get/comments/byId', (req, res) => {
     const item = req.get("item")-1;
     const articleId = req.get("articleId");
     
-    const sqlSelect = "SELECT Users.UserUn,Users.UserPP,ArticleComment.Comment FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId WHERE ArticleComment.ArticleId = ? ORDER BY CommentCreatedAt ASC LIMIT 20 OFFSET ?";
+    const sqlSelect = "SELECT Users.UserUn,Users.UserPP,Comments.Comment FROM Comments INNER JOIN UserComment ON UserComment.CId = Comments.CommentId INNER JOIN Users ON Users.UserId = UserComment.UId INNER JOIN ArticleComment ON ArticleComment.CId = Comments.CommentId WHERE ArticleComment.AId = ? ORDER BY CommentCreatedAt ASC LIMIT 20 OFFSET ?";
 
     db.query(sqlSelect, [articleId,item], (err, result) => {
 
@@ -530,30 +530,65 @@ app.post('/api/insert/comment', (req, res) => {
     const comment=req.body.comment;
     const commentCreatedAt = req.body.commentCreatedAt;
   
-    const sqlInsert = "INSERT INTO `ArticleComment`(`CommentId`, `UserId`, `ArticleId`,`Comment`,`CommentCreatedAt`) VALUES (?,?,?,?,?)";
-    db.query(sqlInsert, [commentId,userId,articleId,comment, commentCreatedAt], (err, result) => {
+    //const sqlInsert = "INSERT INTO `ArticleComment`(`CommentId`, `UserId`, `ArticleId`,`Comment`,`CommentCreatedAt`) VALUES (?,?,?,?,?)";
+    const sqlInsert = "INSERT INTO Comments (`CommentId`, `Comment`, `CommentCreatedAt`) VALUES (?,?,?)"
+    db.query(sqlInsert, [commentId,comment,commentCreatedAt], (err, result) => {
 
         if(err){
             res.status(500).send({message: err.message});
-        }
-        else{
-            res.sendStatus(200);
+        }else{
+
+            const sqlInsert2 = "INSERT INTO UserComment (`UId`, `CId`) VALUES (?,?)"
+            db.query(sqlInsert2, [userId,commentId], (err, result) => {
+
+                if(err){
+                    res.status(500).send({message: err.message});
+                }else{
+
+                    const sqlInsert3 = "INSERT INTO ArticleComment( `AId`, `CId` ) VALUES (?,?)"
+                    db.query(sqlInsert3, [articleId,commentId], (err, result) => {
+
+                        if(err){
+                            res.status(500).send({message: err.message});
+                        }
+                        else{
+                            res.sendStatus(200);
+                        }
+                    });
+
+                }
+            });
+
         }
     });
+   
+    
 });
 
 //DELETE-COMMENT
-//na olyan még nincs
 app.delete('/api/delete/comment/:commentId', (req, res) => {
+    console.log("eeee");
     const id = req.params.commentId;
-    const sqlDelete = "DELETE FROM ArticleComment WHERE CommentId = ?";
-    db.query(sqlDelete, id, (err, result) => {
+    const sqlDelete = "DELETE FROM ArticleComment WHERE CId = ?;DELETE FROM UserComment WHERE CId = ?;";
+    db.query(sqlDelete, [id,id], (err, result) => {
         if(err){
-            console.log("Comment DELETE error: " + err);
+            res.status(500).send({message: err.message});
+            //console.log(err.message)
+
         }else{
-            res.sendStatus(200);
+            
+
+            const sqlDelete = "DELETE FROM Comments WHERE CommentId = ?";
+            db.query(sqlDelete, id, (err, result) => {
+                if(err){
+                    res.status(500).send({message: err.message});
+                    //console.log(err.message)
+                }else{
+                    res.status(200).send({message: "Comment deleted"})
+                }
+            
+            });
         }
-        console.log("Comment DELETE result: " + result);
         
     });
 });
@@ -818,5 +853,4 @@ app.listen(3001, () => {
 /*
 app.listen(process.env.PORT || 3000, function(){
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-});
-*/
+});*/
