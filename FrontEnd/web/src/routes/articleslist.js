@@ -125,17 +125,18 @@ const ArticleStatusView=(ArticleStatus)=>{
 
 let navigate = useNavigate();
 const routeChange = (gotId) =>{
-  alert("Második selected got id: " + gotId);
+ 
   navigate('/adminEditArticle', {state:{id: gotId}});
 }
 
     return(
       
         <div>
-           <input type="text" id="form"  onKeyUp={searchRecords} onChange={(e)=>setSearch(e.target.value)} class="form-control" placeholder="Search" style={{backgroundColor:"#ececec"}}/>
-        <ReactBootStrap.Table responsive bordered hover>
-                        <thead className="tabla">
-                                <tr>
+                  <ReactBootStrap.Table responsive bordered hover>
+                        
+                                <thead >
+                                <tr className="none">
+                                    <th>User Name</th>
                                     <th>Name</th>
                                     <th>Small description</th>
                                     <th>Main description</th>
@@ -146,22 +147,27 @@ const routeChange = (gotId) =>{
                                     <th>Updated at</th>
                                     <th>Operation</th>
                                 </tr>
+                                <th colSpan={10}>
+                                    <input type="text" id="form"  onKeyUp={searchRecords} onChange={(e)=>setSearch(e.target.value)} class="form-control" placeholder="Search" style={{backgroundColor:"#ececec"}}/>
+                                </th>
+                                
                           </thead>
   
-          
+                    <tbody >
                   {search.length==0 ? ArticleNameList.map((val) => {
                       return(
-
-                          <tbody >
+                            
+                          
                             <tr>
-                              <td>{val.ArticleName}</td>    
-                              <td>{val.ArticleSmDescr}</td>  
-                              <td>{val.ArticleMDescr}</td>  
-                              <td style={{justifyContent:"center"}}><img src={val.ArticleImg} style={{ width: "30%" ,alignSelf:"center" }} alt={val.ArticleImg} /></td>  
-                              <td>{val.ArticleType}</td>  
-                              <td> {ArticleStatusView(val.ArticleStatus)}</td>  
-                              <td>{val.ArticleCreatedAt}</td>  
-                              <td>{val.ArticleUpdatedAt}</td>  
+                              <td><td className="td-none">User Name:</td>{val.UserUn}</td> 
+                              <td><td className="td-none">Name:</td>{val.ArticleName}</td>    
+                              <td><td className="td-none">Small description:</td>{val.ArticleSmDescr}</td>  
+                              <td><td className="td-none">Main description:</td>{val.ArticleMDescr}</td>  
+                              <td><td className="td-none">Image:</td><img src={val.ArticleImg}  alt={val.ArticleImg} /></td>  
+                              <td><td className="td-none">Type:</td>{val.ArticleType}</td>  
+                              <td><td className="td-none">Status:</td>{ArticleStatusView(val.ArticleStatus)}</td>  
+                              <td><td className="td-none">Created at:</td>{val.ArticleCreatedAt}</td>  
+                              <td><td className="td-none">Updated at:</td>{val.ArticleUpdatedAt}</td>  
 
                             
                            <td>
@@ -173,7 +179,7 @@ const routeChange = (gotId) =>{
                           
                             </td>
                             </tr> 
-                            </tbody>
+                            
                         
                       )
                       
@@ -181,17 +187,17 @@ const routeChange = (gotId) =>{
                   : search.length !=0 && record.map((val) => {
                       return(
 
-                          <tbody >
+                          
                             <tr>
-                              <td>{val.ArticleName}</td>    
-                              <td>{val.ArticleSmDescr}</td>  
-                              <td>{val.ArticleMDescr}</td>  
-                              <td><img src={val.ArticleImg} style={{ width: "30%" }} alt={val.ArticleImg} /></td>  
-                              <td>{val.ArticleType}</td>  
-                              <td> {ArticleStatusView(val.ArticleStatus)}</td>  
-                              <td>{val.ArticleCreatedAt}</td>  
-                              <td>{val.ArticleUpdatedAt}</td>  
-
+                             <td> <td className="td-none">User Name:</td>{val.UserUn}</td> 
+                              <td><td className="td-none">Name:</td>{val.ArticleName}</td>    
+                              <td><td className="td-none">Small description:</td>{val.ArticleSmDescr}</td>  
+                              <td><td className="td-none">Main description:</td>{val.ArticleMDescr}</td>  
+                              <td><td className="td-none">Image:</td><img src={val.ArticleImg}  alt={val.ArticleImg} /></td>  
+                              <td><td className="td-none">Type:</td>{val.ArticleType}</td>  
+                              <td><td className="td-none">Status:</td>{ArticleStatusView(val.ArticleStatus)}</td>  
+                              <td><td className="td-none">Created at:</td>{val.ArticleCreatedAt}</td>  
+                              <td><td className="td-none">Updated at:</td>{val.ArticleUpdatedAt}</td>
                             
                            <td>
                            
@@ -202,10 +208,10 @@ const routeChange = (gotId) =>{
                           
                             </td>
                             </tr> 
-                            </tbody>
+                            
                         
                       )
-                  })}
+                  })}</tbody>
                 </ReactBootStrap.Table>
 
              

@@ -84,10 +84,10 @@ export default function EditUser() {
     formState: {errors}
   } = useForm();
 
-  const onSubmit = (data) => {
-      alert(JSON.stringify(data));
-      modalClose();
+  const onSubmit = () => {
+      
       submitUserData();
+      routeChange();
   };
 
   const submitUserData = () => {
@@ -296,7 +296,7 @@ export default function EditUser() {
               )
             })}
           </div>
-          <div className='ms-5'>
+          <div className='ms-5 d-flex align-items-center justify-content-center'>
             <Button variant='primary' onClick={routeChange}>Back to selection page</Button>
           </div>
 

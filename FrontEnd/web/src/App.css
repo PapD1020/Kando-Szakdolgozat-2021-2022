@@ -1,7 +1,4 @@
-.App {
-  /*text-align: center;*/
-  /*font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;*/
-}
+
 
 .errordiv{
   height: 60px;
@@ -11,4 +8,53 @@
   width: fit-content; 
   /* To adjust the height as well */ 
   height: fit-content;
+}
+
+
+.table-responsive thead th{
+  background-color: #0d6efd;
+  color: white;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+td img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30vh;
+  
+}
+td {
+  
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+   
+}
+.td-none{
+  display:none ;
+  
+}
+@media screen and (max-width: 990px) {
+  .table-responsive td {
+      display: block;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+  }
+  td img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50vh;
+    
+  }
+  .none {
+    display:none ;
+  }
+  .td-none{
+    font-weight: bold;
+    
+  }
 }

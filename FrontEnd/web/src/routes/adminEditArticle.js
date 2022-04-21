@@ -56,24 +56,11 @@ export default function EditArticle() {
  
 }, []);
 
-  /*
-  const getChoosenArticleById = () => {
-    alert("függvény meghívva")
-    Axios.get('http://localhost:3001/api/get/article/oneById1', {
-      headers: {
-        'content-type': "application/json",
-        'articleId1': location.state.id
-      }
-    }).then((response) => {
-      setOneArticleList(response.data);
-      console.log("One article get: " + JSON.stringify(response));
-    })
-  }
-  */
+  
 
   let navigate = useNavigate();
   const routeChange = () => {
-    navigate('/articleslist');
+    navigate('/articlelist');
   }
 
   const {
@@ -82,9 +69,10 @@ export default function EditArticle() {
     formState: {errors}
   } = useForm();
 
-  const onSubmit = (data) => {
-      alert(JSON.stringify(data));
+  const onSubmit = () => {
+     
       submitArticleData();
+      routeChange();
   };
 
   const submitArticleData = () => {
@@ -159,7 +147,7 @@ export default function EditArticle() {
                                                     <label className="display-6 mb-3">Article type:</label>
                                                     <select id="types" className="form-control p-2 mb-3"{
                                                         ...register("articleTypeUpd", {
-                                                            required: false,
+                                                            required: true,
                                                         })
                                                     } onChange={(e) => {
                                                         setArticleTypeUpd(e.target.value);
@@ -181,7 +169,7 @@ export default function EditArticle() {
                                                     <label className="display-6 mb-3">Article name:</label>
                                                     <input type="text" className="mb-3 p-2 form-control" defaultValue={val.ArticleName}{
                                                         ...register("articleNameUpd", {
-                                                            required: false,
+                                                            required: true,
                                                             minLength: 1,
                                                             maxLength: 20
                                                         })
@@ -203,7 +191,7 @@ export default function EditArticle() {
                                                     <label className="display-6 mb-3">Article image:</label>
                                                     <input type="url" className="mb-3 p-2 form-control" defaultValue={val.ArticleImg}{
                                                         ...register("articleImgUpd", {
-                                                            required: false,
+                                                            required: true,
                                                             minLength: 1,
                                                             maxLength: 500
                                                         })
@@ -226,7 +214,7 @@ export default function EditArticle() {
                                                     <label className="display-5 mb-3 mt-3">Article small description:</label>
                                                     <textarea rows="3" className="mb-3 p-2 form-control" defaultValue={val.ArticleSmDescr}{
                                                         ...register("articleSmDescrUpd", {
-                                                            required: false,
+                                                            required: true,
                                                             minLength: 1,
                                                             maxLength: 100
                                                         })
@@ -290,6 +278,7 @@ export default function EditArticle() {
                                                       <option defaultValue={val.ArticleStatus}>{ArticleStatusView(val.ArticleStatus)}</option>
                                                       <option value="1">Aktív</option>
                                                       <option value="0">Inaktív</option>
+                                                      <option value="-1">Felfüggesztett</option>
                                                       <option value="-2">Törölt</option>
                                                   </select>
                                               </div>
@@ -329,7 +318,7 @@ export default function EditArticle() {
             })}
           </div>
 
-          <div className='ms-5'>
+          <div className='ms-5 d-flex align-items-center justify-content-center'>
             <Button variant='primary' onClick={routeChange}>Back to selection page</Button>
           </div>
 

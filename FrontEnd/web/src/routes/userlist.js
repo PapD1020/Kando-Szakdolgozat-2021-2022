@@ -110,16 +110,15 @@ import { useForm } from "react-hook-form";
 
    let navigate = useNavigate();
    const routeChange = (gotId) =>{
-     alert("Második selected got id: " + gotId);
+    
      navigate('/adminEditUser', {state:{id: gotId}});
    }
    return(
    <div >
     
-    <input type="text" id="form"  onKeyUp={searchRecords} onChange={(e)=>setSearch(e.target.value)} class="form-control" placeholder="Search" style={{backgroundColor:"#ececec"}}/>
-                    <ReactBootStrap.Table striped bordered hover > 
-                         <thead className="tabla">
-                                <tr>
+         <ReactBootStrap.Table responsive bordered hover > 
+                         <thead >
+                                <tr className="none">
                                     <th>Username</th>
                                     <th>First name</th>
                                     <th>Second name</th>
@@ -131,6 +130,10 @@ import { useForm } from "react-hook-form";
                                     <th>Updated at</th>
                                     <th>Operation</th>
                                  </tr>
+                                 <th colSpan={10}>
+                                 <input type="text" id="form"  onKeyUp={searchRecords} onChange={(e)=>setSearch(e.target.value)} class="form-control" placeholder="Search" style={{backgroundColor:"#ececec"}}/>
+ 
+                                 </th>
                          </thead>
                          
                    { search.length==0 ? UsersNameList.map((val) => {
@@ -139,22 +142,21 @@ import { useForm } from "react-hook-form";
                               
                           <tbody>
                             <tr>
-                              <td>{val.UserUn}</td>    
-                              
-                              <td>{val.UserFN}</td>  
-                              <td>{val.UserSN}</td>  
-                              <td>{val.UserDob}</td>  
-                              <td>{UserPLView(val.UserPL)}</td>  
-                              <td><img src={val.UserPP} style={{ width: "30%" }} alt={val.UserPP} /></td>
-                              <td>{val.UserEmail}</td>  
-                              <td>{val.UserCreatedAt}</td>  
-                              <td>{val.UserUpdatedAt}</td> 
+                              <td><td className="td-none">Username:</td>{val.UserUn}</td>    
+                              <td><td className="td-none">First name:</td>{val.UserFN}</td>  
+                              <td><td className="td-none">Second name:</td>{val.UserSN}</td>  
+                              <td><td className="td-none">Date of birth:</td>{val.UserDob}</td>  
+                              <td><td className="td-none">Permisson:</td>{UserPLView(val.UserPL)}</td>  
+                              <td><td className="td-none">Image:</td><img src={val.UserPP}  alt={val.UserPP}></img></td>
+                              <td><td className="td-none">Email:</td>{val.UserEmail}</td>  
+                              <td><td className="td-none">Created at:</td>{val.UserCreatedAt}</td>  
+                              <td><td className="td-none">Updated at:</td>{val.UserUpdatedAt}</td> 
                            
                            <td>
                           
 
                            <td><Button variant="primary" onClick={() => {routeChange(val.UserId)}}>Settings</Button></td>
-                           <td><Button onClick={() => {deleteUser(val.UserId)}}>Delete User</Button></td>
+                           <td><Button onClick={() => {deleteUser(val.UserId)}}>Delete </Button></td>
                           
                           
                           </td>
@@ -170,22 +172,21 @@ import { useForm } from "react-hook-form";
                             
                         <tbody>
                           <tr>
-                            <td>{val.UserUn}</td>    
-                            
-                            <td>{val.UserFN}</td>  
-                            <td>{val.UserSN}</td>  
-                            <td>{val.UserDob}</td>  
-                            <td>{UserPLView(val.UserPL)}</td>  
-                            <td><img src={val.UserPP} style={{ width: "30%" }} alt={val.UserPP} /></td>
-                            <td>{val.UserEmail}</td>  
-                            <td>{val.UserCreatedAt}</td>  
-                            <td>{val.UserUpdatedAt}</td> 
+                          <td><td className="td-none">Username:</td>{val.UserUn}</td>    
+                              <td><td className="td-none">First name:</td>{val.UserFN}</td>  
+                              <td><td className="td-none">Second name:</td>{val.UserSN}</td>  
+                              <td><td className="td-none">Date of birth:</td>{val.UserDob}</td>  
+                              <td><td className="td-none">Permisson:</td>{UserPLView(val.UserPL)}</td>  
+                              <td><td className="td-none">Image:</td><img src={val.UserPP}  alt={val.UserPP}></img></td>
+                              <td><td className="td-none">Email:</td>{val.UserEmail}</td>  
+                              <td><td className="td-none">Created at:</td>{val.UserCreatedAt}</td>  
+                              <td><td className="td-none">Updated at:</td>{val.UserUpdatedAt}</td> 
                          
                          <td>
                         
 
                          <td><Button variant="primary" onClick={() => {routeChange(val.UserId)}}>Settings</Button></td>
-                         <td><Button onClick={() => {deleteUser(val.UserId)}}>Delete User</Button></td>
+                         <td><Button onClick={() => {deleteUser(val.UserId)}}>Delete </Button></td>
                         
                         
                         </td>
