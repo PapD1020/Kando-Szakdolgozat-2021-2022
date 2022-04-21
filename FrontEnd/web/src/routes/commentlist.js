@@ -64,29 +64,15 @@ export default function Comment(){
     };
 
     
-   
-const ArticleStatusView=(ArticleStatus)=>{
-  if(ArticleStatus==-2){ArticleStatus = "Törölt"}
-  if(ArticleStatus==-1){ArticleStatus = "Felfüggesztett"}
-  if(ArticleStatus==0){ArticleStatus = "Inaktív"}
-  if(ArticleStatus==1){ArticleStatus = "Aktív"}
-
-  return ArticleStatus;
-}
-
-let navigate = useNavigate();
-const routeChange = (gotId) =>{
-  alert("Második selected got id: " + gotId);
-  navigate('/adminEditArticle', {state:{id: gotId}});
-}
+  
 
     return(
         <div >
            
         
-            <ReactBootStrap.Table striped bordered hover>
-                        <thead className="tabla">
-                                <tr>
+            <ReactBootStrap.Table responsive bordered hover>
+                        <thead >
+                                <tr className="none">
                                     <th>User</th>
                                     <th>Article</th>
                                     <th>Comment</th>                               
@@ -100,10 +86,10 @@ const routeChange = (gotId) =>{
 
                           <tbody >
                             <tr>
-                              <td><p>{val.UserId}</p>{val.UserUn}</td>    
-                              <td><p>{val.ArticleId}</p>{val.ArticleName}</td>  
-                              <td>{val.Comment}</td>  
-                              <td>{val.CommentCreatedAt}</td>  
+                              <td><td className="td-none">User:</td><p>{val.UserId}</p>{val.UserUn}</td>    
+                              <td><td className="td-none">Article:</td><p>{val.ArticleId}</p>{val.ArticleName}</td>  
+                              <td><td className="td-none">Comment:</td>{val.Comment}</td>  
+                              <td><td className="td-none">Created at:</td>{val.CommentCreatedAt}</td>  
                          
 
                             
