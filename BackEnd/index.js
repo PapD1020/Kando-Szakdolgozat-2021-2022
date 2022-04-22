@@ -128,7 +128,7 @@ app.get('/api/get/article/byId', (req, res) => {
     const item = req.get("item")-1;
     const userId = req.get("userId");
 
-    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = ? ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET ?";
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = ? ORDER BY Articles.ArticleCreatedAt DESC LIMIT 20 OFFSET ?";
     
     db.query(sqlSelect, [userId,item], (err, result) => {
         if(err){
@@ -183,6 +183,30 @@ app.get('/api/get/article/search/byId', (req, res) => {
         }
     });
 });
+
+//Márk
+//GET - Favorite Searching
+app.get('/api/get/favorite/search/', (req, res) => {
+    const searchedString = "%" + req.get("searchedString") + "%";
+    const item = req.get("item")-1;
+    const userId = req.get("userId");
+console.log(item + "" + userId + "" + searchedString);
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE UserFavorite.UserId = ? AND Articles.ArticleName LIKE ? ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET ?";
+    
+    db.query(sqlSelect, [userId,searchedString,item], (err, result) => {
+        if(err){
+            console.log(sqlSelect)
+            res.status(500).send({message: err.message});
+        }
+        else if (result.length == 0){
+            res.status(404).send({message: 'Not found'});
+        }else{
+            res.status(200).send(result);
+        }
+        console.log(result);
+    });
+});
+
 
 //POST - Article by userId
 //Dani - createArticle.js
@@ -533,25 +557,45 @@ app.post('/api/insert/comment', (req, res) => {
     //const sqlInsert = "INSERT INTO `ArticleComment`(`CommentId`, `UserId`, `ArticleId`,`Comment`,`CommentCreatedAt`) VALUES (?,?,?,?,?)";
     const sqlInsert = "INSERT INTO Comments (`CommentId`, `Comment`, `CommentCreatedAt`) VALUES (?,?,?)"
     db.query(sqlInsert, [commentId,comment,commentCreatedAt], (err, result) => {
-
         if(err){
+
             res.status(500).send({message: err.message});
+
         }else{
 
             const sqlInsert2 = "INSERT INTO UserComment (`UId`, `CId`) VALUES (?,?)"
             db.query(sqlInsert2, [userId,commentId], (err, result) => {
-
                 if(err){
+
+                    //send 500 and delete comment if insert fails
                     res.status(500).send({message: err.message});
+
+                    const sqlDelete = "DELETE FROM Comments WHERE CommentId = ?";
+                    db.query(sqlDelete, commentId, (err, result) => {
+                        if(err){
+                            res.status(500).send({message: err.message});
+                        }
+                    });
+
                 }else{
 
                     const sqlInsert3 = "INSERT INTO ArticleComment( `AId`, `CId` ) VALUES (?,?)"
                     db.query(sqlInsert3, [articleId,commentId], (err, result) => {
-
                         if(err){
+
+                            //send 500 and delete comment if insert fails
                             res.status(500).send({message: err.message});
+
+                            const sqlDelete = "DELETE FROM Comments WHERE CommentId = ?";
+                            db.query(sqlDelete, commentId, (err, result) => {
+                                if(err){
+                                    res.status(500).send({message: err.message});
+                                }
+                            });
+
                         }
                         else{
+                            //send 200 if everything was OK
                             res.sendStatus(200);
                         }
                     });
@@ -567,30 +611,28 @@ app.post('/api/insert/comment', (req, res) => {
 
 //DELETE-COMMENT
 app.delete('/api/delete/comment/:commentId', (req, res) => {
-    console.log("eeee");
-    const id = req.params.commentId;
-    const sqlDelete = "DELETE FROM ArticleComment WHERE CId = ?;DELETE FROM UserComment WHERE CId = ?;";
-    db.query(sqlDelete, [id,id], (err, result) => {
+    const commentId = req.params.commentId;
+   /* const sqlDelete = "DELETE FROM ArticleComment WHERE CId = ?;DELETE FROM UserComment WHERE CId = ?;";
+    db.query(sqlDelete, [commentId,commentId], (err, result) => {
         if(err){
             res.status(500).send({message: err.message});
-            //console.log(err.message)
+            console.log(err.message)
 
         }else{
             
-
-            const sqlDelete = "DELETE FROM Comments WHERE CommentId = ?";
-            db.query(sqlDelete, id, (err, result) => {
+*/
+            const sqlDelete = "DELETE Comments FROM Comments WHERE CommentId = ?";
+            db.query(sqlDelete, commentId, (err, result) => {
                 if(err){
                     res.status(500).send({message: err.message});
-                    //console.log(err.message)
                 }else{
                     res.status(200).send({message: "Comment deleted"})
                 }
             
             });
-        }
+      /*  }
         
-    });
+    });*/
 });
 
 /**************************************************FAVORITE*********************************************************************/
@@ -603,9 +645,7 @@ app.get('/api/get/article/favorite/byId', (req, res) => {
     //const item = req.body.item-1; POST-hoz body kérés
     const item = req.get("item")-1;
     const userId = req.get("userId");
-console.log(item + userId);
-    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP, UserFavorite.FavoriteId FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE UserFavorite.UserId = ? ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET ?";
-    
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE UserFavorite.UserId = ? ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET ?";
     db.query(sqlSelect, [userId,item], (err, result) => {
         if(err){
             console.log(sqlSelect)
@@ -626,12 +666,11 @@ console.log(item + userId);
 //Márk - Home/Articles.js
 app.post('/api/insert/favorite', (req, res) => {
 
-    const favoriteId = Nanoid.nanoid();
     const userId = req.body.userId;
     const articleId = req.body.articleId;
- 
+    const favoriteId = userId+articleId;
 
-    const sqlInsert = "INSERT INTO `UserFavorite`(`FavoriteId`, `UserId`, `ArticleId`) VALUES (?,?,?)";
+    const sqlInsert = "INSERT IGNORE INTO `UserFavorite`(FavoriteId,`UserId`, `ArticleId`) VALUES (?,?,?)";
     db.query(sqlInsert, [favoriteId,userId,articleId], (err, result) => {
 
         if(err){
@@ -647,11 +686,12 @@ app.post('/api/insert/favorite', (req, res) => {
 //DELETE-Favorite
 //Tomi
 //Márk - UsersFavorites/Articles.js
-app.delete('/api/delete/favorite/:favoriteId', (req, res) => {
-    const id = req.params.favoriteId;
-    console.log(id);
-    const sqlDelete = "DELETE FROM UserFavorite WHERE FavoriteId = ?";
-    db.query(sqlDelete, id, (err, result) => {
+app.delete('/api/delete/favorite/:articleId/:userId', (req, res) => {
+    const articleId = req.params.articleId;
+    const userId = req.params.userId;
+    console.log(articleId + " " + userId)
+    const sqlDelete = "DELETE FROM UserFavorite WHERE ArticleId = ? AND UserId = ?";
+    db.query(sqlDelete, [articleId, userId], (err, result) => {
         if(err){
             res.status(500).send({message: err.message});
         }
@@ -668,7 +708,7 @@ app.delete('/api/delete/favorite/:favoriteId', (req, res) => {
 app.get('/api/get/article/search/:articleName', (req, res) => {
     const name = "%" +req.params.articleName + "%";
     console.log(name);
-    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId  INNER JOIN Users ON  ArticleUser.UId=Users.UserId WHERE ArticleName LIKE ?";
+    const sqlSelect = "SELECT * FROM Articles WHERE ArticleName LIKE ?";
     db.query(sqlSelect, name, (err, result) => {
         if(err){
             console.log("Article GET error: " + err);
@@ -683,7 +723,7 @@ app.get('/api/get/article/search/:articleName', (req, res) => {
 //Tomi
 app.get('/api/get/articleall', (req, res) => {
 
-    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId  INNER JOIN Users ON  ArticleUser.UId=Users.UserId ORDER BY Articles.ArticleUpdatedAt DESC";
+    const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleUpdatedAt DESC";
     db.query(sqlSelect, (err, result) => {
         if(err){
             console.log("Article GET error: " + err);
@@ -712,22 +752,31 @@ app.get('/api/get/article/:articleId', (req, res) => {
 //Tomi
 //DELETE - Article
 app.delete('/api/delete/article/:articleId', (req, res) => {
-    const id = req.params.articleId;
-    //DELETE Articles FROM Articles INNER JOIN ArticleComment ON Articles.ArticleId=ArticleComment.ArticleId WHERE Articles.ArticleId = ?;DELETE Articles FROM Articles INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE Articles.ArticleId = ?";
-        const sqlDelete = "DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId WHERE Articles.ArticleId = ?";
-    db.query(sqlDelete, id, (err, res) => {
-        if(err){
-            console.log(err);
-        }else{
-            res.sendStatus(200);
-        }
-    });
+        const id = req.params.articleId;
+   
+        const sqlDelete = "DELETE Comments FROM Comments INNER JOIN ArticleComment ON ArticleComment.CId = Comments.CommentId WHERE ArticleComment.AId = ?";
+        db.query(sqlDelete, id, (err, result) => {
+            if(err){
+                res.status(500).send({message: err.message});
+            }else{
+
+                const sqlDelete = "DELETE Articles FROM Articles WHERE Articles.ArticleId = ?";
+                db.query(sqlDelete, id, (err, result) => {
+                    if(err){
+                        res.status(500).send({message: err.message});
+                    }else{
+                        res.status(200).send({message: "Article deleted"});
+                    }
+                });
+            }
+        });
+            
 });
 
 //Tomi
 //GET - User Searching
 app.get('/api/get/user/search/:userUn', (req, res) => {
-    const name = "%"+req.params.userUn+"%";
+    const name = "%"+req.params.userUn+ "%";
     console.log(name);
     const sqlSelect = "SELECT * FROM Users WHERE UserUn LIKE ?";
     db.query(sqlSelect, name, (err, result) => {
@@ -794,25 +843,28 @@ app.put('/api/update/user', (req, res) => {
     });
 });
 
+
 //Tomi
 //DELETE - USERS
 app.delete('/api/delete/user/:userId', (req, res) => {
     const id = req.params.userId;
     console.log(id);
-    const sqlDelete = "DELETE Users FROM Users WHERE UserId=?;DELETE Users FROM Users INNER JOIN ArticleUser ON Users.UserId=ArticleUser.UId WHERE Users.UserId = ?;DELETE Users FROM Users INNER JOIN ArticleComment ON Users.UserId=ArticleComment.UserId WHERE Users.UserId = ?;DELETE Users FROM Users INNER JOIN UserFavorite ON Users.UserId=UserFavorite.UserId WHERE Users.UserId = ?";
-    db.query(sqlDelete, id, (err, result) => {
+    const sqlDelete = "DELETE Comments FROM Comments INNER JOIN UserComment ON UserComment.CId = Comments.CommentId WHERE UserComment.UId = ?; DELETE Articles FROM Articles INNER JOIN ArticleUser ON ArticleUser.AId = Articles.ArticleId WHERE ArticleUser.UId = ?; DELETE Users FROM Users WHERE UserId = ?";
+      db.query(sqlDelete, [id,id,id], (err, result) => {
         if(err){
-            console.log("Users DELETE error: " + err);
+            res.status(500).send({message: err.message});
+        }else{
+            res.status(200).send({message: "User deleted"});
         }
-        console.log("Users DELETE result: " + result);
     });
 });
+
 
 //GET
 // Tomi
 app.get('/api/get/commentall', (req, res) => {
 
-    const sqlSelect = "SELECT Articles.ArticleName, Comments.CommentId, Comments.Comment, Comments.CommentCreatedAt FROM Articles INNER JOIN ArticleComment ON ArticleComment.AId = Articles.ArticleId INNER JOIN Comments ON Comments.CommentId = ArticleComment.CId ORDER BY Comments.CommentCreatedAt DESC";    
+    const sqlSelect = "SELECT Users.UserId,Articles.ArticleId,Users.UserUn,Articles.ArticleName,ArticleComment.CommentId,ArticleComment.Comment,ArticleComment.CommentCreatedAt FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId INNER JOIN Articles ON Articles.ArticleId = ArticleComment.ArticleId ORDER BY CommentCreatedAt DESC";
     db.query(sqlSelect, (err, result) => {
         if(err){
             console.log("Comment GET error: " + err);
@@ -825,7 +877,6 @@ app.get('/api/get/commentall', (req, res) => {
 
 
 
-
 app.listen(3001, () => {
     console.log("Running on port 3001");
 });
@@ -835,4 +886,5 @@ app.listen(3001, () => {
 /*
 app.listen(process.env.PORT || 3000, function(){
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-});*/
+});
+*/
