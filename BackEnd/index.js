@@ -708,8 +708,7 @@ app.delete('/api/delete/favorite/:articleId/:userId', (req, res) => {
 app.get('/api/get/article/search/:articleName', (req, res) => {
     const name = "%" +req.params.articleName + "%";
     console.log(name);
-    const sqlSelect = "SELECT * FROM Articles WHERE ArticleName LIKE ?";
-    db.query(sqlSelect, name, (err, result) => {
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId  INNER JOIN Users ON  ArticleUser.UId=Users.UserId WHERE ArticleName LIKE ?";   db.query(sqlSelect, name, (err, result) => {
         if(err){
             console.log("Article GET error: " + err);
         }
