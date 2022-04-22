@@ -22,6 +22,7 @@ export default function ProtectedRoutes(){
                 console.log("Auth status eldöntés után: " + AuthStatus);
             }
             else{
+                setAuthStatus(false);
                 console.log("Auth status eldöntés után: " + AuthStatus);
                 alert("Session terminated. You have been logged out.");
             }
