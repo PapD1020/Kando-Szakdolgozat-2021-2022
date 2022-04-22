@@ -73,7 +73,7 @@ export default function Comment(){
             <ReactBootStrap.Table responsive bordered hover>
                         <thead >
                                 <tr className="none">
-                                    <th>User</th>
+                                    
                                     <th>Article</th>
                                     <th>Comment</th>                               
                                     <th>Created at</th>                  
@@ -86,7 +86,7 @@ export default function Comment(){
 
                           <tbody >
                             <tr>
-                              <td><td className="td-none">User:</td><p>{val.UserId}</p>{val.UserUn}</td>    
+                           
                               <td><td className="td-none">Article:</td><p>{val.ArticleId}</p>{val.ArticleName}</td>  
                               <td><td className="td-none">Comment:</td>{val.Comment}</td>  
                               <td><td className="td-none">Created at:</td>{val.CommentCreatedAt}</td>  

@@ -713,11 +713,8 @@ app.get('/api/get/article/:articleId', (req, res) => {
 //DELETE - Article
 app.delete('/api/delete/article/:articleId', (req, res) => {
     const id = req.params.articleId;
-   
-        //"DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId WHERE ArticleId = ?" ez jó
-        //DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId INNER JOIN ArticleComment ON Articles.ArticleId=ArticleComment.ArticleId INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE Articles.ArticleId = ? jó
-    
-        const sqlDelete = "DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId WHERE Articles.ArticleId = ?;DELETE Articles FROM Articles INNER JOIN ArticleComment ON Articles.ArticleId=ArticleComment.ArticleId WHERE Articles.ArticleId = ?;DELETE Articles FROM Articles INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE Articles.ArticleId = ?";
+    //DELETE Articles FROM Articles INNER JOIN ArticleComment ON Articles.ArticleId=ArticleComment.ArticleId WHERE Articles.ArticleId = ?;DELETE Articles FROM Articles INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE Articles.ArticleId = ?";
+        const sqlDelete = "DELETE Articles FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId=ArticleUser.AId WHERE Articles.ArticleId = ?";
     db.query(sqlDelete, id, (err, res) => {
         if(err){
             console.log(err);
@@ -730,7 +727,7 @@ app.delete('/api/delete/article/:articleId', (req, res) => {
 //Tomi
 //GET - User Searching
 app.get('/api/get/user/search/:userUn', (req, res) => {
-    const name = "%"+req.params.userUn+ "%";
+    const name = "%"+req.params.userUn+"%";
     console.log(name);
     const sqlSelect = "SELECT * FROM Users WHERE UserUn LIKE ?";
     db.query(sqlSelect, name, (err, result) => {
@@ -815,7 +812,7 @@ app.delete('/api/delete/user/:userId', (req, res) => {
 // Tomi
 app.get('/api/get/commentall', (req, res) => {
 
-    const sqlSelect = "SELECT Users.UserId,Articles.ArticleId,Users.UserUn,Articles.ArticleName,ArticleComment.CommentId,ArticleComment.Comment,ArticleComment.CommentCreatedAt FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId INNER JOIN Articles ON Articles.ArticleId = ArticleComment.ArticleId ORDER BY CommentCreatedAt DESC";
+    const sqlSelect = "SELECT Articles.ArticleName, Comments.CommentId, Comments.Comment, Comments.CommentCreatedAt FROM Articles INNER JOIN ArticleComment ON ArticleComment.AId = Articles.ArticleId INNER JOIN Comments ON Comments.CommentId = ArticleComment.CId ORDER BY Comments.CommentCreatedAt DESC";    
     db.query(sqlSelect, (err, result) => {
         if(err){
             console.log("Comment GET error: " + err);
@@ -826,21 +823,6 @@ app.get('/api/get/commentall', (req, res) => {
     });
 });
 
-//DELETE-COMMENT
-//Tomi
-app.delete('/api/delete/comment/:commentId', (req, res) => {
-    const id = req.params.commentId;
-    const sqlDelete = "DELETE FROM ArticleComment WHERE CommentId = ?";
-    db.query(sqlDelete, id, (err, result) => {
-        if(err){
-            console.log("Comment DELETE error: " + err);
-        }else{
-            res.sendStatus(200);
-        }
-        console.log("Comment DELETE result: " + result);
-        
-    });
-});
 
 
 
