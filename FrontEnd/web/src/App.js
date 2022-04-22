@@ -54,7 +54,7 @@ export default function App(){
               setLoginStatus(true);
               setLoginName(response.data.user[0].UserUn);
               console.log(response.data.user[0].UserPL)
-              if(response.data.user[0].UserPL){
+              if(response.data.user[0].UserPL === 9){
                 adminTrue();
               }
           }
@@ -492,16 +492,6 @@ export default function App(){
                         <div className="row mb-5">
                             <div className="col-sm-auto">
                                 <input className="btn btn-outline-primary" type="submit" value={"Register"}/>
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            <div className="col">
-                               <div className="text-danger">
-                                {ErrorMessage && (
-                                    <p>{ErrorMessage}</p>
-                                )}
-                               </div>
                             </div>
                         </div>
                     </form>
