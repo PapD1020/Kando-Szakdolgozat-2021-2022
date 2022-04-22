@@ -89,9 +89,8 @@ export default function Article(){
     //DELETE - POST
     const deleteArticle = (articleId) =>{
       Axios.delete(`http://localhost:3001/api/delete/article/${articleId}`); // with altgr+7 you can add variables to it
-
-      alert("Successfuly deleted. Please click on the refresh button.")
-      //kell frissítés, hogy eltünjön a törölt, submitos nem működik
+      refreshArticleData();
+   
     };
 
     
@@ -112,7 +111,7 @@ export default function Article(){
  
   alert("Successfuly changed! Please click on the refresh button.");
   setShow(false);
-  
+  refreshArticleData();
 };
 const ArticleStatusView=(ArticleStatus)=>{
   if(ArticleStatus==-2){ArticleStatus = "Törölt"}

@@ -864,8 +864,7 @@ app.delete('/api/delete/user/:userId', (req, res) => {
 // Tomi
 app.get('/api/get/commentall', (req, res) => {
 
-    const sqlSelect = "SELECT Users.UserId,Articles.ArticleId,Users.UserUn,Articles.ArticleName,ArticleComment.CommentId,ArticleComment.Comment,ArticleComment.CommentCreatedAt FROM ArticleComment INNER JOIN Users ON Users.UserId = ArticleComment.UserId INNER JOIN Articles ON Articles.ArticleId = ArticleComment.ArticleId ORDER BY CommentCreatedAt DESC";
-    db.query(sqlSelect, (err, result) => {
+    const sqlSelect = "SELECT Articles.ArticleName, Comments.CommentId, Comments.Comment, Comments.CommentCreatedAt FROM Articles INNER JOIN ArticleComment ON ArticleComment.AId = Articles.ArticleId INNER JOIN Comments ON Comments.CommentId = ArticleComment.CId ORDER BY Comments.CommentCreatedAt DESC";      db.query(sqlSelect, (err, result) => {
         if(err){
             console.log("Comment GET error: " + err);
         }

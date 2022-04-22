@@ -44,9 +44,9 @@ export default function Comment(){
       })};
     //GET - POST
     //Refresh Post data
-    const refreshArticleData = () => {
+    const refreshCommentData = () => {
 
-        Axios.get('http://localhost:3001/api/get/articleall').then((response) => {
+        Axios.get('http://localhost:3001/api/get/commentall').then((response) => {
     
         setCommentList(response.data);
         //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
@@ -58,9 +58,9 @@ export default function Comment(){
     //DELETE - POST
     const deleteComment = (commentId) =>{
       Axios.delete(`http://localhost:3001/api/delete/comment/${commentId}`); // with altgr+7 you can add variables to it
-
-      alert("Successfuly deleted. Please click on the refresh button.")
-      //kell frissítés, hogy eltünjön a törölt, submitos nem működik
+      refreshCommentData();
+      
+      
     };
 
     
