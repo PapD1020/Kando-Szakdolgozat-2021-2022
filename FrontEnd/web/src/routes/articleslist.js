@@ -88,9 +88,9 @@ export default function Article(){
 
     //DELETE - POST
     const deleteArticle = (articleId) =>{
-      Axios.delete(`http://localhost:3001/api/delete/article/${articleId}`); // with altgr+7 you can add variables to it
+      Axios.delete(`http://localhost:3001/api/delete/article/${articleId}`).then(() => {  // with altgr+7 you can add variables to it
       refreshArticleData();
-   
+      });
     };
 
     

@@ -61,9 +61,9 @@ import { useForm } from "react-hook-form";
   
    //DELETE - USERS
   const deleteUser = (userId) =>{
-    Axios.delete(`http://localhost:3001/api/delete/user/${userId}`); // with altgr+7 you can add variables to it
+    Axios.delete(`http://localhost:3001/api/delete/user/${userId}`).then(() => {  // with altgr+7 you can add variables to it
     refreshUserData();
-   
+    });
   };
 
     // Search Records here 

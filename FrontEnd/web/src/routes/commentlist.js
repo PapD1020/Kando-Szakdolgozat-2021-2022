@@ -57,10 +57,10 @@ export default function Comment(){
 
     //DELETE - POST
     const deleteComment = (commentId) =>{
-      Axios.delete(`http://localhost:3001/api/delete/comment/${commentId}`); // with altgr+7 you can add variables to it
+      Axios.delete(`http://localhost:3001/api/delete/comment/${commentId}`).then(() => { // with altgr+7 you can add variables to it
       refreshCommentData();
       
-      
+      });
     };
 
     

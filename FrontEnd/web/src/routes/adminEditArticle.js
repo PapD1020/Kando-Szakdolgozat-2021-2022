@@ -15,7 +15,7 @@ export default function EditArticle() {
   const [ArticleStatusUpd, setArticleStatusUpd] = useState('');
 
   const location = useLocation();
-
+ 
   const [LoginStatus, setLoginStatus] = useState(false);
 
   const [OneArticleList, setOneArticleList] = useState([]);
@@ -87,7 +87,9 @@ export default function EditArticle() {
       articleType: ArticleTypeUpd,
       articleStatus: ArticleStatusUpd,
       articleUpdatedAt: date
+      
     });
+    
   };
   const ArticleStatusView=(ArticleStatus)=>{
     if(ArticleStatus==-2){ArticleStatus = "Törölt"}

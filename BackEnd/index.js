@@ -723,8 +723,7 @@ app.get('/api/get/article/search/:articleName', (req, res) => {
 //Tomi
 app.get('/api/get/articleall', (req, res) => {
 
-    const sqlSelect = "SELECT * FROM Articles ORDER BY ArticleUpdatedAt DESC";
-    db.query(sqlSelect, (err, result) => {
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId  INNER JOIN Users ON  ArticleUser.UId=Users.UserId ORDER BY Articles.ArticleUpdatedAt DESC";    db.query(sqlSelect, (err, result) => {
         if(err){
             console.log("Article GET error: " + err);
         }
