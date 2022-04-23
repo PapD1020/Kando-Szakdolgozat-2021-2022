@@ -88,8 +88,6 @@ export default function Article(){
     );
 }
 
-
-//PureComponent - jobb optimalizáció, pl. nincsenek felesleges újra renderelések
 class CardContainer extends React.PureComponent {    
 
   render() {

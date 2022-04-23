@@ -11,10 +11,7 @@ export default function CreateArticle(){
     const [ArticleMDescr, setArticleMDescr] = useState('');
     const [ArticleImg, setArticleImg] = useState('');
     const [ArticleType, setArticleType] = useState('');
-    
     const [LoginStatus, setLoginStatus] = useState('');
-
-    const [ErrorMessage, setErrorMessage] = useState('');
 
     Axios.defaults.withCredentials = true;
 
@@ -45,8 +42,7 @@ export default function CreateArticle(){
 
     const submitArticleData = () => {
 
-        //articleName - backend variable name
-        Axios.post('http://localhost:3001/api/insert/article/byId', { //URL for our api (node.js backend)
+        Axios.post('http://localhost:3001/api/insert/article/byId', {
           userId: GotUserId.current,
           articleName: ArticleName,
           articleSmDescr: ArticleSmDescr,

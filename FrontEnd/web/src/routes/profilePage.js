@@ -16,6 +16,7 @@ export default function ProfileUpdate(){
 
     const GotUserId = useRef(null);
 
+    Axios.defaults.withCredentials = true;
 
     const current = new Date();
     const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
@@ -47,9 +48,6 @@ export default function ProfileUpdate(){
 
     const password = useRef({});
     password.current = watch("firstPw", "");
-
-    Axios.defaults.withCredentials = true;
-
 
     useEffect(() => {
         Axios.get('http://localhost:3001/api/login/user').then((response) => {
@@ -95,7 +93,6 @@ export default function ProfileUpdate(){
             console.log("Update user response: " + JSON.stringify(response)),
             handleShowSucUpd()
         );
-        //alert("Successfully updated as: " + GotUserId.current);
     };
 
     const changePassword = () => {
@@ -112,13 +109,11 @@ export default function ProfileUpdate(){
     const [ModalState, setModalState] = useState(false);
 
     const modalClose = () => setModalState(false);
-
     const modalOpen = () => setModalState(true);
 
     const [ModalStatePw, setModalStatePw] = useState(false);
 
     const modalClosePw = () => setModalStatePw(false);
-
     const modalOpenPw = () => setModalStatePw(true);
 
     const [showSucUpd, setShowSucUpd] = useState(false);
@@ -255,8 +250,8 @@ export default function ProfileUpdate(){
                                         <input type="text" className="form-control" defaultValue={val.UserFN}{
                                             ...register2("userFNUpd", {
                                                 required: false,
-                                                minLength: 3, //Mennyi legyen?
-                                                maxLength: 20, //Mennyi legyen?
+                                                minLength: 3,
+                                                maxLength: 20,
                                             })
                                         }onChange={(e) => {
                                             setUserFNUpd(e.target.value);
@@ -271,8 +266,8 @@ export default function ProfileUpdate(){
                                         <input type="text" className="form-control" defaultValue={val.UserSN}{
                                             ...register2("userSNUpd", {
                                                 required: false,
-                                                minLength: 3, //Mennyi legyen?
-                                                maxLength: 20, //Mennyi legyen?
+                                                minLength: 3,
+                                                maxLength: 20,
                                             })
                                         }onChange={(e) => {
                                             setUserSNUpd(e.target.value);

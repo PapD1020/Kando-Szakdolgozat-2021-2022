@@ -102,7 +102,6 @@ export default function App(){
       });
   };
 
-
   const logout = () =>{
 
     Axios.get("http://localhost:3001/api/user/logout").then((response) => {
@@ -434,9 +433,9 @@ export default function App(){
                                     <label className="display-6 mb-3">First name:</label>
                                     <input type="text" className="mb-3 p-2 form-control"{
                                         ...register2("userFNReg", {
-                                            required: true, //kötelező legyen?
-                                            minLength: 3, //Mennyi legyen?
-                                            maxLength: 20, //Mennyi legyen?
+                                            required: true,
+                                            minLength: 3,
+                                            maxLength: 20,
                                         })
                                     } onChange={(e) => {
                                         setUserFNReg(e.target.value);
@@ -455,9 +454,9 @@ export default function App(){
                                     <label className="display-6 mb-3">Second name:</label>
                                     <input type="text" className="mb-3 p-2 form-control"{
                                         ...register2("userSNReg", {
-                                            required: true, //kötelező legyen?
-                                            minLength: 3, //Mennyi legyen?
-                                            maxLength: 20, //Mennyi legyen?
+                                            required: true,
+                                            minLength: 3,
+                                            maxLength: 20,
                                         })
                                     } onChange={(e) => {
                                         setUserSNReg(e.target.value);
@@ -476,7 +475,7 @@ export default function App(){
                                     <label className="display-6 mb-3">Date of birth:</label>
                                     <input type="date" className="mb-3 p-2 form-control"{
                                         ...register2("userDobReg", {
-                                            required: true, //kötelező legyen?
+                                            required: true,
                                         })
                                     } onChange={(e) => {
                                         setUserDobReg(e.target.value);

@@ -6,21 +6,14 @@ import { Card, Button } from 'react-bootstrap';
 export default function CreateArticle(props){
   
     const [ArticleNameList, setArticleNameList] = useState([]);
-    
-    const [LoginStatus, setLoginStatus] = useState('');
 
     const GotUserId = useRef(null);
     
-
     Axios.defaults.withCredentials = true;
 
-      //check every time we refresh the page if a user is logged in
       useEffect(() => {
           Axios.get('http://localhost:3001/api/login/user').then((response) => {
-          //ellenőrzésre
-          //console.log("Are we logged in: " + JSON.stringify(response));
               if(response.data.loggedIn === true){
-                  setLoginStatus(response.data.user[0].UserUn);
                   GotUserId.current = response.data.user[0].UserId;
               }
           }).then(() => {
@@ -35,7 +28,6 @@ export default function CreateArticle(props){
           });
       }, []);
 
-      
       let navigate = useNavigate();
       const routeChange = (gotId) =>{
         navigate('/editArticle', {state:{id: gotId}});

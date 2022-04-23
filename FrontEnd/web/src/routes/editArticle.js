@@ -14,15 +14,7 @@ export default function EditArticle() {
   const [ArticleTypeUpd, setArticleTypeUpd] = useState('');
   const [ArticleStatusUpd, setArticleStatusUpd] = useState('');
 
-  const [DuplicateError, setDuplicateError] = useState('');
-  const [DuplicateErrorMsg, setDuplicateErrorMsg] = useState('');
-  const [SuccessfullMessage, setSuccessfullMessage] = useState('');
-  const [ErrorMessage, setErrorMessage] = useState('');
-
-
   const location = useLocation();
-
-  const [LoginStatus, setLoginStatus] = useState(false);
 
   const [OneArticleList, setOneArticleList] = useState([]);
 
@@ -54,6 +46,7 @@ export default function EditArticle() {
   }
 
   const refreshArticleData = () => {
+
     Axios.get('http://localhost:3001/api/get/article/oneById', {
       headers: {
         'content-type': "application/json",
@@ -82,8 +75,7 @@ export default function EditArticle() {
 
   const submitArticleData = () => {
 
-    //articleName - backend variable name
-    Axios.put('http://localhost:3001/api/update/article/byUser', { //URL for our api (node.js backend)
+    Axios.put('http://localhost:3001/api/update/article/byUser', {
       articleId: location.state.id,
       articleName: ArticleNameUpd,
       articleSmDescr: ArticleSmDescrUpd,
