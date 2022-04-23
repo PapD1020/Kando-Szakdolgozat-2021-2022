@@ -51,7 +51,18 @@ export default function CreateArticle(){
           articleType: ArticleType,
           articleCreatedAt: date,
           articleUpdatedAt: date
-      }).then(() => {
+      }).then((response) => {
+          if(response.status === 409){
+              console.log("409: " + response.data.message);
+          }
+
+          if(response.status === 500){
+            console.log("500: " + response.data.message);
+          }
+
+          if(response.status === 200){
+            console.log("200: " + response.data.message);
+          }
             handleShowSucUpd()
       })
     };
@@ -104,7 +115,7 @@ export default function CreateArticle(){
                                         ...register("articleName", {
                                             required: true,
                                             minLength: 1,
-                                            maxLength: 20
+                                            maxLength: 100
                                         })
                                     } onChange={(e) => {
                                         setArticleName(e.target.value);
@@ -146,7 +157,7 @@ export default function CreateArticle(){
                                     <textarea rows="3" className="mb-3 p-2 form-control"{
                                         ...register("articleSmDescr", {
                                             required: true,
-                                            minLength: 1,
+                                            minLength: 10,
                                             maxLength: 100
                                         })
                                     } onChange={(e) => {
@@ -174,8 +185,8 @@ export default function CreateArticle(){
                                     <textarea rows="10" cols="170" className="mb-3 p-2 form-control"{
                                         ...register("articleMDescr", {
                                             required: true,
-                                            minLength: 3,
-                                            maxLength: 500
+                                            minLength: 1,
+                                            maxLength: 1000
                                         })
                                     } onChange={(e) => {
                                         setArticleMDescr(e.target.value);
@@ -188,8 +199,8 @@ export default function CreateArticle(){
                             <div className="col-sm-auto">
                                 <div className="errordiv text-danger mb-2">
                                     {errors?.articleMDescr?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a main description of your article.</p></div>}
-                                    {errors?.articleMDescr?.type === "minLength" && <div><h5>Your article's main description is too short.</h5><p>Your article's main description length must be between 150 and 500 characters.</p></div>}
-                                    {errors?.articleMDescr?.type === "maxLength" && <div><h5>Your article's main description is too long.</h5><p>Your article's main description length must be between 150 and 500 characters.</p></div>}
+                                    {errors?.articleMDescr?.type === "minLength" && <div><h5>Your article's main description is too short.</h5><p>Your article's main description length must be between 50 and 1000 characters.</p></div>}
+                                    {errors?.articleMDescr?.type === "maxLength" && <div><h5>Your article's main description is too long.</h5><p>Your article's main description length must be between 50 and 1000 characters.</p></div>}
                                     {errors?.articleMDescr?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
                                 </div>
                             </div>

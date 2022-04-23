@@ -13,7 +13,7 @@ const saltRounds = 10;
 
 const jwt = require('jsonwebtoken');
 
-
+/*
 //Nethelyes
 const db = mysql.createPool({
     host: 'mysql.nethely.hu',
@@ -21,17 +21,17 @@ const db = mysql.createPool({
     password: 'KozosAdatbazis1',
     database: 'ideashare'
 });
-
+*/
 
 //Xampos
-/*
+
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
     database: 'ideashare'
 });
-*/
+
 
 //Middleware
 //for express-session
@@ -233,22 +233,38 @@ app.post('/api/insert/article/byId', (req, res) => {
     const articleCreatedAt = req.body.articleCreatedAt;
     const articleUpdatedAt = req.body.articleUpdatedAt;
 
-    const sqlInsert = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleType`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?); INSERT INTO `ArticleUser`(`Uid`, `Aid`) VALUES (?, ?)";
+    const sqlInsert = "INSERT INTO `Articles`(`ArticleId`, `ArticleName`, `ArticleSmDescr`, `ArticleMDescr`, `ArticleImg`, `ArticleType`, `ArticleStatus`, `ArticleCreatedAt`, `ArticleUpdatedAt`) VALUES (?,?,?,?,?,?,?,?,?)";
 
 
-        db.query(sqlInsert, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleCreatedAt, articleUpdatedAt, userId, articleId], (err, result) => {
+        db.query(sqlInsert, [articleId, articleName, articleSmDescr, articleMDescr, articleImg, articleType, articleStatus, articleCreatedAt, articleUpdatedAt], (err, result) => {
 
             if(err){
-                if(err.errno == 1062){
+                if(err.errno === 1062){
                     res.status(409).send({message: "There's a post with exactly same small or detailed description"});
                 }
                 else{
-                    res.status(500).send({message: err.message});
+                    res.status(500).send({message: err});
+
+                    const sqlDelete = "DELETE FROM Articles WHERE ArticleId = ?";
+                    db.query(sqlDelete, articleId, (err, result) => {
+
+                        if(err){
+                            res.status(500).send({message: err.message});
+                        }
+                    })
                 }
             }
+
             else{
-               // res.status(200).send(JSON.stringify(result[0]) + JSON.stringify(result[1]));
-               res.status(200).send({message: "Article successfully created."});
+                const sqlInsert2 = "INSERT INTO `ArticleUser`(`UId`, `AId`) VALUES (?, ?)";
+                db.query(sqlInsert2, [userId, articleId])
+
+                if(err){
+                    res.status(500).send({message: err});
+                }
+                else{
+                    res.status(200).send({message: "Article successfully created."});
+                }
             }
         });
 });
@@ -425,7 +441,7 @@ app.post('/api/login/user', (req, res) => {
                     //JWT creation
                     const id = result[0].UserId;
                     const token = jwt.sign({id}, "jwtSecret", { //ezt a secretet kell a verify-nál is megadni (verifyJWT)
-                        expiresIn: 3600, //60 mins, 300 = 5 mins
+                        expiresIn: 36000, //60 mins, 300 = 5 mins
                     });
 
                     req.session.user = result;
