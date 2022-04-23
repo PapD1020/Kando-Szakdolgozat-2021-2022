@@ -1,6 +1,6 @@
 import  Axios  from "axios";
 import { useEffect, useState} from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import App from "./App";
 
 
@@ -8,28 +8,44 @@ export default function ProtectedRoutes(){
 
     //const AuthStatus = useRef(false);
 
-    const [AuthStatus, setAuthStatus] = useState(false);
+    const [Auth, setAuth] = useState(false);
+    const [Done,setDone] = useState(false);
     Axios.defaults.withCredentials = true;
 
     useEffect(() => {
         Axios.get('http://localhost:3001/api/login/user/auth', {headers: {
             "x-access-token": localStorage.getItem("token")
         }}).then((response) => {
-            console.log("Auth status eldöntés előtt: " + AuthStatus.current);
-            if(response.data.isUserAuth === true){
-                setAuthStatus(response.data.isUserAuth);
-                //AuthStatus.current = response.data.isUserAuth;
-                console.log("Auth status eldöntés után: " + AuthStatus);
+            console.log("isUserAuth response: " + JSON.stringify(response.data));
+            console.log("isUserAuth response isUserAuth: " + JSON.stringify(response.data.isUserAuth));
+            console.log("isUserAuth response auth: " + JSON.stringify(response.data.auth));
+  
+            if(response.data.isUserAuth === undefined){
+                if(response.data.auth === false){
+                    console.log("ifben1: " + response.data.auth);
+                    setAuth(response.data.auth);
+                    setDone(true);
+                }
             }
             else{
-                setAuthStatus(false);
-                console.log("Auth status eldöntés után: " + AuthStatus);
-                alert("Session terminated. You have been logged out.");
+                if(response.data.isUserAuth === true){
+                    console.log("ifben2: " + response.data.isUserAuth);
+                    setAuth(response.data.isUserAuth);
+                    setDone(true);
+                }
             }
-            console.log("isUserAuth response: " + JSON.stringify(response.data));
-            console.log(response.data.isUserAuth);
-        });
+        })
     }, []);
+    console.log("authstatus: "+Auth);
+    return Done === true ?
+             Auth ? <Outlet/> : <Navigate to="/" />
+             :
+             <Wait/>
+             ;
+}
 
-    return AuthStatus ? <Outlet/> : <App />;
+function Wait (){
+    return (
+        <></>
+    )
 }

@@ -6,6 +6,7 @@ import { Card, Button, Spinner } from 'react-bootstrap';
 
 var articleData = [];
 var found = false;
+var hasMore = false;
 var lastFetchedArticleItemId = 1;
 
 export default function Article(){
@@ -29,11 +30,13 @@ export default function Article(){
             try {
                 if (res.status !== 200) {
                     console.log('not200');
+                    hasMore = false;
                     found=false;
                 } else {
                     const jsonRes = res.data;
                     console.log(articleData);
                     console.log(lastFetchedArticleItemId + " " + jsonRes.length);
+                    hasMore = true;
                     found=true;
                     console.log("Message: " + JSON.stringify(res.status));
                     var articleResultId = 0;
@@ -61,7 +64,7 @@ export default function Article(){
         <InfiniteScroll
           dataLength={getData.length}
           next={fetchMoreData()}
-          hasMore={found}
+          hasMore={hasMore}
           loader={<div className="text-center mb-5">
             <Button variant="primary" disabled>
             <Spinner
@@ -77,7 +80,7 @@ export default function Article(){
         >
            { found === true ?
               getData.map((index, i) => (
-                <CardContainer key={index} item={index} data={articleData[i]}/>
+                <CardContainer key={i} item={index} data={articleData[i]}/>
               ))
           : null}
         </InfiniteScroll>
