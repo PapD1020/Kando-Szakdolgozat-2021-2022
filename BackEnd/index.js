@@ -106,7 +106,7 @@ app.get('/api/get/article', (req, res) => {
 
     const item = req.get("item")-1;
 
-    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 ORDER BY ArticleUpdatedAt ASC LIMIT 20  OFFSET ?";
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 ORDER BY ArticleUpdatedAt DESC LIMIT 20  OFFSET ?";
     
     db.query(sqlSelect, [item],(err, result) => {
         if(err){
