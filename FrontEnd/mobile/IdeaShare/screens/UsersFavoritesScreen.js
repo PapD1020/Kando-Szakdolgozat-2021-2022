@@ -1,12 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { useDimensions, useDeviceOrientation } from '@react-native-community/hooks';
+
 //import { Rating, AirbnbRating } from 'react-native-ratings';
-import Articles from '../components/Home/Articles';
-import Header from '../components/Home/Header';
 //import { getStatusBarHeight } from 'react-native-status-bar-height';
 
-const HomeScreen = () => {
+import Articles from '../components/UsersFavorites/Articles';
+import Header from '../components/UsersFavorites/Header';
+
+
+const UsersFavoritesScreen = () => {
   const {landscape} = useDeviceOrientation();
  
   const [searchedStr, setSearchedStr] = useState('');
@@ -27,9 +30,9 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#cec8b0"
+    backgroundColor: "#cec8b0",
     //paddingTop: getStatusBarHeight(),
   },
 });
 
-export default HomeScreen;
+export default UsersFavoritesScreen;

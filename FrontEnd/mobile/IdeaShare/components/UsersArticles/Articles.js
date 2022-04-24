@@ -1,34 +1,39 @@
-import React, { useState, useEffect, useMemo, useCallback, useContext, useRef } from "react";
-import { View, ScrollView, Text, Dimensions, StyleSheet, TouchableOpacity, FlatList, ImageBackground } from "react-native";
-import ScrollableModal from "../globals/ScrollableModalWithRef";
+import React, { useState, useRef, useEffect, useMemo, useCallback, useContext } from "react";
+import { View, Keyboard, ScrollView, Text, TextInput, Image, Dimensions, StyleSheet, TouchableOpacity, Pressable, FlatList, ImageBackground, KeyboardAvoidingView } from "react-native";
+import ScrollableModal from "../globals/ScrollableModal";
 import { PanelHandlerContext } from "../globals/Context";
 import { requestCameraPermission, requestStoragePermission } from "../globals/PermRequests";
 import * as ImagePicker from 'react-native-image-picker';
 import Animated, { useSharedValue, useAnimatedStyle, Easing, withSpring, withTiming } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import FastImage from 'react-native-fast-image'
+import { createGlobalState } from 'react-hooks-global-state';
 import { useFocusEffect } from '@react-navigation/native';
+import RenderHtml from 'react-native-render-html';
 import ContentLoader, { Facebook, Circle, Rect } from 'react-content-loader/native'
 import Toast from 'react-native-toast-message';
 
 //import 'react-native-gesture-handler';
-//import { createGlobalState } from 'react-hooks-global-state';
+
+//import WebView from "react-native-webview";
+//import { RichEditor } from "react-native-pell-rich-editor";
 
 
-//const initialState = { scrollUnlock: true };
-//const { useGlobalState } = createGlobalState(initialState);
+const initialState = { scrollUnlock: true, edit: false, userId: '', articleId: '', articleName: '', articleSmDescr: '', articleMDescr: '', articleImg: '', articleType: '', articleUpdatedAt: '' };
+const { useGlobalState } = createGlobalState(initialState);
 
 var flatListHeight = 0;
-var globalRef = null;
+var globalTextInputRef = null;
+var cardNumberGlobal = null;
 var lastFetchedArticleItemId = 1;
 var articleData = [];
+var userId = null;
+var isKeyboardOpen = false;
+var articleUpdatedAt = null;
 var articleId = null;
 var scrollOffsetVar = "0";
-var userId = null;
 
 const Articles = ({searchedStr}) => {
-
     //Toast message
     const showToast = (type,text1,text2) => {
         Toast.show({
@@ -39,85 +44,25 @@ const Articles = ({searchedStr}) => {
         });
     }
 
-    //swipepanel
-  /*  const [panelProps, setPanelProps] = useState({
-        fullWidth: true,
-        openLarge: true,
-        showCloseButton: true,
-        zIndex : 100,
-        onClose: () => closePanel(),
-        onPressCloseButton: () => closePanel(),
-        style: styles.comments,
-        // ...or any prop you want
-    });*/
+    //Modal
     const [isModalVisible, setModalVisible] = useState(false);
-    const [content, setContent] = useState('');
-    const modalRef = useRef();
+
     const panelHandlerContext = useMemo(() => ({
-        openPanel: (id,content) => {
+        openPanel: (id) => {
             articleId = id;
-            setContent(content);
-            //console.log(isModalVisible);
+            setModalVisible(true);
         },
          closePanel: () => {
-            modalRef.current.close();
-            setContent('');
-        },
-        saveToFavorites: (articleId) => {
-            AsyncStorage.getItem('id').then((id) => {
-                userId = id;
-                const payload = {
-                    userId,
-                    articleId
-                };
-                fetch(`${global.NodeJS_URL}/api/insert/favorite`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
-                })
-                .then(async res => { 
-                    try {
-                        if (res.status !== 200) {
-                            const jsonRes = await res.json();
-                                showToast('error','Error',jsonRes.message);
-                        }else{
-                            const jsonRes = await res.json();
-                            showToast('success','Success',jsonRes.message);
-                        }
-                    } catch (err) {
-                        if (data == ''){ //if there isn't already loaded results
-                            setIsLoading(false);
-                            showToast('error','Error',err.toString());
-                        }
-                        //console.log(err);
-                    };
-                })
-                .catch(err => {
-                    if (data == ''){ //if there isn't already loaded results
-                        setIsLoading(false);
-                        showToast('error','Error',err.toString());
-                    }
-                    //console.log(err);
-                });
-            });
+            setModalVisible(false);
         },
     }));
-
-    useEffect(() => { 
-        if (content != ""){
-        modalRef.current.open();
-        }
-    }, [content]);
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
       };
 
-
-
     //ImagePicker RN
+
     const [pickerResponse, setPickerResponse] = useState(null);
 
     const onImageLibraryPress = useCallback(() => {
@@ -146,7 +91,7 @@ const Articles = ({searchedStr}) => {
     //imagePicker
     const [pickedImagePath, setPickedImagePath] = useState('');
 
-    
+
     //infiniteScroll
     const flatlistRef = useRef();
     const [data, setData] = useState ([]);
@@ -154,33 +99,99 @@ const Articles = ({searchedStr}) => {
     const [getLastFetchedArticleItemId, setLastFetchedArticleItemId] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [isSearch, setIsSearch] = useState(false);
-    useEffect(() => { 
+
+    useEffect(() => {
         AsyncStorage.getItem('id').then((id) => {
+            userId = id;
             if (searchedStr != ''){
                 setIsSearch(true);
                 fetchMore(true,true,searchedStr)
             }else{
                 fetchMore(true);
             }
-        });
+        })
     }, [searchedStr]);
 
-    
+    //ScrollToIndex
+    const scrollToIndex = (cardNumber) => {
+        if ( flatlistRef.current != null && data !=[''] ) {
+            flatlistRef.current.scrollToIndex({
+                animated: true,
+                index: cardNumber,
+                viewPosition: 0
+            })
+        }
+
+        if (globalTextInputRef != undefined) {
+            globalTextInputRef.blur();
+        }
+    }
+
+    //ScrollOffset
+    const ScrollToOffset = (o,a) => {
+        if ( flatlistRef.current != null && data !=['']) {
+            flatlistRef.current.scrollToOffset({
+                animated: a,
+                offset: Number(o)
+            })
+        }
+    }
+
+    //get scroll position
+    onScroll = (event) => {
+        scrollOffsetVar = event.nativeEvent.contentOffset.y;
+    }
+
+    //when screen unfocused(return) or focused: get/store scroll position; and listen to keyboard: scroll back to top of the card if keyboard is closed
+    useFocusEffect(
+        //when the screen is focused
+
+        React.useCallback(() => {
+            AsyncStorage.getItem('scrollOffsetUsersArticles').then((offset) => {
+                ScrollToOffset(offset,false);
+            })
+
+            const keyboardShowListener = Keyboard.addListener(
+                'keyboardDidShow',
+                () => {
+                }
+            );
+
+            const keyboardHideListener = Keyboard.addListener(
+                'keyboardDidHide',
+                () => {
+                    if ( articleData != [] ) {
+                        scrollToIndex(cardNumberGlobal);
+                    }
+                }
+            );
+
+            // when the screen is unfocused
+             // Useful for cleanup functions
+            return () => {
+                AsyncStorage.setItem('scrollOffsetUsersArticles', scrollOffsetVar.toString());
+                
+                keyboardHideListener.remove();
+                keyboardShowListener.remove();
+            };
+
+        }, []));
+
     const fetchMore = (refreshing, isSearch, searchedStr) => {
         if (refreshing == true) {
             setIsLoading(true);
             lastFetchedArticleItemId = 1;
             //setArticleData([]);////state-es articledata-hoz
+            setData([]); 
             articleData = [];
-            setData([]);
         }
         if (isSearch){
-
-            fetch(`${global.NodeJS_URL}/api/get/article/search`, {
+            fetch(`${global.NodeJS_URL}/api/get/article/search/byId`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'item' : lastFetchedArticleItemId,
+                    'userId' : userId,
                     'searchedString' : searchedStr,
                 },
             })
@@ -222,7 +233,7 @@ const Articles = ({searchedStr}) => {
                         setIsLoading(false);
                         showToast('error','Error',err.toString());
                     }
-                    //console.log(err);
+                // console.log(err);
                 };
             })
             .catch(err => {
@@ -230,20 +241,21 @@ const Articles = ({searchedStr}) => {
                     setIsLoading(false);
                     showToast('error','Error',err.toString());
                 }
-                //console.log(err);
-            });
-
-
+            // throw err;
+            // console.log(err);
+            });    
+            
+            
 
         }else{
 
 
-
-            fetch(`${global.NodeJS_URL}/api/get/article`, {
+            fetch(`${global.NodeJS_URL}/api/get/article/byId`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'item' : lastFetchedArticleItemId,
+                    'userId' : userId,
                 },
             })
             .then(async res => { 
@@ -258,7 +270,6 @@ const Articles = ({searchedStr}) => {
                     } else {
                         setIsLoading(false);
                         const jsonRes = await res.json();
-
                         found=true;
                         var articleResultId = 0;
                         //let adata = [...getArticleData]; //state-es articledata-hoz
@@ -266,7 +277,7 @@ const Articles = ({searchedStr}) => {
                             //adata.push(jsonRes[articleResultId]); //state-es articledata-hoz
                             articleData.push(jsonRes[articleResultId]);
                         };
-                            //setArticleData(adata);//,()=> 		console.log("setState completed", this.state)); //state-es articledata
+                            //setArticleData(adata);//,()=>         console.log("setState completed", this.state)); //state-es articledata
                         setData(prevState =>[
                             ...prevState,
                             ...Array.from({length:articleResultId}).map((_,articleResultId)=>articleResultId+1 + prevState.length),
@@ -281,7 +292,7 @@ const Articles = ({searchedStr}) => {
                         setIsLoading(false);
                         showToast('error','Error',err.toString());
                     }
-                    //console.log(err);
+                // console.log(err);
                 };
             })
             .catch(err => {
@@ -289,77 +300,25 @@ const Articles = ({searchedStr}) => {
                     setIsLoading(false);
                     showToast('error','Error',err.toString());
                 }
-                //console.log(err);
-            });
+            // throw err;
+            // console.log(err);
+            });    
 
 
         }
-
     };
 
-    //ScrollToIndex
-    const scrollToIndex = (cardNumber) => {
-        if ( flatlistRef.current != null ) {
-            flatlistRef.current.scrollToIndex({
-                animated: true,
-                index: cardNumber,
-                viewPosition: 0
-            })
-        }
-    }
+    const [getScrollUnlock, setScrollUnlock] = useGlobalState('scrollUnlock');
 
-    //ScrollOffset
-    const ScrollToOffset = (o,a) => {
-        if ( flatlistRef.current != null ) {
-            flatlistRef.current.scrollToOffset({
-                animated: a,
-                offset: Number(o)
-            })
-        }
-    }
-
-    //get scroll position
-    onScroll = (event) => {
-        scrollOffsetVar = event.nativeEvent.contentOffset.y;
-    }
-
-    //save and restore scroll position
-    useFocusEffect(
-
-        React.useCallback(() => {
-            AsyncStorage.getItem('scrollOffsetHome').then((offset) => {
-                ScrollToOffset(offset,false);
-            })
-
-        return () => {
-            AsyncStorage.setItem('scrollOffsetHome', scrollOffsetVar.toString());
-        };
-
-    }, []));
-
-    //lock scroll if zoomed
-    const scrollUnlock = useRef(true);
-
-    const [getScrollUnlock, setScrollUnlock] = useState(true);
-
-    const switchScrollUnlock = (bool) => {
-        setScrollUnlock(bool);
-       //scrollUnlock.current = bool;
-      // console.log(scrollUnlock.current);
-    }
-
-
-    //render the cards
     const renderItem = useCallback(
         ({item}) => (
-            <> 
+            
+            <>
                 <Text style={styles.emptycard}></Text>
-                { isLoading == false && articleData[item-1] != [] && articleData[item-1] != undefined && articleData[item-1].ArticleStatus == 1 ? 
-                    <Article item={item} scrollToIndex={scrollToIndex} switchScrollUnlock={switchScrollUnlock} /*data={getArticleData}*//>
+                { articleData[item-1] != [] && articleData[item-1] != undefined && articleData[item-1].ArticleStatus >= 0  ? 
+                    <Article item={item} scrollToIndex={scrollToIndex} /*data={getArticleData}*//>
                 : null} 
             </>
-
-
         ),
     []);
 
@@ -370,11 +329,16 @@ const Articles = ({searchedStr}) => {
         const {x, y, width, height} = layout;
         flatListHeight = height;
       }
+
+      const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
+        console.log("Visible items are", viewableItems);
+        console.log("Changed in this iteration", changed);
+    }, []);
+
     return(
         <PanelHandlerContext.Provider value={panelHandlerContext}>
         <View style={styles.container} onLayout={(event) => { find_dimesions(event.nativeEvent.layout) }}>
-        {/* <ScrollableModal isVisible={isModalVisible} onSwipeComplete={toggleModal} articleId={articleId}/> */}
-        <ScrollableModal /*isVisible={isModalVisible}*/ onSwipeComplete={() => {setContent('')}} id={/*"0CaIwAncmpgZtxjBTM4pF"*/articleId} content={content} ref={modalRef}/>
+        <ScrollableModal isVisible={isModalVisible} onSwipeComplete={toggleModal} id={articleId} content='comments'/>
         { isLoading && <><LoadingPlaceholder style={{flex: 1}}/><LoadingPlaceholder style={{flex: 1}}/></> }
             <FlatList
                 scrollEnabled = {getScrollUnlock}
@@ -382,6 +346,7 @@ const Articles = ({searchedStr}) => {
                 ref={flatlistRef /*(ref) => {
                     globalRef = ref;
                   }*/}
+                //onViewableItemsChanged={onViewableItemsChanged}
                 onScroll={onScroll}
                 onEndReachedThreshold={2}
                 onEndReached={() => fetchMore(false, isSearch, searchedStr)}
@@ -424,36 +389,30 @@ class Article extends React.PureComponent {
 
         const {item} = this.props;
         const {scrollToIndex} = this.props;
-        const {switchScrollUnlock} = this.props;
-
         //const {data} = this.props;
         return(
-            <ArticleFunc item={item} scrollToIndex={scrollToIndex} switchScrollUnlock={switchScrollUnlock}/*data={data[item-1]}*//>
+            <ArticleFunc item={item} scrollToIndex={scrollToIndex}/*data={data[item-1]}*//>
         )
     }
 }
-
 /*
 const Article = ({item,data}) => {
     console.log("data: " + data);
     return(
         <ArticleFunc item={item}/>
 )}*/
+const ArticleFunc = ({item, scrollToIndex}) => {
 
-const ArticleFunc = ({item, data, scrollToIndex, switchScrollUnlock}) => {
+item=item-1;
 
-    item=item-1;
     
-    //const PostProps = [{postId: getPostId}, {userId:getUserId}, {postTitle:getPostTitle}, {postDescription:getPostDescriprion}, {postImgUri: getPostImgUri}, {createdAt: getPostCreatedAt}];
-    //const PostProps = [{postId: 1}, {userId:1}, {postTitle:'title'}, {postDescription:'Desc'}, {postImgUri: 'https://images.unsplash.com/photo-1544526226-d4568090ffb8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by'}, {createdAt: '2020.12.12.'}];
-
-    //const [getScrollUnlock, setScrollUnlock] = useGlobalState('scrollUnlock');
-
-    const [getArticleData, setArticleData] = useState([articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleSmDescr]);
+    const [getScrollUnlock, setScrollUnlock] = useGlobalState('scrollUnlock');
+    const [getIfEdit, setIfEdit] = useGlobalState('edit');
+    //const [getArticleData, setArticleData] = useState([data.ArticleImg, data.ArticleName, data.ArticleSmDescr]);
+    //const [getArticleData, setArticleData] = useState([articleData[item].ArticleId, articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleSmDescr, articleData[item].ArticleMDescr]);
     
     const [getIfZoomed, setIfZoomed] = useState(false);
 
-    const [animate, setAnimate] = useState(false);
     //const [getArticleStylesForNextAnimation, setArticleStylesForNextAnimation] = useState({height:500, padding: 10, paddingTop:5, borderRadius: 10})
     const articleStylesForNextAnimation = useRef({height:500, padding: 10, paddingTop:5, borderRadius: 10});
 
@@ -465,23 +424,16 @@ const ArticleFunc = ({item, data, scrollToIndex, switchScrollUnlock}) => {
                 duration:500,
                 easing: Easing.bezier(0.6, 0.30, 0, 1),
             }),
-
             padding: withTiming(animation.value.padding,{
                 delay:100,
                 duration:800,
                 easing: Easing.bezier(0.6, 0.23, 0, 1),
             }),
-
             paddingTop: withTiming(animation.value.paddingTop,{
                 delay:100,
                 duration:1000,
                 easing: Easing.bezier(0.6, 0.23, 0, 1),
-            } , (finished) => {
-               /* console.log(finished)
-                scrollToIndex(item),
-                switchScrollUnlock(!getIfZoomed)*/
             }),
-
             borderRadius: withTiming(animation.value.borderRadius,{
                 delay:100,
                 duration:500,
@@ -490,112 +442,229 @@ const ArticleFunc = ({item, data, scrollToIndex, switchScrollUnlock}) => {
         };  
     });
 
-    const ZoomIt = ({data}) => {
-        setAnimate(true);
+    const ZoomIt = () => {
         if ( getIfZoomed == false) {
             [
                 animation.value = {height: flatListHeight, padding:0, marginBottom: 0, paddingTop:0, borderRadius: 0},
                 //setArticleData([data.ArticleImg, data.ArticleName, data.ArticleMDescr]),
-                setArticleData([articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleMDescr]),
+                //setArticleData([articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleMDescr]),
                 //setArticleStylesForNextAnimation({height: flatListHeight, padding:0, paddingTop:0, borderRadius:0}),
                 articleStylesForNextAnimation.current = {height: flatListHeight, padding:0, paddingTop:0, borderRadius:0},
                 setIfZoomed(true),
-                //setScrollUnlock(false),
-                switchScrollUnlock(false),
+                setScrollUnlock(false),
             ]
         }else{
             [
                 animation.value = {height:500, padding: 10, marginBottom: 15, paddingTop:5, borderRadius:10},
                 //setArticleData([data.ArticleImg, data.ArticleName, data.ArticleSmDescr]),
-                setArticleData([articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleSmDescr]),
+                //setArticleData([articleData[item].ArticleImg, articleData[item].ArticleName, articleData[item].ArticleSmDescr]),
                 //setArticleStylesForNextAnimation({height:500, padding: 10, paddingTop:5, borderRadius:10}),
                 articleStylesForNextAnimation.current = {height:500, padding: 10, paddingTop:5, borderRadius:10},
                 setIfZoomed(false),
-                //setScrollUnlock(true),
-                switchScrollUnlock(true),
+                setScrollUnlock(true),
             ]
         }
     }
 
     return (
-        
         <>
-
-            <Animated.View  style={[styles.articleContainer, animate == true && animatedStyles]}>
-                <ArticleHeader props={[articleData[item].UserPP, articleData[item].UserUn, articleData[item].UserId]}/>
-                <TouchableOpacity activeOpacity={0.9} style={styles.articleBodyContainer} onPress={() => ([ZoomIt({data}), scrollToIndex(item) /*globalRef.scrollToIndex({
-            animated: true,
-            index: item,
-            viewPosition: 0
-          })*/    ])}>    
+            <Animated.View style={[styles.articleContainer, animatedStyles]}>
+                <TouchableOpacity activeOpacity={0.9} style={styles.articleBodyContainer} onPress={() => ([ZoomIt(), scrollToIndex(item)])}>    
                     <ArticleBody
-                      //  onLayout={(event) => {this.find_dimension(event.nativeEvent.layout)}}
-                        props={[getArticleData[0], getArticleData[1], getArticleData[2], getIfZoomed, articleData[item].UserPP/*getPostImgUri,getPostTitle, getPostDescriprion*/]}
+                        onLayout={(event) => {this.find_dimension(event.nativeEvent.layout)}}
+                        props={[item, getIfZoomed, getIfEdit]}
                         />
                 </TouchableOpacity>
-                <ArticleFooter props={[articleData[item].ArticleId]}/>
+                <ArticleFooter props={[item]}/>
             </Animated.View>
-
         </>           
-        
-    
-
     )
 }
 
-const ArticleHeader = ({props}) => {
-const { openPanel } = useContext(PanelHandlerContext);
-    return (
-        <TouchableOpacity activeOpacity={0.5} style={styles.articleHeaderContainer} onPress={() => {openPanel(props[2],'profile')}}>
-            <View style={styles.articleHeaderImgContainer} >
-                <FastImage source={{uri: props[0]}} style={styles.articleHeaderImg} />
-            </View>
-            <View style={styles.articleHeaderUNameContainer}>
-                <Text style={styles.articleHeaderUName}>
-                    {props[1]}
-                </Text>       
-            </View>
-        </TouchableOpacity>
-    );
-}
-
 const ArticleBody = ({props}) => {
-    //const BASE_URI = 'https://source.unsplash.com/random?sig=';
+    const [articleId, setArticleId] = useGlobalState('articleId');
+    const [articleName, setArticleName] = useGlobalState('articleName');
+    const [articleSmDescr, setArticleSmDescr] = useGlobalState('articleSmDescr');
+    const [articleMDescr, setArticleMDescr] = useGlobalState('articleMDescr');
+
+    useEffect(() => {
+        if (props[2] === true && articleId === articleData[props[0]].ArticleId) {
+            setArticleName(articleData[props[0]].ArticleName);
+            setArticleSmDescr(articleData[props[0]].ArticleSmDescr);
+            setArticleMDescr(articleData[props[0]].ArticleMDescr);            
+        }
+    }, [props[2]]);
+
+    
     return(
             <ImageBackground 
-            source={{uri: props[0] /*pickedImagePath/*/}} 
+            source={{uri: articleData[props[0]].ArticleImg /*pickedImagePath/*/}} 
             style={styles.articleBodyContainer}
             imageStyle={{ borderRadius: 10}}
         >
-            <Text style={styles.articleBodyHeader}>{props[1]}</Text>
-            { props[3] === false ?
-                <View style={styles.articleBodyFooter} onStartShouldSetResponder={() => false}>
-                    <Text onStartShouldSetResponder={() => true}>{props[2]}</Text>   
-                </View>
+            
+            { props[2] === true && articleId === articleData[props[0]].ArticleId ?
+                <TextInput multiline={true} style={[styles.articleBodyHeader]} onChangeText={setArticleName}>{articleName}</TextInput>
             :
-                <ScrollView style={styles.articleBodyFooter}  onStartShouldSetResponder={() => true}>
-                    <View onStartShouldSetResponder={() => true}>
-                    <Text>{props[2]}</Text></View>
+                <Text style={styles.articleBodyHeader}>{articleData[props[0]].ArticleName}</Text>
+            }
+            { props[1] === false ?
+                    <View style={styles.articleBodyFooter} onStartShouldSetResponder={() => false}>
+                    { props[2] === true && articleId === articleData[props[0]].ArticleId ?
+                        <TextInput multiline={true}  ref={(ref) => {globalTextInputRef = ref}} style={styles.textInput} onChangeText={setArticleSmDescr}>{articleSmDescr}</TextInput>
+                    :
+                        <Text>{articleData[props[0]].ArticleSmDescr}</Text>
+                    }
+                    </View>
+            :
+                <ScrollView style={styles.articleBodyFooter} contentContainerStyle={{flexGrow: 1}} onStartShouldSetResponder={() => true}>
+                        { props[2] === true && articleId === articleData[props[0]].ArticleId ?
+                             <TextInput multiline={true} ref={(ref) => {globalTextInputRef = ref}} tyle={styles.textInput} onChangeText={setArticleMDescr}>{articleMDescr}</TextInput>
+                        /*    <RichEditor
+                        style={styles.articleBodyFooterTextInput}
+                        useContainer={false}
+                        initialHeight={10}
+                        onChangeText={setArticleMDescr}
+                        initialContentHTML = {articleData[props[0]].ArticleMDescr}
+                    />*/
+                        :
+                        <View onStartShouldSetResponder={() => true}>
+                        <RenderHtml
+                            contentWidth={Dimensions.get("window").width}
+                            source={{html: articleData[props[0]].ArticleMDescr}}
+                            /></View>
+                            // <Text>{articleData[props[0]].ArticleMDescr}</Text>
+                        }  
                 </ScrollView>
             }
         </ImageBackground>
-   
     );
 }
 
 const ArticleFooter = ({props}) => {
-const { openPanel, saveToFavorites } = useContext(PanelHandlerContext);
+    const { openPanel } = useContext(PanelHandlerContext);
+    const [getIfEdit, setIfEdit] = useGlobalState('edit');
+
+    const [userId, setUserId] = useGlobalState('userId');
+    const [articleId, setArticleId] = useGlobalState('articleId');
+    const [articleName, setArticleName] = useGlobalState('articleName');
+    const [articleSmDescr, setArticleSmDescr] = useGlobalState('articleSmDescr');
+    const [articleMDescr, setArticleMDescr] = useGlobalState('articleMDescr');
+    const [articleImg, setArticleImg] = useGlobalState('articleImg');
+    const [articleType, setArticleType] = useGlobalState('articleType');
+
+    useEffect(() => {
+        AsyncStorage.getItem('id').then((id) => {
+            setUserId(id);
+        })
+    }, []);
+
+    const showToast = (type,text1,text2) => {
+        Toast.show({
+          type: type,
+          text1: text1,
+          text2: text2,
+          position: 'bottom'
+        });
+    }
+
+    const getCurrentDate=()=>{
+
+        var date = new Date().getDate();
+        var month = new Date().getMonth() + 1;
+        var year = new Date().getFullYear();
+        var hours = new Date().getHours();
+        var minutes = new Date().getMinutes();
+        var seconds = new Date().getSeconds();
+  
+        //Alert.alert(date + '-' + month + '-' + year);
+        // You can turn it in to your desired format
+        return year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;//format: dd-mm-yyyy;
+  }
+
+    const Submit = (status) => {
+        console.log("ing" + articleImg);
+
+        if( articleName == '' || articleSmDescr == '' || articleMDescr == '' ) {
+            showToast('info','Info','Please fill all the required fields');
+        }else{
+            articleStatus = status;
+            // console.log(articleStatus);
+            articleUpdatedAt = getCurrentDate();
+            const payload = {
+                userId,
+                articleId,
+                articleName,
+                articleSmDescr,
+                articleMDescr,
+                articleImg,
+                articleType,
+                articleStatus,
+                articleUpdatedAt
+            };
+            fetch(`${global.NodeJS_URL}/api/update/article/byUser`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(async res => { 
+                try {
+                    if (res.status !== 200) {
+                        const jsonRes = await res.json();
+                        //console.log(jsonRes);
+                        showToast('error','Error',jsonRes.errorMessage);
+                    } else {
+                        articleData[props[0]].ArticleName = articleName;
+                        articleData[props[0]].ArticleSmDescr = articleSmDescr;
+                        articleData[props[0]].ArticleMDescr = articleMDescr;
+                        articleData[props[0]].ArticleImg = articleImg;
+                        setIfEdit(prevState => !prevState);
+                        showToast('success','Success',"Idea successfully updated");
+                        //fetchMore(true);
+                    }
+                } catch (err) {
+                    showToast('error','Error',err.toString());
+                    //console.log(err);
+                };
+            })
+            .catch(err => {
+                showToast('error','Error',err.toString());
+                //console.log(err);
+            });
+        }
+
+       // console.log(userId+articleName+articleSmDescr+articleMDescr);
+    }
+
     return(
-    <View style={styles.articleFooter}>
-        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer}/* underlayColor={'rgba(0,0,0,0.3)'} */onPress={() => {saveToFavorites(props[0])}}>
-            {/* <FastImage source={require("../../public/images/star.png")} style={styles.articleFooterBtnImg}/> */}
-            <MaterialCommunityIcons name="star" color="#4d4a42" size={34} />
+    <>
+        { getIfEdit == true && articleId === articleData[props[0]].ArticleId ?
+        <View style={styles.articleFooter}>
+        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {Submit(-2)}}>
+            <MaterialCommunityIcons name="delete" color="#4d4a42" size={30} />
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {openPanel(props[0],'comments')}}>
+        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {openPanel()}}>
+            <MaterialCommunityIcons name="image-edit" color="#4d4a42" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {Submit(1)}}>
+            <MaterialCommunityIcons name="content-save" color="#4d4a42" size={30} />
+        </TouchableOpacity>
+        </View>      
+    : getIfEdit == false ?
+    <View style={styles.articleFooter}>
+        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {openPanel(articleData[props[0]].ArticleId)}}>
             <MaterialCommunityIcons name="comment" color="#4d4a42" size={30} />
-            {/* <FastImage source={require("../../public/images/chat-bubble.png")} style={styles.articleFooterBtnImg}/> */}
-        </TouchableOpacity>                    
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {[cardNumberGlobal = props[0], setIfEdit(prevState => !prevState), setArticleId(articleData[props[0]].ArticleId),setArticleImg(articleData[props[0]].ArticleImg),setArticleType(articleData[props[0]].ArticleType)]}}>
+            <MaterialCommunityIcons name="pencil" color="#4d4a42" size={30} />
+        </TouchableOpacity>       
     </View>
+    :null
+    }
+                       
+    </>
     )
 }
 
@@ -605,16 +674,16 @@ const styles = StyleSheet.create({
         backgroundColor: "#cec8b0", //'#8aacc8',
         //paddingTop: getStatusBarHeight(),
         borderRadius: 10,
-        overflow: "hidden",
+        overflow: 'hidden',
     },
     articleContainer: {
-        height: 500, //Dimensions.get('window').height*0.6 set it at animation too
+        height: 500,
+     //   height: Dimensions.get('window').height*0.6,
         backgroundColor: '#f2f1e1',
         borderRadius: 10,
         marginBottom: 15,
         padding: 10,
-        paddingBottom: 10, //overrides the animation of "padding"
-        paddingTop: 5,
+        paddingBottom: 10,  //overrides the animation of "padding"
         marginTop: -1,
         shadowColor: "#000000",
         shadowOffset: {
@@ -625,6 +694,14 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         
         elevation: 10,
+    },
+    textInput: {
+        height: '100%',
+        textAlignVertical: 'top',
+    },
+    textInputHeader: {
+        height: '80%',
+        textAlignVertical: 'top',
     },
         articleHeaderContainer: {
             //flex:1,
@@ -640,7 +717,6 @@ const styles = StyleSheet.create({
                 aspectRatio: 1,
                 height:'100%',
                 flex: 1,
-                borderRadius: 10000,
             },
             articleHeaderUNameContainer: {
                 flex:5,
@@ -677,6 +753,9 @@ const styles = StyleSheet.create({
                 borderBottomLeftRadius: 10,
                 borderBottomRightRadius: 10,
             },
+                articleBodyFooterTextInput: {
+                    height: '100%',
+                },
         articleFooter: {
             //flex:1,
             flexDirection: 'row',
@@ -697,9 +776,16 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontSize: 20,
     },
+    photoshot:{
+        aspectRatio : 1,
+        width: '100%',
+        borderRadius: 20,
+        flex:1,
+        marginBottom: 5,
+    },
     emptycard: {
         height: 1,
-    },
+    }
 });
     
 

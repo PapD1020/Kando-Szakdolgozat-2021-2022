@@ -1,14 +1,13 @@
-import React, { useState, setState, createContext} from 'react';
-import { render } from 'react-dom';
-import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform, SafeAreaView } from 'react-native';
+import React from 'react';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import Header from "../components/Settings/Header";
 import OptionList from '../components/Settings/OptionList';
 
-const SettingsScreen = ({/*navigation,*/ userName}) => {
+const SettingsScreen = ({userPP, userName}) => {
     return(
         <SafeAreaView style={styles.container}>
             <Header userName={userName} />
-            <OptionList />
+            <OptionList userName={userName} userPP={userPP}/>
         </SafeAreaView>
         
 

@@ -5,7 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { AuthScreen, SettingsScreen, HomeScreen, NewArticleScreen } from './screens';
+import { AuthScreen, SettingsScreen, HomeScreen, NewArticleScreen, UsersArticlesScreen, UsersFavoritesScreen } from './screens';
+import FastImage from 'react-native-fast-image'
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +18,7 @@ const screenOptions = {
 const Tab = createMaterialBottomTabNavigator();
 
 
-export const SignedInStack = ({userName}) => {  
+export const SignedInStack = ({userName,userPP}) => {  
     return (
       <NavigationContainer>
      {/*    <Stack.Navigator
@@ -34,14 +35,15 @@ export const SignedInStack = ({userName}) => {
             </Stack.Screen>
         </Stack.Navigator> */}
         <Tab.Navigator
-        initialRouteName="Home"
-        shifting={true}
-        activeColor="#4d4a42"
-       // inactiveColor="#3e2465"
-        /*barStyle={{ backgroundColor: '#694fad' }}*/>
+          initialRouteName="Home"
+          shifting={true}
+          activeColor="#4d4a42"
+          // inactiveColor="#3e2465"
+          /*barStyle={{ backgroundColor: '#694fad' }}*/>
+            
           <Tab.Screen
             name="Home"
-            children={props =><HomeScreen {...props} userName={userName}/>}
+            children={props =><HomeScreen {...props}/>}
             options={{
               tabBarColor:"#c9c8b3",
               tabBarIcon: ({color}) => (
@@ -49,9 +51,29 @@ export const SignedInStack = ({userName}) => {
               ),
             }}
             />
+            <Tab.Screen
+            name="My Ideas"
+            children={props => <UsersArticlesScreen {...props}/>}
+            options={{
+              tabBarColor:"#c9c8b3",
+              tabBarIcon: ({color}) => (
+                <MaterialCommunityIcons name="lightbulb-group" color={color} size={26} />
+              ),
+            }}
+            />
+            <Tab.Screen
+            name="Favorites"
+            children={props => <UsersFavoritesScreen {...props}/>}
+            options={{
+              tabBarColor:"#c9c8b3",
+              tabBarIcon: ({color}) => (
+                <MaterialCommunityIcons name="star" color={color} size={26} />
+              ),
+            }}
+            />
           <Tab.Screen
-            name="Create New"
-            children={props => <NewArticleScreen {...props} userName={userName} />}
+            name="New Idea"
+            children={props => <NewArticleScreen {...props}/>}
             options={{
               tabBarColor:"#c9c8b3",
               tabBarIcon: ({color}) => (
@@ -60,12 +82,12 @@ export const SignedInStack = ({userName}) => {
             }}
             />
             <Tab.Screen
-            name="PostCreate"
-            children={props => <SettingsScreen {...props} userName={userName} />}
+            name="My Profile"
+            children={props => <SettingsScreen {...props} userName={userName} userPP={userPP} />}
             options={{
               tabBarColor:"#c9c8b3",
               tabBarIcon: ({color}) => (
-                <MaterialCommunityIcons name="account" color={color} size={26} />
+                <FastImage source={{uri: userPP}} style={styles.icon} color={color} size={26} />
               ),
             }}
             />
@@ -89,5 +111,14 @@ export const SignedOutStack = () => {
   
 }
 
+const styles = StyleSheet.create({
+  icon: {
+    aspectRatio: 1,
+    height:'100%',
+    flex: 1,
+    borderRadius: 10000,
+  }
+});
 
 export default SignedInStack
+

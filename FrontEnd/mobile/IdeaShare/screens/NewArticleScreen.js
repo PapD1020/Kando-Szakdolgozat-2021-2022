@@ -1,15 +1,14 @@
-import React, { useState, setState, createContext} from 'react';
-import { render } from 'react-dom';
-import { ImageBackground, View, ScrollView, Text, StyleSheet, TouchableOpacity, TextInput, Platform, SafeAreaView } from 'react-native';
+import React from 'react';
+import { View, StyleSheet} from 'react-native';
 import Header from "../components/NewArticle/Header";
 import ArticleDataForm from '../components/NewArticle/ArticleDataForm';
 
-const NewArticleScreen = ({/*navigation,*/ userName}) => {
+const NewArticleScreen = () => {
     return(
-          <ScrollView style={styles.container} /* contentContainerStyle={{flexGrow: 1}}*/>
-            <Header userName={userName} />
+          <View style={styles.container}>
+            <Header/>
             <ArticleDataForm/>
-          </ScrollView>
+          </View>
 
     )
 }

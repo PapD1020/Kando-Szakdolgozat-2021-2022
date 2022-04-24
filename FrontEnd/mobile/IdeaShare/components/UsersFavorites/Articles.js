@@ -39,17 +39,7 @@ const Articles = ({searchedStr}) => {
         });
     }
 
-    //swipepanel
-  /*  const [panelProps, setPanelProps] = useState({
-        fullWidth: true,
-        openLarge: true,
-        showCloseButton: true,
-        zIndex : 100,
-        onClose: () => closePanel(),
-        onPressCloseButton: () => closePanel(),
-        style: styles.comments,
-        // ...or any prop you want
-    });*/
+
     const [isModalVisible, setModalVisible] = useState(false);
     const [content, setContent] = useState('');
     const modalRef = useRef();
@@ -57,25 +47,14 @@ const Articles = ({searchedStr}) => {
         openPanel: (id,content) => {
             articleId = id;
             setContent(content);
-            //console.log(isModalVisible);
         },
          closePanel: () => {
             modalRef.current.close();
             setContent('');
         },
-        saveToFavorites: (articleId) => {
-            AsyncStorage.getItem('id').then((id) => {
-                userId = id;
-                const payload = {
-                    userId,
-                    articleId
-                };
-                fetch(`${global.NodeJS_URL}/api/insert/favorite`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
+        removeFromFavorites: (articleId) => {
+                fetch(`${global.NodeJS_URL}/api/delete/favorite/${articleId}/${userId}`, {
+                    method: 'DELETE',
                 })
                 .then(async res => { 
                     try {
@@ -85,23 +64,17 @@ const Articles = ({searchedStr}) => {
                         }else{
                             const jsonRes = await res.json();
                             showToast('success','Success',jsonRes.message);
+                            fetchMore(true);
                         }
                     } catch (err) {
-                        if (data == ''){ //if there isn't already loaded results
-                            setIsLoading(false);
                             showToast('error','Error',err.toString());
-                        }
                         //console.log(err);
                     };
                 })
                 .catch(err => {
-                    if (data == ''){ //if there isn't already loaded results
-                        setIsLoading(false);
                         showToast('error','Error',err.toString());
-                    }
                     //console.log(err);
                 });
-            });
         },
     }));
 
@@ -115,9 +88,8 @@ const Articles = ({searchedStr}) => {
         setModalVisible(!isModalVisible);
       };
 
-
-
     //ImagePicker RN
+
     const [pickerResponse, setPickerResponse] = useState(null);
 
     const onImageLibraryPress = useCallback(() => {
@@ -146,7 +118,6 @@ const Articles = ({searchedStr}) => {
     //imagePicker
     const [pickedImagePath, setPickedImagePath] = useState('');
 
-    
     //infiniteScroll
     const flatlistRef = useRef();
     const [data, setData] = useState ([]);
@@ -156,16 +127,17 @@ const Articles = ({searchedStr}) => {
     const [isSearch, setIsSearch] = useState(false);
     useEffect(() => { 
         AsyncStorage.getItem('id').then((id) => {
+            userId = id;
             if (searchedStr != ''){
                 setIsSearch(true);
                 fetchMore(true,true,searchedStr)
             }else{
                 fetchMore(true);
             }
-        });
+     })
+
     }, [searchedStr]);
 
-    
     const fetchMore = (refreshing, isSearch, searchedStr) => {
         if (refreshing == true) {
             setIsLoading(true);
@@ -176,12 +148,13 @@ const Articles = ({searchedStr}) => {
         }
         if (isSearch){
 
-            fetch(`${global.NodeJS_URL}/api/get/article/search`, {
+            fetch(`${global.NodeJS_URL}/api/get/favorite/search`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'item' : lastFetchedArticleItemId,
                     'searchedString' : searchedStr,
+                    'userId' : userId,
                 },
             })
             .then(async res => { 
@@ -239,11 +212,12 @@ const Articles = ({searchedStr}) => {
 
 
 
-            fetch(`${global.NodeJS_URL}/api/get/article`, {
+            fetch(`${global.NodeJS_URL}/api/get/article/favorite/byId`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'item' : lastFetchedArticleItemId,
+                    'userId' : userId
                 },
             })
             .then(async res => { 
@@ -327,12 +301,12 @@ const Articles = ({searchedStr}) => {
     useFocusEffect(
 
         React.useCallback(() => {
-            AsyncStorage.getItem('scrollOffsetHome').then((offset) => {
+            AsyncStorage.getItem('scrollOffsetFavorites').then((offset) => {
                 ScrollToOffset(offset,false);
             })
 
         return () => {
-            AsyncStorage.setItem('scrollOffsetHome', scrollOffsetVar.toString());
+            AsyncStorage.setItem('scrollOffsetFavorites', scrollOffsetVar.toString());
         };
 
     }, []));
@@ -584,12 +558,12 @@ const ArticleBody = ({props}) => {
 }
 
 const ArticleFooter = ({props}) => {
-const { openPanel, saveToFavorites } = useContext(PanelHandlerContext);
+const { openPanel, removeFromFavorites } = useContext(PanelHandlerContext);
     return(
     <View style={styles.articleFooter}>
-        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer}/* underlayColor={'rgba(0,0,0,0.3)'} */onPress={() => {saveToFavorites(props[0])}}>
+        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer}/* underlayColor={'rgba(0,0,0,0.3)'} */onPress={() => {removeFromFavorites(props[0])}}>
             {/* <FastImage source={require("../../public/images/star.png")} style={styles.articleFooterBtnImg}/> */}
-            <MaterialCommunityIcons name="star" color="#4d4a42" size={34} />
+            <MaterialCommunityIcons name="close" color="#4d4a42" size={34} />
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {openPanel(props[0],'comments')}}>
             <MaterialCommunityIcons name="comment" color="#4d4a42" size={30} />

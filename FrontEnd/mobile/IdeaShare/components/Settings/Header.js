@@ -1,32 +1,19 @@
-import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Image, Dimensions, StyleSheet, TouchableHighlight, Platform, Pressable, FlatList } from "react-native";
-import { SwipeablePanel } from 'rn-swipeable-panel';
-import { AuthContext } from '../../components/Context';
+import React, { useContext } from "react";
+import { View, Text, Image, Dimensions, StyleSheet, TouchableHighlight } from "react-native";
+import { AuthContext } from '../../components/globals/Context';
 
-function Header ({userName, ...navigation}) {
-const { signOut } = useContext(AuthContext);
+function Header ({...navigation}) {
     return(
         <View style={styles.HeaderContainer}>
-            <UName userName={userName}/>
+            <Text style={styles.Text}>My Profile </Text>
             <LogoutButton  {...navigation}/>
         </View>
     )
 }
 
 
-const UName = ({userName}) => {
-
-    return(
-        <View style={styles.TextContainer}>
-            <Text style={styles.Text}>{userName}</Text>
-        </View>
-    )
-}
-
-
 const LogoutButton = ({...navigation}) => {
-
-    const API_URL = Platform.OS === 'ios' ? 'http://localhost:5000' : 'http://192.168.1.51:5000';
+    const { signOut } = useContext(AuthContext);
 
     const onSubmitHandler = () => {
         
@@ -51,12 +38,19 @@ const LogoutButton = ({...navigation}) => {
 
 const styles = StyleSheet.create({
     HeaderContainer: {
-        flex:1,
         flexDirection: "row",
-        height: '10%',
-        fontSize: 40,
+        height: 60,
         color: '#4d4a42',
-        backgroundColor: '#cec8b0'
+        backgroundColor: '#cec8b0',
+        shadowColor: "#000000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        
+        elevation: 10,
     },
 
     TextContainer: {
@@ -67,6 +61,11 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
     },
     Text: {
+        flex: 5,
+        //justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: "row",
+        paddingLeft: 10,
         fontSize: 40,
         color: '#4d4a42',
         margin:0,

@@ -33,7 +33,7 @@ const Header = ({searchArticle}) => {
                 </>
             :
                 <>
-                    <Text style={styles.Text}>IdeaShare</Text>
+                    <Text style={styles.Text}>My Ideas</Text>
                     <SearchButton toggleSearchBar={toggleSearchBar}/>
                 </>
             }

@@ -1,34 +1,29 @@
 import React, {useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { AuthContext } from '../../components/Context';
 
-function Header ({userName, ...navigation}) {
-const { signOut } = useContext(AuthContext);
+function Header () {
     return(
         <View style={styles.HeaderContainer}>
-            <UName userName={userName}/>
-        </View>
-    )
-}
-
-
-const UName = ({userName}) => {
-
-    return(
-        <View style={styles.TextContainer}>
-            <Text style={styles.Text}>{userName}</Text>
+            <Text style={styles.Text}>New Idea</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     HeaderContainer: {
-        flex:1,
         flexDirection: "row",
-        height: '10%',
-        fontSize: 40,
+        height: 60,
         color: '#4d4a42',
-        backgroundColor: '#cec8b0'
+        backgroundColor: '#cec8b0',
+        shadowColor: "#000000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        
+        elevation: 10,
     },
 
     TextContainer: {
@@ -39,6 +34,11 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
     },
     Text: {
+        flex: 5,
+        //justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: "row",
+        paddingLeft: 10,
         fontSize: 40,
         color: '#4d4a42',
         margin:0,

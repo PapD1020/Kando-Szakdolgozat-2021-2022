@@ -1,254 +1,311 @@
-import React, { useState, setState, createContext, useContext} from 'react';
-import { ImageBackground, Image, Dimensions, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform, useWindowDimensions} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useState, useContext} from 'react';
+import { Dimensions, View, ScrollView, Text, StyleSheet, TouchableOpacity, TouchableHighlight, TextInput, useWindowDimensions, StatusBar, SafeAreaView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { AuthContext } from '../components/Context';
-import {useStateIfMounted} from 'use-state-if-mounted';
+import { AuthContext } from '../components/globals/Context';
 
+import MaskInput, { Masks } from 'react-native-mask-input';
+import Toast from 'react-native-toast-message';
 
-//const API_URL = Platform.OS === 'ios' ? 'http://localhost:5000' : 'http://192.168.1.51:5000';
-//const API_URL = Platform.OS === 'ios' ? 'http://localhost:3001' : 'http://192.168.0.107:3001';
-
+//import {useStateIfMounted} from 'use-state-if-mounted';
+//import DatePicker from 'react-native-date-picker'
+var userCreatedAt = null;
+var userUpdatedAt = null;
 
 function AuthScreen ({navigation}) {
 
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
-    const [password, setPassword] = useState('');
+    const [userUn, setUserUn] = useState('');
+    const [userPw, setUserPw] = useState('');
+    const [userEmail, setUserEmail] = useState('');
+    const [userFN, setUserFN] = useState('');
+    const [userSN, setUserSN] = useState('');
+    const [userDob, setUserDob] = useState('');
+    const [userPP, setUserPP] = useState('');
 
-    const [isError, setIsError] = useStateIfMounted(false);
-    const [getmessage, setMessage] = useState('');
     const [isLogin, setIsLogin] = useState(true);  
 
     const { signIn } = useContext(AuthContext);
 
+    const showToast = (type,text1,text2) => {
+        Toast.show({
+            type: type,
+            text1: text1,
+            text2: text2,
+            position: 'bottom'
+        });
+    }
+
     const onChangeHandler = () => {
         setIsLogin(!isLogin);
-        setMessage('');
     };
 
-    const onLoggedIn = token => {
-        fetch(`${global.NodeJS_URL}/private`, {
+    const onLoggedIn = (token,UserUn,UserId,UserPP) => {
+        fetch(`${global.NodeJS_URL}/api/login/user/auth`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-                'Email' : email,
+                //'Authorization': `Bearer ${token}`,
+                'x-access-token': token,
             },
         })
         .then(async res => { 
             try {
-                const jsonRes = await res.json();
                 if (res.status === 200) {
-                    setMessage(jsonRes.message);
+                    const jsonRes = await res.json();
+                    showToast('success', 'Success', jsonRes.message);
                     /* navigation.navigate('Home', {
                         paramKey: jsonRes.userName,
                       }); */
-                      signIn(token, jsonRes.userName);
-                    setIsError(false);
+                      signIn(token, UserUn, UserId, UserPP);
                 }else{
-                    setIsError(true);
-                    setMessage(jsonRes.message);
+                    const jsonRes = await res.json();
+                    showToast('error', 'Error', jsonRes.message);
                 }
             } catch (err) {
-             //   console.log(err);
+                showToast('error', 'Error', err.toString());
+                //console.log(err);
             };
         })
         .catch(err => {
-         //   console.log(err);
+            showToast('error', 'Error', err.toString());
+            //console.log(err);
         });
     }
+
+    const getCurrentDate=()=>{
+
+        var date = new Date().getDate();
+        var month = new Date().getMonth() + 1;
+        var year = new Date().getFullYear();
+        var hours = new Date().getHours();
+        var minutes = new Date().getMinutes();
+        var seconds = new Date().getSeconds();
+  
+        //Alert.alert(date + '-' + month + '-' + year);
+        return year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
+  }
 
     const onSubmitHandler = () => {
-        const payload = {
-            email,
-            name,
-            password,
-        };
-        fetch(`${global.NodeJS_URL}/${isLogin ? 'login' : 'signup'}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-        })
-        .then(async res => { 
-            try {
-                const jsonRes = await res.json();
-                if (res.status !== 200) {
-                    setIsError(true);
-                    setMessage(jsonRes.message);
-                } else {
-                    onLoggedIn(jsonRes.token);
-                    setIsError(false);
-                }
-            } catch (err) {
-               // console.log(err);
-            };
-        })
-        .catch(err => {
-          //  console.log(err);
-        });
-    };
 
-    const getMessage = () => {
-        const status = isError ? `Error: ` : `Success: `;
-        return status + getmessage;
-    }
+        if(
+            ( !isLogin && (userUn == '' || userPw == '' || userEmail == '' || userFN == '' || userSN == '' || userDob == '' ))
+            || 
+            ( isLogin && (userUn == '' || userPw == '') )
+            )
+            {
+            showToast('info','Info','Please fill all the required fields');
+        }else{
+            userCreatedAt = userUpdatedAt = getCurrentDate();
+            const payload = {
+                userUn,
+                userPP,
+                userPw,
+                userFN,
+                userSN,
+                userDob,
+                userEmail,
+                userCreatedAt,
+                userUpdatedAt,
+            };
+            fetch(`${global.NodeJS_URL}/api/${isLogin ? 'login/user' : 'register/user'}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(async res => { 
+                try {
+                    if (res.status !== 200) {
+                        const jsonRes = await res.json();
+                        //showToast('error', 'Error', jsonRes.message)
+                    } else {
+                        const jsonRes = await res.json();
+                        if (isLogin) {
+                            if (jsonRes.auth == true ) {
+                                onLoggedIn(jsonRes.token,jsonRes.result[0].UserUn,jsonRes.result[0].UserId, jsonRes.result[0].UserPP);
+                            }else{
+                                showToast('error', 'Error', jsonRes.message)
+                            }
+                        }else if (!isLogin) {
+                            showToast('success', 'Success', jsonRes.message)
+                        }
+                    }
+                } catch (err) {
+                    showToast('error', 'Error', err.toString())
+                    // console.log(err);
+                };
+            })
+            .catch(err => {
+                showToast('error', 'Error', err.toString())
+                // console.log(err);
+            });
+        }
+        
+    };
 
     const windowHeight = useWindowDimensions().height;
 
     return (
+        <SafeAreaView style={styles.screenContainer}>
+        <StatusBar
+        animated={true}
+        backgroundColor="#4d4a42"
+        barStyle='light-content'
+        //showHideTransition={statusBarTransition}
+        hidden={false} />
         <View style={[{ minHeight: Math.round(windowHeight), height:Dimensions.get('screen').height }]}>
-        <View style={styles.background}>
-            <LinearGradient style = {styles.titleGradient} colors={['#8aacc8','#8aacc8','#8aacc8']}>
-           <View style={styles.titleCntainer}>
-                <Text style={styles.titleText}>IdeaShare</Text>
-            </View>
+            <LinearGradient style = {styles.titleGradient} colors={['#cec8b0','#cec8b0','#cec8b0',/*'#8aacc8'*/]}>
+                    <Text style={styles.titleText}>IdeaShare</Text>
             </LinearGradient>
-            <View style={styles.cardContainer}>
-                <View style={styles.card}>
+            <View style={styles.container}>
+                <View style={styles.formContainer}>
                     <Text style={styles.heading}>{isLogin ? 'Login' : 'Signup'}</Text>
                     <View style={styles.form}>
-                        <View style={styles.inputs}>
-                            <TextInput style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={setEmail}></TextInput>
-                            {!isLogin && <TextInput style={styles.input} placeholder="Name" onChangeText={setName}></TextInput>}
-                            <TextInput secureTextEntry={true} style={styles.input} placeholder="Password" onChangeText={setPassword}></TextInput>
-                            <Text style={[styles.message, {color: isError ? 'red' : 'green'}]}>{getmessage ? getMessage() : null}</Text>
-                            <TouchableOpacity style={styles.button} onPress={onSubmitHandler}>
-                                <Text style={styles.buttonText}>Done</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttonAlt} onPress={onChangeHandler}>
-                                <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
-                            </TouchableOpacity>
-                        </View>    
+                            {!isLogin ?
+                                <ScrollView style={styles.inputs}>
+                                    <TextInput style={styles.input} placeholder="Username" placeholderTextColor='darkgrey' autoCapitalize="none" onChangeText={setUserUn}></TextInput>
+                                    <TextInput style={styles.input} placeholder="E-mail" placeholderTextColor='darkgrey' onChangeText={setUserEmail}></TextInput>
+                                    <TextInput style={styles.input} placeholder="Forename" placeholderTextColor='darkgrey' onChangeText={setUserFN}></TextInput>
+                                    <TextInput style={styles.input} placeholder="Surname" placeholderTextColor='darkgrey' onChangeText={setUserSN}></TextInput>
+                                   {/*  <TextInput style={styles.input} placeholder="Date of Birth" placeholderTextColor= 'darkgrey' onPress={() => setOpen(true)} onChangeText={userDob}></TextInput>
+                                    <DatePicker
+                                            modal
+                                            open={open}
+                                            date={date}
+                                            onConfirm={(date) => {
+                                            setOpen(false)
+                                            setDate(date)
+                                            }}
+                                            onCancel={() => {
+                                            setOpen(false)
+                                            }}
+                                        /> */}
+                                    <MaskInput style={styles.input} placeholder="Date of Birth, eg. 1990/01/01" placeholderTextColor='darkgrey' value={userDob} onChangeText={(masked, unmasked) => {setUserDob(masked)}}       mask={Masks.DATE_YYYYMMDD/*[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]*/}/>
+                                    <TextInput secureTextEntry={true} style={styles.input} placeholder="Password" placeholderTextColor='darkgrey'  onChangeText={setUserPw}></TextInput>
+                                    <TextInput style={styles.input} placeholder="Profile picture link (optional)" placeholderTextColor='darkgrey'  onChangeText={setUserPP}></TextInput>
+
+                                </ScrollView>
+                            : 
+                                <View style={styles.inputs}>
+                                    <TextInput style={styles.input} placeholder="Username" placeholderTextColor='darkgrey' autoCapitalize="none" onChangeText={setUserUn}></TextInput>
+                                    <TextInput style={styles.input} placeholder="Password" placeholderTextColor='darkgrey' onChangeText={setUserPw} secureTextEntry={true}></TextInput>
+                                </View>
+                            }
                     </View>
                 </View>
+                <View style={styles.footer}>
+                     {/* <Text style={[styles.message, {color: isError ? 'red' : 'green'}]}>{getmessage ? getMessage() : null}</Text> */}
+                    <TouchableHighlight style={styles.button} onPress={onSubmitHandler} underlayColor={'#32302a'}>
+                        <Text style={styles.buttonText}>Done</Text>
+                    </TouchableHighlight>
+                    <TouchableOpacity style={styles.buttonAlt} onPress={onChangeHandler}>
+                        <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View style={styles.footer}>
+            {/* <View style={styles.footer}>
                 <Image style={styles.footerImg} source={require('../public/images/bulb.png')}></Image>
-            </View>
+            </View> */}
         </View>
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
-    titleGradient: {
-        flex: 2,
-        alignItems: 'center',
+    screenContainer: {
+        flex: 1,
         justifyContent: 'center',
-        paddingTop: getStatusBarHeight(),
-        //backgroundColor: '#009688',
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
-        width: '100%',
-        marginBottom: 20,
-    },
-    titleText: {
-        fontSize: 50,
-        color: '#eeffff',
-    },
-    background: {
-        backgroundColor: '#eeffff'/*'#bbdefb'*/,
-        flex: 1,
-        width: '100%',
-        alignItems: 'center',
-    },
-    cardContainer: {
-        flex: 7,
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    card: {
-        flex: 1,
-        backgroundColor: '#eeffff',
-        width: '80%',
-        //marginTop: '40%',
-        borderRadius: 20,
-        maxHeight: 380,
-        //paddingBottom: '27%',
-        paddingBottom: '27%',
-    },
-    heading: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        marginLeft: '10%',
-        marginTop: '5%',
-        marginBottom: '30%',
-        color: '#8aacc8',
-    },
-    form: {
-        flex: 1,
-        justifyContent: 'space-between',
-        paddingBottom: '5%',
-    },
-    inputs: {
-        width: '100%',
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: '10%',
-    },  
-    input: {
-        width: '80%',
-        borderBottomWidth: 1,
-        borderBottomColor: '#0077c2',
-        paddingTop: 10,
-        fontSize: 16, 
-        minHeight: 40,
-        color: 'black',
+        backgroundColor: '#f2f1e1', //'#ECF0F1'
+      },
+        titleGradient: {
+            flex: 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: getStatusBarHeight(),
+            //backgroundColor: '#009688',
+            borderBottomLeftRadius: 20,
+            borderBottomRightRadius: 20,
+            width: '100%',
+            elevation: 10,
+        },
+            titleText: {
+                fontSize: 50,
+                color: '#4d4a42', //'#eeffff',
+            },
+        container: {
+            flex: 9,
+            width: '100%',
+        },
+            formContainer: {
+                flex: 3,
+                padding: 45,
+                paddingBottom: 0,
+            },
+                heading: {
+                    fontSize: 30,
+                    fontWeight: 'bold',
+                    color: '#4d4a42',//'#8aacc8',
+                    marginBottom: 20,
+                },
+                form: {
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                },
+                    inputs: {
+                        width: '100%',
 
-    },
-    button: {
-        width: '80%',
-        backgroundColor: '#8aacc8',
-        height: 40,
-        borderRadius: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginVertical: 5,
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: '400'
-    },
-    buttonAlt: {
-        width: '80%',
-        borderWidth: 1,
-        height: 40,
-        borderRadius: 5,
-        borderColor: '#8aacc8'/*'#0077c2'*/,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginVertical: 5,
-    },
-    buttonAltText: {
-        color: '#8aacc8',
-        fontSize: 16,
-        fontWeight: '400',
-    },
-    message: {
-        fontSize: 16,
-        marginVertical: '5%',
-    },
-    footer: {
-        flex: 5,
-       // alignItems: 'center',
-       // justifyContent: 'center',
-       // backgroundColor: 'red',
-        width: '100%'
-    },
-    footerImg:{
-        marginBottom: -50,
-        marginLeft: -50,
-        flex:1,
-        aspectRatio: 1,
-    },
+                    }, 
+                        input: {
+                            backgroundColor: 'white',
+                            borderRadius: 10,
+                            marginBottom: 10,
+                            paddingLeft: 10,
+                            minHeight: 40,
+                            color: 'black',
+                            margin: 5,
+                            elevation: 2,
+                        },
+            footer: {
+                height: 150,
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingLeft: 50,
+                paddingRight: 50,
+            },
+                button: {
+                    width: '100%',
+                    backgroundColor: '#4d4a42',
+                    height: 40,
+                    borderRadius: 5,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginVertical: 5,
+                },
+                buttonText: {
+                    color: 'white',
+                    fontSize: 16,
+                    fontWeight: '400'
+                },
+                buttonAlt: {
+                    width: '100%',
+                    borderWidth: 1,
+                    height: 40,
+                    borderRadius: 5,
+                    borderColor: '#4d4a42'/*'#8aacc8'/*'#0077c2'*/,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginVertical: 5,
+                },
+                buttonAltText: {
+                    color: '#4d4a42',//'#8aacc8',
+                    fontSize: 16,
+                    fontWeight: '400',
+                },
+                message: {
+                    fontSize: 16,
+                },
 });
 
 export default AuthScreen;
