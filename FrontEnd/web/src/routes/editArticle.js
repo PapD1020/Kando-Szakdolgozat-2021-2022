@@ -34,7 +34,7 @@ export default function EditArticle() {
 
   useEffect(() => {
       getChoosenArticleById();
-  }, []);
+  });
 
   const getChoosenArticleById = () => {
 

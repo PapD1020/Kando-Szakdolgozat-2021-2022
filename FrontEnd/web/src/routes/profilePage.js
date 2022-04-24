@@ -297,11 +297,24 @@ export default function ProfileUpdate(){
                                         <label>User email: </label>
                                         <input type="email" className="form-control" defaultValue={val.UserEmail}{
                                             ...register2("userEmailUpd", {
-                                                required: false
+                                                required: false,
+                                                minLength: 12,
+                                                maxLength: 40,
+                                                pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
                                             })
                                         }onChange={(e) => {
                                             setUserEmailUpd(e.target.value);
                                         }}/>
+
+                                        {errors2?.userEmailUpd?.type === "minLength" && <div><h5>Your email's length is too short.</h5><p>Your email must exceed 12 characters.</p></div>}
+                                        {errors2?.userEmailUpd?.type === "maxLength" && <div><h5>Your email's length is too long.</h5><p>Your email must not exceed 40 characters.</p></div>}
+                                        {errors2?.userEmailUpd?.type === "pattern" && <div><ul>
+                                                <li>Uppercase (A-Z) and lowercase (a-z) English letters</li>
+                                                <li>Digits (0-9)</li>
+                                                <li>Do not use any special characters</li>
+                                                <li>Character . ( period, dot or fullstop) provided that it is not the first or last character and it will not come one after the other</li>
+                                            </ul>
+                                        </div>}
                                     </div>
                         
                                     <div className="mt-5">
