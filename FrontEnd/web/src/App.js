@@ -415,8 +415,8 @@ export default function App(){
                                     <label className="display-6 mb-3">Profile picture:</label>
                                     <input className="form-control p-2 mb-3" type="URL" {
                                         ...register2("userPPReg", {
-                                            minLength: 8,
-                                            maxLength: 100,
+                                            minLength: 10,
+                                            maxLength: 500,
                                         })
                                     } onChange={(e) =>{
                                         setUserPPReg(e.target.value);
@@ -424,8 +424,8 @@ export default function App(){
                                 </div>
 
                                 <div className="errordiv text-danger mb-2">
-                                    {errors2?.userPPReg?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 8 and 100 characters.</p></div>}
-                                    {errors2?.userPPReg?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 8 and 100 characters.</p></div>}
+                                    {errors2?.userPPReg?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 10 and 500 characters.</p></div>}
+                                    {errors2?.userPPReg?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 10 and 500 characters.</p></div>}
                                 </div>
                             </div>
 

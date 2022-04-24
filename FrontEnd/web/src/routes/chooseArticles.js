@@ -1,15 +1,27 @@
 import React, {useState, useEffect, useRef} from "react";
 import {useNavigate} from "react-router-dom";
 import Axios from 'axios';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Modal } from 'react-bootstrap';
+
 
 export default function CreateArticle(props){
   
     const [ArticleNameList, setArticleNameList] = useState([]);
+    const [MessageError, setMessageError] = useState('');
 
     const GotUserId = useRef(null);
     
     Axios.defaults.withCredentials = true;
+
+    const [showError, setShowError] = useState(false);
+
+    const handleCloseError = () => setShowError(false);
+    const handleShowError = () => setShowError(true);
+
+    const [showNotFound, setShowNotFound] = useState(false);
+
+    const handleCloseNotFound = () => setShowNotFound(false);
+    const handleShowNotFound = () => setShowNotFound(true);
 
       useEffect(() => {
           Axios.get('http://localhost:3001/api/login/user').then((response) => {
@@ -24,13 +36,25 @@ export default function CreateArticle(props){
           }
         }).then((response) => {
           setArticleNameList(response.data);
-        });
+        }).catch((error) => {
+            if(error.response.data.message === 'Not found'){
+              handleShowNotFound();
+            }
+            else{
+              setMessageError(error.response.data.message);
+              handleShowError();
+            }
+        })
           });
       }, []);
 
       let navigate = useNavigate();
       const routeChange = (gotId) =>{
         navigate('/editArticle', {state:{id: gotId}});
+      }
+
+      const routeChangeCreateArticle = () => {
+        navigate('/createArticle');
       }
       
     return(
@@ -64,6 +88,30 @@ export default function CreateArticle(props){
                         </div>
                       )
                   })}
+
+              <Modal className="text-danger" show={showError} onHide={handleCloseError}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Error</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{MessageError}</Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={() => {handleCloseError();}}>
+                    Ok
+                </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal className="text-primary" show={showNotFound} onHide={handleCloseNotFound}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Oops</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>It seems you do not have any articles</Modal.Body>
+                <Modal.Footer>
+                <Button variant="primary" onClick={() => {handleCloseNotFound(); routeChangeCreateArticle();}}>
+                    Let's go and create one
+                </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }

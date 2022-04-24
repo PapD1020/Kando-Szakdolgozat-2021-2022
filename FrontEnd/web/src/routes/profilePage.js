@@ -273,8 +273,8 @@ export default function ProfileUpdate(){
                                             setUserFNUpd(e.target.value);
                                         }}/>
                         
-                                        {errors2?.userFNUpd?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
-                                        {errors2?.userFNUpd?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
+                                        {errors2?.userFNUpd?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 3 and 20 characters.</p></div>}
+                                        {errors2?.userFNUpd?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 3 and 20 characters.</p></div>}
                                     </div>
                         
                                     <div className="form-group">

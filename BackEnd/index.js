@@ -376,9 +376,7 @@ app.get('/api/login/user', (req, res) => {
 
 //Destroy cookie 2.0
 app.get('/api/user/logout', (req, res) => {
-    req.session.destroy((err) => {
-        res.status(200).send({message: err});
-    });
+    req.session.destroy();
 
     res.clearCookie("userId").send({loggedIn: false, cookiesDestroyed: true});
   });
