@@ -10,7 +10,7 @@ export default function Comment(){
     
   const [show, setShow] = useState(false);
   
-  const handleClose = () => setShow(false);
+
 
   const GotArticleId = useRef(null);
 
