@@ -14,6 +14,9 @@ export default function EditArticle() {
   const [ArticleTypeUpd, setArticleTypeUpd] = useState('');
   const [ArticleStatusUpd, setArticleStatusUpd] = useState('');
 
+  const [Message, setMessage] = useState('');
+  const [MessageError, setMessageError] = useState('');
+
   const location = useLocation();
 
   const [OneArticleList, setOneArticleList] = useState([]);
@@ -85,7 +88,11 @@ export default function EditArticle() {
       articleStatus: ArticleStatusUpd,
       articleUpdatedAt: date
     }).then((response) => {
-        handleShowSucUpd()
+        setMessage(response.data.message);
+        handleShowSucUpd();
+    }).catch((error) => {
+      setMessageError(error.response.data.message);
+      handleShowError();
     })
   };
 
@@ -93,6 +100,11 @@ export default function EditArticle() {
 
   const handleCloseSucUpd = () => setShowSucUpd(false);
   const handleShowSucUpd = () => setShowSucUpd(true);
+
+  const [showError, setShowError] = useState(false);
+
+  const handleCloseError = () => setShowError(false);
+  const handleShowError = () => setShowError(true);
 
   return (
     <div>
@@ -167,7 +179,7 @@ export default function EditArticle() {
                                                         ...register("articleNameUpd", {
                                                             required: false,
                                                             minLength: 1,
-                                                            maxLength: 20
+                                                            maxLength: 30
                                                         })
                                                     } onChange={(e) => {
                                                         setArticleNameUpd(e.target.value);
@@ -317,17 +329,29 @@ export default function EditArticle() {
             <Button variant='primary' onClick={routeChange}>Back to selection page</Button>
           </div>
 
-          <Modal show={showSucUpd} onHide={handleCloseSucUpd}>
+          <Modal className='text-success' show={showSucUpd} onHide={handleCloseSucUpd}>
               <Modal.Header closeButton>
                   <Modal.Title>Success</Modal.Title>
               </Modal.Header>
-              <Modal.Body>Successfully updated your article</Modal.Body>
+              <Modal.Body>{Message}</Modal.Body>
               <Modal.Footer>
-              <Button variant="secondary" onClick={() => {handleCloseSucUpd(); modalClose();}}>
+              <Button variant="secondary" onClick={() => {handleCloseSucUpd(); modalClose(); refreshArticleData();}}>
                   Ok
               </Button>
               </Modal.Footer>
           </Modal>
+
+            <Modal className="text-danger" show={showError} onHide={handleCloseError}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Error</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{MessageError}</Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={() => {handleCloseError();}}>
+                    Ok
+                </Button>
+                </Modal.Footer>
+            </Modal>
     </div>
   )
 }

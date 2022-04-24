@@ -13,6 +13,9 @@ export default function CreateArticle(){
     const [ArticleType, setArticleType] = useState('');
     const [LoginStatus, setLoginStatus] = useState('');
 
+    const [Message, setMessage] = useState('');
+    const [MessageError, setMessageError] = useState('');
+
     Axios.defaults.withCredentials = true;
 
     const GotUserId = useRef(null);
@@ -52,25 +55,23 @@ export default function CreateArticle(){
           articleCreatedAt: date,
           articleUpdatedAt: date
       }).then((response) => {
-          if(response.status === 409){
-              console.log("409: " + response.data.message);
-          }
-
-          if(response.status === 500){
-            console.log("500: " + response.data.message);
-          }
-
-          if(response.status === 200){
-            console.log("200: " + response.data.message);
-          }
-            handleShowSucUpd()
-      })
+          setMessage(response.data.message);
+          handleShowSucUpd();
+        }).catch((error) => {
+            setMessageError(error.response.data.message);
+            handleShowError();
+        })
     };
 
     const [showSucUpd, setShowSucUpd] = useState(false);
 
     const handleCloseSucUpd = () => setShowSucUpd(false);
     const handleShowSucUpd = () => setShowSucUpd(true);
+
+    const [showError, setShowError] = useState(false);
+
+    const handleCloseError = () => setShowError(false);
+    const handleShowError = () => setShowError(true);
 
     let navigate = useNavigate();
     const routeChange = () =>{
@@ -215,17 +216,30 @@ export default function CreateArticle(){
                 </div>
             )}
 
-            <Modal show={showSucUpd} onHide={handleCloseSucUpd}>
+            <Modal className="text-success" show={showSucUpd} onHide={handleCloseSucUpd}>
                 <Modal.Header closeButton>
                     <Modal.Title>Success</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Successfully created {ArticleName} article</Modal.Body>
+                <Modal.Body>{ArticleName} {Message}</Modal.Body>
                 <Modal.Footer>
                 <Button variant="secondary" onClick={() => {handleCloseSucUpd(); routeChange();}}>
                     Let's check it
                 </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Modal className="text-danger" show={showError} onHide={handleCloseError}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Error</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{MessageError}</Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={() => {handleCloseError();}}>
+                    Ok
+                </Button>
+                </Modal.Footer>
+            </Modal>
+
         </div>
     );
 }

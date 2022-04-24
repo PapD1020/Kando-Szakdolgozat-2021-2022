@@ -501,16 +501,18 @@ app.put('/api/update/user/password', (req, res) => {
     bcrypt.hash(userPw, saltRounds, (err, hash) => {
         if(err){
             res.status(500).send({message: err.message});
-            //console.log("Change password - bcrypt error: " + err);
-        }else{
-
-        const sqlUpdate = "UPDATE Users SET UserPw = ?, UserUpdatedAt = ? WHERE UserId = ?";
-
-        db.query(sqlUpdate, [hash, userUpdatedAt, userId], (err, result) => {
-        if(err){
-            res.status(500).send({message: err.message});
-            //console.log("User password change sql error: " + err);
         }
+        else{
+
+            const sqlUpdate = "UPDATE Users SET UserPw = ?, UserUpdatedAt = ? WHERE UserId = ?";
+
+            db.query(sqlUpdate, [hash, userUpdatedAt, userId], (err, result) => {
+            if(err){
+                res.status(500).send({message: err.message});
+            }
+            else{
+                res.status(200).send({message: "Password changed successfully"});
+            }
         });
     }
     });

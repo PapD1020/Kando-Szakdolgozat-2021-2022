@@ -16,6 +16,9 @@ export default function ProfileUpdate(){
 
     const GotUserId = useRef(null);
 
+    const [Message, setMessage] = useState('');
+    const [MessageError, setMessageError] = useState('');
+
     Axios.defaults.withCredentials = true;
 
     const current = new Date();
@@ -41,7 +44,6 @@ export default function ProfileUpdate(){
     };
 
     const onSubmitPw = () => {
-        alert("pwchange");
         changePassword();
         modalClosePw();
     };
@@ -63,7 +65,7 @@ export default function ProfileUpdate(){
                 }
             }).then((response) => {
                 setUsersNameList(response.data)
-            });
+            })
         });
     }, []);
 
@@ -89,10 +91,15 @@ export default function ProfileUpdate(){
         userEmail: UserEmailUpd,
         userUpdatedAt: date
 
-        }).then((response) => 
-            console.log("Update user response: " + JSON.stringify(response)),
-            handleShowSucUpd()
-        );
+        }).then((response) => {
+            if(response.data.message){
+                setMessage(response.data.message)
+                handleShowSucUpd()
+            }
+        }).catch((error) => {
+            setMessageError(error.response.data.message);
+            handleShowError();
+        })
     };
 
     const changePassword = () => {
@@ -100,10 +107,14 @@ export default function ProfileUpdate(){
             userId: GotUserId.current,
             userPw: UserPwUpd,
             userUpdatedAt: date
-        }).then((response) => 
-            console.log("Updated user password response: " + response),
+        }).then((response) => {
+            console.log("Updated user password response: " + response)
+            setMessage(response.data.message)
             handleShowSucPwUpd()
-        );
+        }).catch((error) => {
+            setMessageError(error.response.data.message);
+            handleShowError();
+        })
     }
 
     const [ModalState, setModalState] = useState(false);
@@ -125,6 +136,11 @@ export default function ProfileUpdate(){
 
     const handleCloseSucPwUpd = () => setShowSucPwUpd(false);
     const handleShowSucPwUpd = () => setShowSucPwUpd(true);
+
+    const [showError, setShowError] = useState(false);
+
+    const handleCloseError = () => setShowError(false);
+    const handleShowError = () => setShowError(true);
 
     return(
         <div>
@@ -311,11 +327,11 @@ export default function ProfileUpdate(){
                       )
                   })}
 
-            <Modal show={showSucUpd} onHide={handleCloseSucUpd}>
+            <Modal className="text-success" show={showSucUpd} onHide={handleCloseSucUpd}>
                 <Modal.Header closeButton>
                     <Modal.Title>Success</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Successfully updated your profile</Modal.Body>
+                <Modal.Body>{Message}</Modal.Body>
                 <Modal.Footer>
                 <Button variant="secondary" onClick={handleCloseSucUpd}>
                     Ok
@@ -323,13 +339,25 @@ export default function ProfileUpdate(){
                 </Modal.Footer>
             </Modal>
 
-            <Modal show={showSucPwUpd} onHide={handleCloseSucPwUpd}>
+            <Modal className="text-success" show={showSucPwUpd} onHide={handleCloseSucPwUpd}>
                 <Modal.Header closeButton>
                     <Modal.Title>Success</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Successfully changed your password</Modal.Body>
+                <Modal.Body>{Message}</Modal.Body>
                 <Modal.Footer>
                 <Button variant="secondary" onClick={handleCloseSucPwUpd}>
+                    Ok
+                </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal className="text-danger" show={showError} onHide={handleCloseError}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Error</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{MessageError}</Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={() => {handleCloseError();}}>
                     Ok
                 </Button>
                 </Modal.Footer>

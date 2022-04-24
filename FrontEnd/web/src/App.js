@@ -29,10 +29,9 @@ export default function App(){
   const [UserDobReg, setUserDobReg] = useState('');
   const [UserEmailReg, setUserEmailReg] = useState('');
 
+  const [Message, setMessage] = useState('');
+  const [MessageError, setMessageError] = useState('');
   const [ErrorMessage, setErrorMessage] = useState('');
-  const [SuccessfullMessage, setSuccessfullMessage] = useState('');
-
-  const [SuccessfullReg, setSuccessfullReg] = useState('');
 
   const [IsAdmin, setIsAdmin] = useState(false);
 
@@ -46,7 +45,7 @@ export default function App(){
 
       useEffect(() => {
         checkLoginStatus()
-    }, []);
+    });
 
     const checkLoginStatus = () => {
         Axios.get('http://localhost:3001/api/login/user').then((response) => {
@@ -73,10 +72,13 @@ export default function App(){
           userEmail: UserEmailReg,
           userCreatedAt: date,
           userUpdatedAt: date
-          }).then((response) => 
-              console.log("Register user response: " + JSON.stringify(response)),
-              handleShowSucReg()
-          );
+          }).then((response) => {
+            setMessage(response.data.message)
+            handleShowSucReg()
+          }).catch((error) => {
+            setMessageError(error.response.data.message);
+            handleShowError();
+          })
       };
 
     const submitUserDataLogin = () => {
@@ -95,11 +97,13 @@ export default function App(){
                 adminTrue();
               }
               checkLoginStatus();
-              setSuccessfullMessage(response.data.message);
               handleClose();
               routeChangeArticles();
           }
-      });
+      }).catch((error) => {
+        setErrorMessage(error.response.data.message)
+        handleCloseError();
+      })
   };
 
   const logout = () =>{
@@ -167,6 +171,11 @@ export default function App(){
 
   const handleCloseLogout = () => setShowLogout(false);
   const handleShowLogout = () => setShowLogout(true);
+
+  const [showError, setShowError] = useState(false);
+
+  const handleCloseError = () => setShowError(false);
+  const handleShowError = () => setShowError(true);
 
   const [showTooltip, setShowTooltip] = useState(false);
   const target = useRef(null);
@@ -307,7 +316,7 @@ export default function App(){
                             </div>
                         </div>
 
-                        <div className="row">
+                        <div className="row mt-2 mb-3">
                             <div className="col">
                                <div className="text-danger">
                                 {ErrorMessage && (
@@ -543,7 +552,7 @@ export default function App(){
 
         <Modal show={showSucReg} onHide={handleCloseSucReg}>
           <Modal.Header closeButton>
-            <Modal.Title>Successfully registered as</Modal.Title>
+            <Modal.Title>{Message} as</Modal.Title>
           </Modal.Header>
           <Modal.Body>{UserUnReg}</Modal.Body>
           <Modal.Footer>
@@ -567,6 +576,18 @@ export default function App(){
             </Button>
           </Modal.Footer>
         </Modal>
+
+        <Modal className="text-danger" show={showError} onHide={handleCloseError}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Error</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{MessageError}</Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={() => {handleCloseError();}}>
+                    Ok
+                </Button>
+                </Modal.Footer>
+            </Modal>
 
       <Outlet />
     </div>
