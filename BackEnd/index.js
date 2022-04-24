@@ -106,7 +106,7 @@ app.get('/api/get/article', (req, res) => {
 
     const item = req.get("item")-1;
 
-    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 ORDER BY ArticleId ASC LIMIT 20  OFFSET ?";
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 ORDER BY ArticleUpdatedAt ASC LIMIT 20  OFFSET ?";
     
     db.query(sqlSelect, [item],(err, result) => {
         if(err){
@@ -128,7 +128,7 @@ app.get('/api/get/article/byId', (req, res) => {
     const item = req.get("item")-1;
     const userId = req.get("userId");
 
-    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = ? ORDER BY Articles.ArticleCreatedAt DESC LIMIT 20 OFFSET ?";
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = ? ORDER BY Articles.ArticleUpdatedAt DESC LIMIT 20 OFFSET ?";
     
     db.query(sqlSelect, [userId,item], (err, result) => {
         if(err){
@@ -149,7 +149,7 @@ app.get('/api/get/article/search/', (req, res) => {
     const searchedString = "%" + req.get("searchedString") + "%";
     const item = req.get("item")-1;
 
-    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 WHERE ArticleName LIKE ? ORDER BY ArticleId ASC LIMIT 20 OFFSET ?";
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 WHERE ArticleName LIKE ? ORDER BY ArticleName ASC LIMIT 20 OFFSET ?";
     //const sqlSelect = "SELECT * FROM Articles WHERE ArticleName LIKE ?";
     db.query(sqlSelect, [searchedString,item], (err, result) => {
         if(err){
@@ -170,7 +170,7 @@ app.get('/api/get/article/search/byId', (req, res) => {
     const item = req.get("item")-1;
     const userId = req.get("userId");
 
-    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = ? AND ArticleName LIKE ? ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET ?";
+    const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId WHERE ArticleUser.UId = ? AND ArticleName LIKE ? ORDER BY Articles.ArticleName ASC LIMIT 20 OFFSET ?";
     //const sqlSelect = "SELECT * FROM Articles WHERE ArticleName LIKE ?";
     db.query(sqlSelect, [userId, searchedString, item, ], (err, result) => {
         if(err){
@@ -191,7 +191,7 @@ app.get('/api/get/favorite/search/', (req, res) => {
     const item = req.get("item")-1;
     const userId = req.get("userId");
 console.log(item + "" + userId + "" + searchedString);
-    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE UserFavorite.UserId = ? AND Articles.ArticleName LIKE ? ORDER BY Articles.ArticleId ASC LIMIT 20 OFFSET ?";
+    const sqlSelect = "SELECT Articles.*, Users.UserUn, Users.UserId, Users.UserPP FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId INNER JOIN Users ON ArticleUser.UId = Users.UserId AND Articles.ArticleStatus = 1 INNER JOIN UserFavorite ON Articles.ArticleId=UserFavorite.ArticleId WHERE UserFavorite.UserId = ? AND Articles.ArticleName LIKE ? ORDER BY Articles.ArticleName ASC LIMIT 20 OFFSET ?";
     
     db.query(sqlSelect, [userId,searchedString,item], (err, result) => {
         if(err){
