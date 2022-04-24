@@ -10,7 +10,7 @@ export default function Article(){
     
   const [show, setShow] = useState(false);
   
-  const handleClose = () => setShow(false);
+  
   const [LoginStatus, setLoginStatus] = useState('');
   const GotArticleId = useRef(null);
   const [search,setSearch] =useState('');

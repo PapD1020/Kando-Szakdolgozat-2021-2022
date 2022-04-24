@@ -58,20 +58,7 @@ export default function EditUser() {
  
 }, []);
 
-  /*
-  const getChoosenArticleById = () => {
-    alert("függvény meghívva")
-    Axios.get('http://localhost:3001/api/get/article/oneById1', {
-      headers: {
-        'content-type': "application/json",
-        'articleId1': location.state.id
-      }
-    }).then((response) => {
-      setOneArticleList(response.data);
-      console.log("One article get: " + JSON.stringify(response));
-    })
-  }
-  */
+
 
   let navigate = useNavigate();
   const routeChange = () => {
