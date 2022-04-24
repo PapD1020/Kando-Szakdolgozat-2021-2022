@@ -3,7 +3,7 @@ import '../App.css';
 import Axios from 'axios';
 import { useForm } from "react-hook-form";
 import * as ReactBootStrap from "react-bootstrap";
-import { Button,Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 
 export default function Article(){
@@ -35,7 +35,7 @@ export default function Article(){
     };
 
     const [ArticleNameList, setArticleNameList] = useState([]); //'' hibás, [] kell használni
-    const [ArticleNameSetting, setArticleNameSetting] = useState([]);
+  
  
 
     const current = new Date();
@@ -66,7 +66,7 @@ export default function Article(){
       // Search Records here 
     const searchRecords = () =>
     {
-        Axios.get(`http://localhost:3001/api/get/article/search/${search}`) .then(response => {
+        Axios.get(`http://localhost:3001/api/get/article/search/${search}`).then(response => {
           console.log(search);
           setRecord(response.data);
           console.log(record);
@@ -114,10 +114,10 @@ export default function Article(){
   refreshArticleData();
 };
 const ArticleStatusView=(ArticleStatus)=>{
-  if(ArticleStatus==-2){ArticleStatus = "Törölt"}
-  if(ArticleStatus==-1){ArticleStatus = "Felfüggesztett"}
-  if(ArticleStatus==0){ArticleStatus = "Inaktív"}
-  if(ArticleStatus==1){ArticleStatus = "Aktív"}
+  if(ArticleStatus===-2){ArticleStatus = "Törölt"}
+  if(ArticleStatus===-1){ArticleStatus = "Felfüggesztett"}
+  if(ArticleStatus===0){ArticleStatus = "Inaktív"}
+  if(ArticleStatus===1){ArticleStatus = "Aktív"}
 
   return ArticleStatus;
 }
@@ -153,7 +153,7 @@ const routeChange = (gotId) =>{
                           </thead>
   
                     <tbody >
-                  {search.length==0 ? ArticleNameList.map((val) => {
+                  {search.length===0 ? ArticleNameList.map((val) => {
                       return(
                             
                           
@@ -183,7 +183,7 @@ const routeChange = (gotId) =>{
                       )
                       
                   })
-                  : search.length !=0 && record.map((val) => {
+                  : search.length !==0 && record.map((val) => {
                       return(
 
                           

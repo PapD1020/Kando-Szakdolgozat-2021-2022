@@ -1,37 +1,24 @@
  import React, {useState, useEffect} from "react";
  import '../App.css';
 import Axios from 'axios';
-import { useForm } from "react-hook-form";
+
  import * as ReactBootStrap from "react-bootstrap";
- import { Button,Modal } from "react-bootstrap";
+ import { Button} from "react-bootstrap";
  import {useNavigate} from "react-router-dom";
 
  export default function UsersList(){
  
- const [show, setShow] = useState(false);
- const handleClose = () => setShow(false);
+
+
  const [search,setSearch] =useState('');
  const [record,setRecord] = useState([]);
-   
-  var UserUn ='';
-  var UserPw ='';
-  var UserPP ='';
-
-  var UserFN ='';
-  var UserSN ='';
-  var UserDob ='';
-  var UserPL ='';
-  var UserEmail='';
-
+ 
   
 
     const [UsersNameList, setUsersNameList] = useState([]);
 
-    const [NewUserEmail, setNewUserEmail] = useState('');
-     const [UsersNameSettings, setUsersNameSettings] = useState([]);
-    const current = new Date();
-     const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
-
+   
+  
     //On page load get users
    useEffect(() => {
 
@@ -42,13 +29,7 @@ import { useForm } from "react-hook-form";
     }, []);
 
 
-     const UserSetting = (userId) =>{
-       setShow(true);
-    Axios.get(`http://localhost:3001/api/get/user/${userId}`).then((response) => {
-  
-     setUsersNameSettings(response.data);
-      //console.log(response.data); //console logging the SELECT * FROM post to the frontend terminal
-     })};
+     
      
     //GET - USERS
     const refreshUserData = () => {
@@ -69,39 +50,20 @@ import { useForm } from "react-hook-form";
     // Search Records here 
     const searchRecords = () =>
     {
-        Axios.get(`http://localhost:3001/api/get/user/search/${search}`) .then(response => {
-          console.log(search);
+        Axios.get(`http://localhost:3001/api/get/user/search/${search}`).then(response => {
+         
           setRecord(response.data);
-          console.log(record);
+      
         });
          
     }
   
-  //PUT - USERS
-  const updateUser = (userid) =>{
-     Axios.put('http://localhost:3001/api/update/user', {
-      userId: userid,
-      userUn: UserUn,
-      userPP: UserPP,
-      userPw: UserPw,
-      userFN: UserFN,
-      userSN: UserSN,
-      userDob: UserDob,
-      userPL: UserPL,
-      userEmail: UserEmail,
-      userUpdatedAt: date
-    });
   
-    alert("Successfuly changed! Please click on the refresh button.");
-    setShow(false);
-    refreshUserData();
-   };
    const UserPLView=(UserPL)=>{
-    if(UserPL==-2){UserPL = "Törölt"}
-    if(UserPL==-1){UserPL = "Felfüggesztett"}
-    if(UserPL==0){UserPL = "Inaktív"}
-    if(UserPL==1){UserPL = "Aktív"}
-    if(UserPL==9){UserPL = "Admin"}
+    if(UserPL===-2){UserPL = "Törölt"}
+    if(UserPL===-1){UserPL = "Felfüggesztett"}
+    if(UserPL===0){UserPL = "Inaktív"}
+    if(UserPL===1){UserPL = "Aktív"}
 
   
     return UserPL;
@@ -135,7 +97,7 @@ import { useForm } from "react-hook-form";
                                  </th>
                          </thead>
                          
-                   { search.length==0 ? UsersNameList.map((val) => {
+                   { search.length===0 ? UsersNameList.map((val) => {
                    
                       return(
                               
@@ -165,7 +127,7 @@ import { useForm } from "react-hook-form";
                       
                        )
                    })
-                   : search.length!=0 && record.map((val) => {
+                   : search.length!==0 && record.map((val) => {
                    
                     return(
                             

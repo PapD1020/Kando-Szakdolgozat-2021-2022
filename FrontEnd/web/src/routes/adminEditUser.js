@@ -94,11 +94,11 @@ export default function EditUser() {
   };
 
   const UserPLView=(UserPL)=>{
-    if(UserPL==-2){UserPL = "Törölt"}
-    if(UserPL==-1){UserPL = "Felfüggesztett"}
-    if(UserPL==0){UserPL = "Inaktív"}
-    if(UserPL==1){UserPL = "Aktív"}
-    if(UserPL==9){UserPL = "Admin"}
+    if(UserPL===-2){UserPL = "Törölt"}
+    if(UserPL===-1){UserPL = "Felfüggesztett"}
+    if(UserPL===0){UserPL = "Inaktív"}
+    if(UserPL===1){UserPL = "Aktív"}
+  
 
   
     return UserPL;
@@ -148,7 +148,7 @@ export default function EditUser() {
                                               ...register("userUnUpd", {
                                                   minLength: 6,
                                                   maxLength: 20,
-                                                  pattern: /^[A-Za-z]+$/i //valószínűleg nincsenek benne ékezetes betűk, javítani kell
+                                                  //pattern: /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/ //valószínűleg nincsenek benne ékezetes betűk, javítani kell
                                               })
                                           }onChange={(e) => {
                                               setUserUnUpd(e.target.value);
@@ -241,7 +241,7 @@ export default function EditUser() {
                                           <option value="-1">Felfüggesztett</option>
                                           <option value="0">Inaktív</option>
                                           <option value="1">Aktív</option>
-                                          <option value="9">Admin</option>
+                                          
                                       </select>
                                     </div>
                                     </div>

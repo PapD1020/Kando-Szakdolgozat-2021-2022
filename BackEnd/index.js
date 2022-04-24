@@ -13,7 +13,7 @@ const saltRounds = 10;
 
 const jwt = require('jsonwebtoken');
 
-/*
+
 //Nethelyes
 const db = mysql.createPool({
     host: 'mysql.nethely.hu',
@@ -21,8 +21,8 @@ const db = mysql.createPool({
     password: 'KozosAdatbazis1',
     database: 'ideashare'
 });
-*/
 
+/*
 //Xampos
 
 const db = mysql.createPool({
@@ -31,7 +31,7 @@ const db = mysql.createPool({
     password: '',
     database: 'ideashare'
 });
-
+*/
 
 //Middleware
 //for express-session
@@ -726,11 +726,12 @@ app.get('/api/get/article/search/:articleName', (req, res) => {
     console.log(name);
     const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId  INNER JOIN Users ON  ArticleUser.UId=Users.UserId WHERE ArticleName LIKE ?";   db.query(sqlSelect, name, (err, result) => {
         if(err){
-            console.log("Article GET error: " + err);
+            res.status(500).send({message: err.message});
         }
-
-        console.log("Result FIGYELD:" + result);               //valamiért Object-et kapok terminálban
-        res.send(result);
+        
+        else{
+            res.status(200).send(result);
+        }
     });
 });
 
@@ -740,11 +741,13 @@ app.get('/api/get/articleall', (req, res) => {
 
     const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId  INNER JOIN Users ON  ArticleUser.UId=Users.UserId ORDER BY Articles.ArticleUpdatedAt DESC";    db.query(sqlSelect, (err, result) => {
         if(err){
-            console.log("Article GET error: " + err);
+            res.status(500).send({message: err.message});
         }
-
-        console.log("Result FIGYELD:" + result);                //valamiért Object-et kapok terminálban
-        res.send(result);
+        if (result.length == 0){
+            res.status(404).send({message: 'Not found'});
+        }else{
+            res.status(200).send(result);
+        }
     });
 });
 
@@ -755,11 +758,13 @@ app.get('/api/get/article/:articleId', (req, res) => {
     const sqlSelect = "SELECT * FROM Articles WHERE ArticleId = ?";
     db.query(sqlSelect, id, (err, result) => {
         if(err){
-            console.log("Article GET error: " + err);
+            res.status(500).send({message: err.message});
         }
-
-        console.log(result);                //valamiért Object-et kapok terminálban
-        res.send(result);
+        if (result.length == 0){
+            res.status(404).send({message: 'Not found'});
+        }else{
+            res.status(200).send(result);
+        }
     });
 });
 
@@ -795,11 +800,12 @@ app.get('/api/get/user/search/:userUn', (req, res) => {
     const sqlSelect = "SELECT * FROM Users WHERE UserUn LIKE ?";
     db.query(sqlSelect, name, (err, result) => {
         if(err){
-            console.log("User GET error: " + err);
+            res.status(500).send({message: err.message});
         }
-
-        console.log("Result FIGYELD:" + result);               //valamiért Object-et kapok terminálban
-        res.send(result);
+      
+        else{
+            res.status(200).send(result);
+        }
     });
 });
 
@@ -810,11 +816,13 @@ app.get('/api/get/user/:userId', (req, res) => {
     const sqlSelect = "SELECT * FROM Users WHERE UserId = ?";
     db.query(sqlSelect, id, (err, result) => {
         if(err){
-            console.log("Article GET error: " + err);
+            res.status(500).send({message: err.message});
         }
-
-        console.log(result);                //valamiért Object-et kapok terminálban
-        res.send(result);
+        if (result.length == 0){
+            res.status(404).send({message: 'Not found'});
+        }else{
+            res.status(200).send(result);
+        }
     });
 });
 
@@ -826,11 +834,13 @@ app.get('/api/get/user', (req, res) => {
 
     db.query(sqlSelect, (err, result) => {
         if(err){
-            console.log("Users GET error: " + err);
+            res.status(500).send({message: err.message});
         }
-
-        console.log("Users GET result: " + result.data); //still not working properly
-        res.send(result);
+        if (result.length == 0){
+            res.status(404).send({message: 'Not found'});
+        }else{
+            res.status(200).send(result);
+        }
     });
 });
 
@@ -849,11 +859,17 @@ app.put('/api/update/user', (req, res) => {
 
     db.query(sqlUpdate, [name,pimg, firstname, secondname, userE,userPL, updated,id ], (err, result) => {                       //Fontos a sorrend, első a PostStatus, aztán a PostName, gondolom az sql szintaktika miatt
         if(err){
-            console.log("Users UPDATE error: " + err);
+            console.log(err);
+            if(err.errno == 1062){
+                res.status(409).send({message: "There is a post with the exact same small or main description"});
+            }
+            else{
+                res.status(500).send({message: err.message});
+            }
         }
-            console.log("Users UPDATE result: " + result);
-            res.sendStatus(200);
-        
+        else{
+            res.status(200).send({result: result, message: "Changed successfully"});
+        }
     });
 });
 
@@ -880,11 +896,13 @@ app.get('/api/get/commentall', (req, res) => {
 
     const sqlSelect = "SELECT Articles.ArticleName, Comments.CommentId, Comments.Comment, Comments.CommentCreatedAt FROM Articles INNER JOIN ArticleComment ON ArticleComment.AId = Articles.ArticleId INNER JOIN Comments ON Comments.CommentId = ArticleComment.CId ORDER BY Comments.CommentCreatedAt DESC";      db.query(sqlSelect, (err, result) => {
         if(err){
-            console.log("Comment GET error: " + err);
+            res.status(500).send({message: err.message});
         }
-
-        console.log("Result FIGYELD:" + result);                //valamiért Object-et kapok terminálban
-        res.send(result);
+        if (result.length == 0){
+            res.status(404).send({message: 'Not found'});
+        }else{
+            res.status(200).send(result);
+        }
     });
 });
 

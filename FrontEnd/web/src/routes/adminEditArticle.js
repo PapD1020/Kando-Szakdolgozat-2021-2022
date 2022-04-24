@@ -92,10 +92,10 @@ export default function EditArticle() {
     
   };
   const ArticleStatusView=(ArticleStatus)=>{
-    if(ArticleStatus==-2){ArticleStatus = "Törölt"}
-    if(ArticleStatus==-1){ArticleStatus = "Felfüggesztett"}
-    if(ArticleStatus==0){ArticleStatus = "Inaktív"}
-    if(ArticleStatus==1){ArticleStatus = "Aktív"}
+    if(ArticleStatus===-2){ArticleStatus = "Törölt"}
+    if(ArticleStatus===-1){ArticleStatus = "Felfüggesztett"}
+    if(ArticleStatus===0){ArticleStatus = "Inaktív"}
+    if(ArticleStatus===1){ArticleStatus = "Aktív"}
   
     return ArticleStatus;
   }
