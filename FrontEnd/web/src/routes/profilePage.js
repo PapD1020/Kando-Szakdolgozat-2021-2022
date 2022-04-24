@@ -148,9 +148,9 @@ export default function ProfileUpdate(){
                       return(
                         <div className="text-center">
 
-                            <div className="card border-primary m-5">
+                            <div className="card border-primary m-5 shadow-lg">
                             <div className="card-header mb-3">{val.UserUn}'s profile</div>
-                            <div className="card-text">Profile picture: <img className="card-img-top w-25" src={val.UserPP} alt="User profile pic"></img></div>
+                            <div className="card-text">Profile picture: <img className="card-img-top w-25 rounded shadow p-3 mb-5 bg-body" src={val.UserPP} alt="User profile pic"></img></div>
                             
                                 <div className="card-body">
                                     <h5 className="card-title">User name: {val.UserUn}</h5>
@@ -245,15 +245,15 @@ export default function ProfileUpdate(){
                                         <label>User profile picture:</label>
                                         <input type="url" className="form-control" defaultValue={val.UserPP}{
                                             ...register2("userPPUpd", {
-                                                minLength: 3,
-                                                maxLength: 200,
+                                                minLength: 10,
+                                                maxLength: 500,
                                             })
                                         }onChange={(e) => {
                                             setUserPPUpd(e.target.value);
                                         }}/>
                         
-                                        {errors2?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 3 and 200 characters.</p></div>}
-                                        {errors2?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 3 and 200 characters.</p></div>}
+                                        {errors2?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 10 and 500 characters.</p></div>}
+                                        {errors2?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 10 and 500 characters.</p></div>}
                                     </div>
                         
                                     <div className="form-group">

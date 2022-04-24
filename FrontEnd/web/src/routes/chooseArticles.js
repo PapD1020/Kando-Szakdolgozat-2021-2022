@@ -58,7 +58,7 @@ export default function CreateArticle(props){
                             </Card.Footer>
                           </Card>
 
-                          <div className="text-center">
+                          <div className="text-center mb-3">
                             <Button variant="primary" onClick={() => {routeChange(val.ArticleId)}}>Select article for editing</Button>
                           </div>
                         </div>

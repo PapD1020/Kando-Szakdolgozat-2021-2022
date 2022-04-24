@@ -52,7 +52,6 @@ export default function App(){
           if(response.data.loggedIn === true){
               setLoginStatus(true);
               setLoginName(response.data.user[0].UserUn);
-              console.log(response.data.user[0].UserPL)
               if(response.data.user[0].UserPL === 9){
                 adminTrue();
               }
@@ -182,7 +181,7 @@ export default function App(){
 
   return(
     <div>
-      <Navbar sticky='top' collapseOnSelect expand="lg" bg="primary" variant="dark">
+      <Navbar className='shadow-lg' sticky='top' collapseOnSelect expand="lg" bg="primary" variant="dark">
         <Container>
         <Navbar.Brand href="/">IdeaShare</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

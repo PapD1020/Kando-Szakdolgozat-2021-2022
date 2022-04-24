@@ -240,7 +240,7 @@ app.post('/api/insert/article/byId', (req, res) => {
 
             if(err){
                 if(err.errno === 1062){
-                    res.status(409).send({message: "There's a post with exactly same small or detailed description"});
+                    res.status(409).send({message: "There's a post with exactly the same small or main description"});
                 }
                 else{
                     res.status(500).send({message: err});
