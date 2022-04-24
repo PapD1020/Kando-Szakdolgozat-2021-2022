@@ -16,6 +16,7 @@ function AuthScreen ({navigation}) {
 
     const [userUn, setUserUn] = useState('');
     const [userPw, setUserPw] = useState('');
+    const [userPw2, setUserPw2] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userFN, setUserFN] = useState('');
     const [userSN, setUserSN] = useState('');
@@ -88,12 +89,14 @@ function AuthScreen ({navigation}) {
     const onSubmitHandler = () => {
 
         if(
-            ( !isLogin && (userUn == '' || userPw == '' || userEmail == '' || userFN == '' || userSN == '' || userDob == '' ))
+            ( !isLogin && (userUn == '' || userPw == '' || userPw2 == '' || userEmail == '' || userFN == '' || userSN == '' || userDob == '' ))
             || 
             ( isLogin && (userUn == '' || userPw == '') )
             )
             {
             showToast('info','Info','Please fill all the required fields');
+        }else if( userPw !== userPw2 ){
+            showToast('info','Info','Passwords do not match');
         }else{
             userCreatedAt = userUpdatedAt = getCurrentDate();
             const payload = {
@@ -183,6 +186,7 @@ function AuthScreen ({navigation}) {
                                         /> */}
                                     <MaskInput style={styles.input} placeholder="Date of Birth, eg. 1990/01/01" placeholderTextColor='darkgrey' value={userDob} onChangeText={(masked, unmasked) => {setUserDob(masked)}}       mask={Masks.DATE_YYYYMMDD/*[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]*/}/>
                                     <TextInput secureTextEntry={true} style={styles.input} placeholder="Password" placeholderTextColor='darkgrey'  onChangeText={setUserPw}></TextInput>
+                                    <TextInput secureTextEntry={true} style={styles.input} placeholder="Password again" placeholderTextColor='darkgrey'  onChangeText={setUserPw2}></TextInput>
                                     <TextInput style={styles.input} placeholder="Profile picture link (optional)" placeholderTextColor='darkgrey'  onChangeText={setUserPP}></TextInput>
 
                                 </ScrollView>
