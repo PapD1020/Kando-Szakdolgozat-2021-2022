@@ -95,7 +95,7 @@ function AuthScreen ({navigation}) {
             )
             {
             showToast('info','Info','Please fill all the required fields');
-        }else if( userPw !== userPw2 ){
+        }else if( !isLogin && userPw !== userPw2 ){
             showToast('info','Info','Passwords do not match');
         }else{
             userCreatedAt = userUpdatedAt = getCurrentDate();
