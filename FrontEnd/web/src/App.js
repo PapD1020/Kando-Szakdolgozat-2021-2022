@@ -21,6 +21,8 @@ export default function App(){
   const [UserUnLogin, setUserUnLogin] = useState('');
   const [UserPwLogin, setUserPwLogin] = useState('');
 
+  const [ProfileP, setProfileP] = useState('');
+
   const [UserUnReg, setUserUnReg] = useState('');
   const [UserPPReg, setUserPPReg] = useState('');
   const [UserPwReg, setUserPwReg] = useState('');
@@ -51,6 +53,7 @@ export default function App(){
         Axios.get('http://localhost:3001/api/login/user').then((response) => {
           if(response.data.loggedIn === true){
               setLoginStatus(true);
+              setProfileP(response.data.user[0].UserPP);
               setLoginName(response.data.user[0].UserUn);
               if(response.data.user[0].UserPL === 9){
                 adminTrue();
@@ -116,10 +119,10 @@ export default function App(){
           routeChange();
         }
       }
-      else{
-        alert("not destroyed.");
-      }
-    })
+    }).catch((error) => {
+      setMessageError(error.response.data.message);
+      handleShowError();
+    });
   }
 
   let navigate = useNavigate();
@@ -216,6 +219,18 @@ export default function App(){
 
           <Nav>
           {LoginStatus && (
+                <Navbar.Brand>
+                  <img
+                    alt=""
+                    src={ProfileP}
+                    width="35"
+                    height="35"
+                    className="d-inline-block align-top rounded"
+                  />{' '}
+                </Navbar.Brand>
+              )}
+
+            {LoginStatus && (
             <NavDropdown title={LoginName} id="basic-nav-dropdown">
               <NavDropdown.Item href="profilePage">Profile</NavDropdown.Item>
               <NavDropdown.Divider />
