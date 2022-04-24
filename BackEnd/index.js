@@ -705,9 +705,9 @@ app.post('/api/insert/favorite', (req, res) => {
 app.delete('/api/delete/favorite/:articleId/:userId', (req, res) => {
     const articleId = req.params.articleId;
     const userId = req.params.userId;
-    console.log(articleId + " " + userId)
-    const sqlDelete = "DELETE FROM UserFavorite WHERE ArticleId = ? AND UserId = ?";
-    db.query(sqlDelete, [articleId, userId], (err, result) => {
+    const favoriteId = userId+articleId;
+    const sqlDelete = "DELETE FROM UserFavorite WHERE FavoriteId = ?";
+    db.query(sqlDelete, [favoriteId], (err, result) => {
         if(err){
             res.status(500).send({message: err.message});
         }
