@@ -723,7 +723,6 @@ app.delete('/api/delete/favorite/:articleId/:userId', (req, res) => {
 //GET - Article Searching
 app.get('/api/get/article/search/:articleName', (req, res) => {
     const name = "%" +req.params.articleName + "%";
-    console.log("ffffffffff" + name);
     const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId  INNER JOIN Users ON  ArticleUser.UId=Users.UserId WHERE ArticleName LIKE ?";   db.query(sqlSelect, name, (err, result) => {
         if(err){
             res.status(500).send({message: err.message});
@@ -796,7 +795,6 @@ app.delete('/api/delete/article/:articleId', (req, res) => {
 //GET - User Searching
 app.get('/api/get/user/search/:userUn', (req, res) => {
     const name = "%"+req.params.userUn+ "%";
-    console.log(name);
     const sqlSelect = "SELECT * FROM Users WHERE UserUn LIKE ?";
     db.query(sqlSelect, name, (err, result) => {
         if(err){
@@ -878,7 +876,6 @@ app.put('/api/update/user', (req, res) => {
 //DELETE - USERS
 app.delete('/api/delete/user/:userId', (req, res) => {
     const id = req.params.userId;
-    console.log(id);
     const sqlDelete = "DELETE Comments FROM Comments INNER JOIN UserComment ON UserComment.CId = Comments.CommentId WHERE UserComment.UId = ?; DELETE Articles FROM Articles INNER JOIN ArticleUser ON ArticleUser.AId = Articles.ArticleId WHERE ArticleUser.UId = ?; DELETE Users FROM Users WHERE UserId = ?";
       db.query(sqlDelete, [id,id,id], (err, result) => {
         if(err){
