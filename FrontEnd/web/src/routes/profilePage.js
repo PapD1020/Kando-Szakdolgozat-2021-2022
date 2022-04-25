@@ -246,14 +246,14 @@ export default function ProfileUpdate(){
                                         <input type="url" className="form-control" defaultValue={val.UserPP}{
                                             ...register2("userPPUpd", {
                                                 minLength: 10,
-                                                maxLength: 500,
+                                                maxLength: 1000,
                                             })
                                         }onChange={(e) => {
                                             setUserPPUpd(e.target.value);
                                         }}/>
                         
-                                        {errors2?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 10 and 500 characters.</p></div>}
-                                        {errors2?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 10 and 500 characters.</p></div>}
+                                        {errors2?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 10 and 1000 characters.</p></div>}
+                                        {errors2?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 10 and 1000 characters.</p></div>}
                                     </div>
                         
                                     <div className="form-group">
