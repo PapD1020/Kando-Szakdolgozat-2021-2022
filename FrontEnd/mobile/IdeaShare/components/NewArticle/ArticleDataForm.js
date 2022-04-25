@@ -12,6 +12,7 @@ const ArticleDataForm = () => {
     const [articleSmDescr, setArticleSmDescr] = useState('');
     const [articleMDescr, setArticleMDescr] = useState('');
     const [articleType, setArticleType] = useState('');
+    const [articleImg, setArticleImg] = useState('');
     const [articleCreatedAt, setArticleCreatedAt] = useState('');
     const [articleUpdatedAt, setArticleUpdatedAt] = useState('');
     
@@ -54,6 +55,7 @@ const ArticleDataForm = () => {
                 articleSmDescr,
                 articleMDescr,
                 articleType,
+                articleImg,
                 articleCreatedAt,
                 articleUpdatedAt
             };
@@ -89,13 +91,16 @@ const ArticleDataForm = () => {
     return(
         <View style={styles.container}>
             <View style={styles.formContainer}>
-            <ScrollView >
+            <ScrollView>
                 
                 <Text style={styles.label}>Title/Name: {articleName.length}/100</Text>
                 <TextInput style={styles.input} onChangeText={setArticleName} maxLength={100} autoCapitalize="none"></TextInput>
                 
                 <Text style={styles.label}>Category: {articleType.length}/100</Text>
                 <TextInput style={styles.input} onChangeText={setArticleType} maxLength={100} autoCapitalize="none"></TextInput>
+                
+                <Text style={styles.label}>Image (Leave it empty to use the default picture): {articleImg.length}/1000</Text>
+                <TextInput style={styles.inputMultiline} onChangeText={setArticleImg} maxLength={1000} multiline={true} autoCapitalize="none"></TextInput>
                 
                 <Text style={styles.label}>Small description: {articleSmDescr.length}/100</Text>
                 <TextInput style={styles.inputMultiline} onChangeText={setArticleSmDescr} maxLength={100} multiline={true} autoCapitalize="none"></TextInput>

@@ -51,26 +51,6 @@ export const SignedInStack = ({userName,userPP}) => {
               ),
             }}
             />
-            <Tab.Screen
-            name="My Ideas"
-            children={props => <UsersArticlesScreen {...props}/>}
-            options={{
-              tabBarColor:"#c9c8b3",
-              tabBarIcon: ({color}) => (
-                <MaterialCommunityIcons name="lightbulb-group" color={color} size={26} />
-              ),
-            }}
-            />
-            <Tab.Screen
-            name="Favorites"
-            children={props => <UsersFavoritesScreen {...props}/>}
-            options={{
-              tabBarColor:"#c9c8b3",
-              tabBarIcon: ({color}) => (
-                <MaterialCommunityIcons name="star" color={color} size={26} />
-              ),
-            }}
-            />
           <Tab.Screen
             name="New Idea"
             children={props => <NewArticleScreen {...props}/>}
@@ -80,8 +60,28 @@ export const SignedInStack = ({userName,userPP}) => {
                 <MaterialCommunityIcons name="plus-thick" color={color} size={26} />
               ),
             }}
-            />
-            <Tab.Screen
+          />
+          <Tab.Screen
+            name="Favorites"
+            children={props => <UsersFavoritesScreen {...props}/>}
+            options={{
+              tabBarColor:"#c9c8b3",
+              tabBarIcon: ({color}) => (
+                <MaterialCommunityIcons name="star" color={color} size={26} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="My Ideas"
+            children={props => <UsersArticlesScreen {...props}/>}
+            options={{
+              tabBarColor:"#c9c8b3",
+              tabBarIcon: ({color}) => (
+                <MaterialCommunityIcons name="lightbulb-group" color={color} size={26} />
+              ),
+            }}
+          />
+          <Tab.Screen
             name="My Profile"
             children={props => <SettingsScreen {...props} userName={userName} userPP={userPP} />}
             options={{
@@ -90,7 +90,7 @@ export const SignedInStack = ({userName,userPP}) => {
                 <FastImage source={{uri: userPP}} style={styles.icon} color={color} size={26} />
               ),
             }}
-            />
+          />
         </Tab.Navigator>
       </NavigationContainer>
     );

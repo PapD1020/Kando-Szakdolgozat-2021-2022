@@ -7,7 +7,6 @@ import Comments from "../Home/Comments";
 import Profile from "../Home/Profile";
 
 
-//const ScrollableModal = ({isVisible,onSwipeComplete,id,content}) => {
 const ScrollableModal = React.forwardRef((props,ref) => {
 
     return (

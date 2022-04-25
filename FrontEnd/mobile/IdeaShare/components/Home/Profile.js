@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TextInput, TouchableHighlight } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ContentLoader, { Facebook, Circle, Rect } from 'react-content-loader/native'
 import Toast from 'react-native-toast-message';
@@ -85,19 +85,21 @@ const UserDataForm = ({userId}) => {
             :
                 <>
                     <FastImage source={{uri: userPP}} style={styles.ProfilePic}/>
-                    <Text style={styles.UsernameText}>{userUn}</Text>
-                    <Text style={styles.label}>E-mail</Text>
-                    <Text style={styles.input} placeholder="E-mail" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userEmail}</Text>
-                    
-                    <Text style={styles.label}>Forename</Text>
-                    <Text style={styles.input} placeholder="Forename" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userFN}</Text>
-                    
-                    <Text style={styles.label}>Surname</Text>
-                    <Text style={styles.input} placeholder="Surnsme" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userSN}</Text>
-                    
-                    <Text style={styles.label}>Profile picture link</Text>
-                    <Text style={styles.input} placeholder="Profile Picture URL" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userPP}</Text>
-                    
+                    <Text style={styles.UsernameText} selectable={true}>{userUn}</Text>
+                    <ScrollView>
+                        <Text style={styles.label}>E-mail</Text>
+                        <Text style={styles.text} selectable={true} placeholder="E-mail" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userEmail}</Text>
+                        
+                        <Text style={styles.label}>Forename</Text>
+                        <Text style={styles.text} selectable={true} placeholder="Forename" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userFN}</Text>
+                        
+                        <Text style={styles.label}>Surname</Text>
+                        <Text style={styles.text} selectable={true} placeholder="Surnsme" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userSN}</Text>
+                        
+                        <Text style={styles.label}>Profile picture link</Text>
+                        <Text style={styles.text} selectable={true} placeholder="Profile Picture URL" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userPP}</Text>
+                        
+                    </ScrollView>
                 </>
             }
         </View>
@@ -125,6 +127,7 @@ const LoadingPlaceholder = () => (
 const styles = StyleSheet.create({
     
     container: {
+        flex: 1,
         backgroundColor: "#f2f1e1",
         padding: 10,
         borderTopLeftRadius: 20,
@@ -166,7 +169,7 @@ const styles = StyleSheet.create({
         color: '#4d4a42',
         marginBottom: 10,
     },
-    input: {
+    text: {
         width: '100%',
         fontSize: 16, 
         minHeight: 40,
@@ -174,7 +177,7 @@ const styles = StyleSheet.create({
        // backgroundColor: 'white',
         borderRadius: 10,
         alignSelf: 'center',
-        marginBottom: 30,
+        marginBottom: 20,
         paddingLeft: 10,
     },
   });

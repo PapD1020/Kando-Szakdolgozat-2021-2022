@@ -186,7 +186,7 @@ const Articles = ({searchedStr}) => {
             articleData = [];
         }
         if (isSearch){
-            fetch(`${global.NodeJS_URL}/api/get/article/search/byId`, {
+            fetch(`${global.NodeJS_URL}/api/get/mobile/article/search/byId`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -513,7 +513,7 @@ const ArticleBody = ({props}) => {
                     { props[2] === true && articleId === articleData[props[0]].ArticleId ?
                         <TextInput multiline={true}  ref={(ref) => {globalTextInputRef = ref}} style={styles.textInput} onChangeText={setArticleSmDescr}>{articleSmDescr}</TextInput>
                     :
-                        <Text>{articleData[props[0]].ArticleSmDescr}</Text>
+                        <Text style={styles.articleBodyFooterText}>{articleData[props[0]].ArticleSmDescr}</Text>
                     }
                     </View>
             :
@@ -528,12 +528,14 @@ const ArticleBody = ({props}) => {
                         initialContentHTML = {articleData[props[0]].ArticleMDescr}
                     />*/
                         :
-                        <View onStartShouldSetResponder={() => true}>
-                        <RenderHtml
-                            contentWidth={Dimensions.get("window").width}
-                            source={{html: articleData[props[0]].ArticleMDescr}}
-                            /></View>
-                            // <Text>{articleData[props[0]].ArticleMDescr}</Text>
+/*                             <View onStartShouldSetResponder={() => true}>
+                            <RenderHtml
+                                style={styles.articleBodyFooterText}
+                                contentWidth={Dimensions.get("window").width}
+                                source={{html: articleData[props[0]].ArticleMDescr}}
+                                />
+                            </View> */
+                            <Text style={styles.articleBodyFooterText}>{articleData[props[0]].ArticleMDescr}</Text>
                         }  
                 </ScrollView>
             }
@@ -645,9 +647,9 @@ const ArticleFooter = ({props}) => {
         <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {Submit(-2)}}>
             <MaterialCommunityIcons name="delete" color="#4d4a42" size={30} />
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {openPanel()}}>
+       {/*  <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*//* onPress={() => {openPanel()}}>
             <MaterialCommunityIcons name="image-edit" color="#4d4a42" size={30} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {Submit(1)}}>
             <MaterialCommunityIcons name="content-save" color="#4d4a42" size={30} />
         </TouchableOpacity>
@@ -738,7 +740,7 @@ const styles = StyleSheet.create({
                 //flex:1,
                 marginBottom : 100,
                 fontSize: 25,
-                backgroundColor: 'rgba(0,0,0,0.4)',
+                backgroundColor: 'rgba(0,0,0,0.55)',
                 color: 'white',
                 paddingLeft: 10,
                 borderTopLeftRadius: 10,
@@ -747,12 +749,15 @@ const styles = StyleSheet.create({
             articleBodyFooter: {
                 flex:3,
                 fontSize: 15,
-                backgroundColor: 'rgba(0,0,0,0.4)',
+                backgroundColor: 'rgba(0,0,0,0.55)',
                 color: 'white',
                 paddingLeft: 10,
                 borderBottomLeftRadius: 10,
                 borderBottomRightRadius: 10,
             },
+                articleBodyFooterText: {
+                    color:'white'
+                },
                 articleBodyFooterTextInput: {
                     height: '100%',
                 },

@@ -176,7 +176,7 @@ const Articles = ({searchedStr}) => {
         }
         if (isSearch){
 
-            fetch(`${global.NodeJS_URL}/api/get/article/search`, {
+            fetch(`${global.NodeJS_URL}/api/get/mobile/article/search`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -570,12 +570,12 @@ const ArticleBody = ({props}) => {
             <Text style={styles.articleBodyHeader}>{props[1]}</Text>
             { props[3] === false ?
                 <View style={styles.articleBodyFooter} onStartShouldSetResponder={() => false}>
-                    <Text onStartShouldSetResponder={() => true}>{props[2]}</Text>   
+                    <Text style={styles.articleBodyFooterText} onStartShouldSetResponder={() => true}>{props[2]}</Text>   
                 </View>
             :
                 <ScrollView style={styles.articleBodyFooter}  onStartShouldSetResponder={() => true}>
                     <View onStartShouldSetResponder={() => true}>
-                    <Text>{props[2]}</Text></View>
+                    <Text style={styles.articleBodyFooterText} >{props[2]}</Text></View>
                 </ScrollView>
             }
         </ImageBackground>
@@ -662,7 +662,7 @@ const styles = StyleSheet.create({
                 //flex:1,
                 marginBottom : 100,
                 fontSize: 25,
-                backgroundColor: 'rgba(0,0,0,0.4)',
+                backgroundColor: 'rgba(0,0,0,0.55)',
                 color: 'white',
                 paddingLeft: 10,
                 borderTopLeftRadius: 10,
@@ -671,12 +671,15 @@ const styles = StyleSheet.create({
             articleBodyFooter: {
                 flex:3,
                 fontSize: 15,
-                backgroundColor: 'rgba(0,0,0,0.4)',
+                backgroundColor: 'rgba(0,0,0,0.55)',
                 color: 'white',
                 paddingLeft: 10,
                 borderBottomLeftRadius: 10,
                 borderBottomRightRadius: 10,
             },
+                articleBodyFooterText: {
+                    color:'white'
+                },
         articleFooter: {
             //flex:1,
             flexDirection: 'row',
