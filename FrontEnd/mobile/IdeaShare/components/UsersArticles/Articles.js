@@ -616,14 +616,15 @@ const ArticleFooter = ({props}) => {
                     if (res.status !== 200) {
                         const jsonRes = await res.json();
                         //console.log(jsonRes);
-                        showToast('error','Error',jsonRes.errorMessage);
+                        showToast('error','Error',jsonRes.message);
                     } else {
+                        const jsonRes = await res.json();
                         articleData[props[0]].ArticleName = articleName;
                         articleData[props[0]].ArticleSmDescr = articleSmDescr;
                         articleData[props[0]].ArticleMDescr = articleMDescr;
                         articleData[props[0]].ArticleImg = articleImg;
                         setIfEdit(prevState => !prevState);
-                        showToast('success','Success',"Idea successfully updated");
+                        showToast('success','Success',jsonRes.message);
                         //fetchMore(true);
                     }
                 } catch (err) {
@@ -646,6 +647,9 @@ const ArticleFooter = ({props}) => {
         <View style={styles.articleFooter}>
         <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {Submit(-2)}}>
             <MaterialCommunityIcons name="delete" color="#4d4a42" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {setIfEdit(prevState => !prevState)}}>
+            <MaterialCommunityIcons name="close" color="#4d4a42" size={30} />
         </TouchableOpacity>
        {/*  <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*//* onPress={() => {openPanel()}}>
             <MaterialCommunityIcons name="image-edit" color="#4d4a42" size={30} />

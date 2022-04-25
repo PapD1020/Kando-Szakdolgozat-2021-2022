@@ -563,7 +563,7 @@ const { openPanel, removeFromFavorites } = useContext(PanelHandlerContext);
     <View style={styles.articleFooter}>
         <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer}/* underlayColor={'rgba(0,0,0,0.3)'} */onPress={() => {removeFromFavorites(props[0])}}>
             {/* <FastImage source={require("../../public/images/star.png")} style={styles.articleFooterBtnImg}/> */}
-            <MaterialCommunityIcons name="close" color="#4d4a42" size={34} />
+            <MaterialCommunityIcons name="delete" color="#4d4a42" size={34} />
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.5} style={styles.articleFooterBtnContainer} /*underlayColor={'rgba(0,0,0,0.3)'}*/ onPress={() => {openPanel(props[0],'comments')}}>
             <MaterialCommunityIcons name="comment" color="#4d4a42" size={30} />
