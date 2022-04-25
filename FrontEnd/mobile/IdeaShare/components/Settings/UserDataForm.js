@@ -143,14 +143,18 @@ const UserDataForm = ({beginLoadData}) => {
                 </>
             :
                 <>
-                    <Text style={styles.label}>E-mail</Text>
-                    <TextInput style={styles.input} onChangeText={setUserEmail} placeholder="E-mail" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userEmail}</TextInput>
-                    <Text style={styles.label}>Forename</Text>
-                    <TextInput style={styles.input} onChangeText={setUserFN} placeholder="Forename" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userFN}</TextInput>
-                    <Text style={styles.label}>Surname</Text>
-                    <TextInput style={styles.input} onChangeText={setUserSN} placeholder="Surname" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userSN}</TextInput>
-                    <Text style={styles.label}>Profile picture link</Text>
-                    <TextInput style={styles.input} onChangeText={setUserPP} placeholder="Profile Picture URL" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userPP}</TextInput>
+                    <Text style={styles.label}>E-mail: {userEmail.length}/40</Text>
+                    <TextInput style={styles.input} onChangeText={setUserEmail} maxLength={40} placeholder="E-mail" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userEmail}</TextInput>
+                    
+                    <Text style={styles.label}>Forename: {userFN.length}/20</Text>
+                    <TextInput style={styles.input} onChangeText={setUserFN} maxLength={20} placeholder="Forename" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userFN}</TextInput>
+                    
+                    <Text style={styles.label}>Surname: {userSN.length}/20</Text>
+                    <TextInput style={styles.input} onChangeText={setUserSN} maxLength={20} placeholder="Surname" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userSN}</TextInput>
+                    
+                    <Text style={styles.label}>Profile picture link (optional): {userPP.length}/1000 </Text>
+                    <TextInput style={styles.input} onChangeText={setUserPP} maxLength={1000} placeholder="Profile Picture URL" placeholderTextColor = 'lightgrey' autoCapitalize="none">{userPP}</TextInput>
+                    
                     <TouchableHighlight style={styles.submitBtn} /*onPress={() => {}}*/ onPress={Submit} underlayColor={'#32302a'}>
                         <Text style={styles.submitBtnText}>Apply</Text>
                     </TouchableHighlight>

@@ -504,14 +504,14 @@ const ArticleBody = ({props}) => {
         >
             
             { props[2] === true && articleId === articleData[props[0]].ArticleId ?
-                <TextInput multiline={true} style={[styles.articleBodyHeader]} onChangeText={setArticleName}>{articleName}</TextInput>
+                <TextInput multiline={true} style={[styles.articleBodyHeader]} onChangeText={setArticleName} maxLength={20}>{articleName}</TextInput>
             :
                 <Text style={styles.articleBodyHeader}>{articleData[props[0]].ArticleName}</Text>
             }
             { props[1] === false ?
                     <View style={styles.articleBodyFooter} onStartShouldSetResponder={() => false}>
                     { props[2] === true && articleId === articleData[props[0]].ArticleId ?
-                        <TextInput multiline={true}  ref={(ref) => {globalTextInputRef = ref}} style={styles.textInput} onChangeText={setArticleSmDescr}>{articleSmDescr}</TextInput>
+                        <TextInput multiline={true}  ref={(ref) => {globalTextInputRef = ref}} style={styles.textInput} onChangeText={setArticleSmDescr}  maxLength={100}>{articleSmDescr}</TextInput>
                     :
                         <Text style={styles.articleBodyFooterText}>{articleData[props[0]].ArticleSmDescr}</Text>
                     }
@@ -519,7 +519,7 @@ const ArticleBody = ({props}) => {
             :
                 <ScrollView style={styles.articleBodyFooter} contentContainerStyle={{flexGrow: 1}} onStartShouldSetResponder={() => true}>
                         { props[2] === true && articleId === articleData[props[0]].ArticleId ?
-                             <TextInput multiline={true} ref={(ref) => {globalTextInputRef = ref}} tyle={styles.textInput} onChangeText={setArticleMDescr}>{articleMDescr}</TextInput>
+                             <TextInput multiline={true} ref={(ref) => {globalTextInputRef = ref}} tyle={styles.textInput} onChangeText={setArticleMDescr} maxLength={1000}>{articleMDescr}</TextInput>
                         /*    <RichEditor
                         style={styles.articleBodyFooterTextInput}
                         useContainer={false}

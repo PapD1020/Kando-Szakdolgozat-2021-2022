@@ -464,8 +464,19 @@ app.post('/api/login/user', (req, res) => {
 //Dani - profilePage.js
 //Márk - settings/userDataForm
 app.put('/api/update/user/userId', (req, res) => {
+
+    var userPP;
+
+    if ( req.body.userPP == undefined || req.body.userPP == '' || req.body.userPP == null ) 
+    {
+        userPP = 'https://molsoft.hu/wp-content/uploads/2020/12/blank-profile-picture-973460_1280.png';
+    }
+    else
+    {
+        userPP = req.body.userPP;
+    }
+
     const userId = req.body.userId;
-    const userPP = req.body.userPP;
     const userFN = req.body.userFN;
     const userSN = req.body.userSN;
     const userEmail = req.body.userEmail;
