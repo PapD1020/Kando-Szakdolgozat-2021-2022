@@ -1,4 +1,5 @@
 import React from 'react';
+import {StatusBar} from 'react-native';
 
 //import SecureStore from 'expo-secure-store';
 import AuthNavigation from './AuthNavigation';
@@ -67,6 +68,12 @@ const toastConfig = {
 export default function App() {
     return (
       <>
+        <StatusBar
+          animated={true}
+          backgroundColor="#4d4a42"
+          barStyle='light-content'
+          //showHideTransition={statusBarTransition}
+          hidden={false} />
         <AuthNavigation />
         <Toast config={toastConfig}/>
       </>

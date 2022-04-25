@@ -151,12 +151,6 @@ function AuthScreen ({navigation}) {
 
     return (
         <SafeAreaView style={styles.screenContainer}>
-        <StatusBar
-        animated={true}
-        backgroundColor="#4d4a42"
-        barStyle='light-content'
-        //showHideTransition={statusBarTransition}
-        hidden={false} />
         <View style={[{ minHeight: Math.round(windowHeight), height:Dimensions.get('screen').height }]}>
             <LinearGradient style = {styles.titleGradient} colors={['#cec8b0','#cec8b0','#cec8b0',/*'#8aacc8'*/]}>
                     <Text style={styles.titleText}>IdeaShare</Text>
