@@ -145,7 +145,7 @@ app.get('/api/get/article/byId', (req, res) => {
 
 //Márk
 //GET - Article Searching
-app.get('/api/get/article/search/', (req, res) => {
+app.get('/api/get/mobile/article/search/', (req, res) => {
     const searchedString = "%" + req.get("searchedString") + "%";
     const item = req.get("item")-1;
 
@@ -165,7 +165,7 @@ app.get('/api/get/article/search/', (req, res) => {
 
 //Márk
 //GET - UsersArticle Searching
-app.get('/api/get/article/search/byId', (req, res) => {
+app.get('/api/get/mobile/article/search/byId', (req, res) => {
     const searchedString = "%" + req.get("searchedString") + "%";
     const item = req.get("item")-1;
     const userId = req.get("userId");
@@ -186,7 +186,7 @@ app.get('/api/get/article/search/byId', (req, res) => {
 
 //Márk
 //GET - Favorite Searching
-app.get('/api/get/favorite/search/', (req, res) => {
+app.get('/api/get/mobile/favorite/search/', (req, res) => {
     const searchedString = "%" + req.get("searchedString") + "%";
     const item = req.get("item")-1;
     const userId = req.get("userId");
@@ -723,7 +723,7 @@ app.delete('/api/delete/favorite/:articleId/:userId', (req, res) => {
 //GET - Article Searching
 app.get('/api/get/article/search/:articleName', (req, res) => {
     const name = "%" +req.params.articleName + "%";
-    console.log(name);
+    console.log("ffffffffff" + name);
     const sqlSelect = "SELECT * FROM Articles INNER JOIN ArticleUser ON Articles.ArticleId = ArticleUser.AId  INNER JOIN Users ON  ArticleUser.UId=Users.UserId WHERE ArticleName LIKE ?";   db.query(sqlSelect, name, (err, result) => {
         if(err){
             res.status(500).send({message: err.message});
