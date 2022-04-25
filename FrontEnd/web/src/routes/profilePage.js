@@ -150,7 +150,7 @@ export default function ProfileUpdate(){
 
                             <div className="card border-primary m-5 shadow-lg">
                             <div className="card-header mb-3">{val.UserUn}'s profile</div>
-                            <div className="card-text">Profile picture: <img style={{width: 200, height: 200}} className="card-img-top rounded shadow p-3 mb-5" src={val.UserPP} alt="User profile pic"></img></div>
+                            <div className="card-text"><img style={{width: 200, height: 200}} className="card-img-top rounded shadow p-3 mb-5" src={val.UserPP} alt="User profile pic"></img></div>
                             
                                 <div className="card-body">
                                     <h5 className="card-title">User name: {val.UserUn}</h5>
