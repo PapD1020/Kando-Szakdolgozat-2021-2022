@@ -1,14 +1,12 @@
 import React, {useState, useEffect, useRef} from "react";
 import '../App.css';
 import Axios from 'axios';
-import { useForm } from "react-hook-form";
 import * as ReactBootStrap from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 
 export default function Article(){
     
-  const [show, setShow] = useState(false);
   
   
   const [LoginStatus, setLoginStatus] = useState('');
@@ -16,31 +14,11 @@ export default function Article(){
   const [search,setSearch] =useState('');
   const [record,setRecord] = useState([]);
   
-  var ArticleName = '';
-  var ArticleSmDescr = '';
-  var ArticleMDescr = '';
-  var ArticleImg = '';
-  var ArticleStatus = '';
-  var ArticleType = '';
-
-    const {
-      register,
-      handleSubmit,
-      formState: {errors}
-    } = useForm();
-
-    const onSubmit = (data) => {
-        alert(JSON.stringify(data));
-        updateArticleStatus();
-    };
 
     const [ArticleNameList, setArticleNameList] = useState([]); //'' hibás, [] kell használni
   
  
 
-    const current = new Date();
-    const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
- 
     //check every time we refresh the page if a user is logged in
  useEffect(() => {
   Axios.get('http://localhost:3001/api/login/user').then((response) => {
@@ -94,25 +72,7 @@ export default function Article(){
     };
 
     
-   //PUT - POST
-   const updateArticleStatus = (Articleid) =>{
-  Axios.put('http://localhost:3001/api/update/article', {
-    articleId : Articleid,
-    articleName: ArticleName,
-    articleSmDescr: ArticleSmDescr,
-    articleMDescr: ArticleMDescr,
-    articleImg: ArticleImg,
-    articleType: ArticleType,
-    articleStatus: ArticleStatus,
-    articleUpdatedAt: date
-  });
-
-  console.log("Article ArticleUpdatedAt: " + date);
- 
-  alert("Successfuly changed! Please click on the refresh button.");
-  setShow(false);
-  refreshArticleData();
-};
+  
 const ArticleStatusView=(ArticleStatus)=>{
   if(ArticleStatus===-2){ArticleStatus = "Törölt"}
   if(ArticleStatus===-1){ArticleStatus = "Felfüggesztett"}
