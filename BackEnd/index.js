@@ -13,7 +13,7 @@ const saltRounds = 10;
 
 const jwt = require('jsonwebtoken');
 
-
+/*
 //Nethelyes
 const db = mysql.createPool({
     host: 'mysql.nethely.hu',
@@ -21,8 +21,8 @@ const db = mysql.createPool({
     password: 'KozosAdatbazis1',
     database: 'ideashare'
 });
+*/
 
-/*
 //Xampos
 
 const db = mysql.createPool({
@@ -31,7 +31,7 @@ const db = mysql.createPool({
     password: '',
     database: 'ideashare'
 });
-*/
+
 
 //Middleware
 //for express-session
