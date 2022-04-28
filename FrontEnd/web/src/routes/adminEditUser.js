@@ -146,16 +146,16 @@ export default function EditUser() {
                                           <label className="display-6 mb-3">User name:</label>
                                           <input type="text" className="form-control p-2 mb-3" defaultValue={val.UserUn}{
                                               ...register("userUnUpd", {
-                                                  minLength: 6,
+                                                  minLength: 1,
                                                   maxLength: 20,
-                                                  //pattern: /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/ //valószínűleg nincsenek benne ékezetes betűk, javítani kell
+                                                  
                                               })
                                           }onChange={(e) => {
                                               setUserUnUpd(e.target.value);
                                           }}/>
                                           <div className="errordiv text-danger mb-2">
-                                            {errors?.userUnUpd?.type === "minLength" && <div><h5>Your user name is too short.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
-                                            {errors?.userUnUpd?.type === "maxLength" && <div><h5>Your user name is too long.</h5><p>Your user name length must be between 6 and 20 characters.</p></div>}
+                                            {errors?.userUnUpd?.type === "minLength" && <div><h5>Your user name is too short.</h5><p>Your user name length must be between 1 and 20 characters.</p></div>}
+                                            {errors?.userUnUpd?.type === "maxLength" && <div><h5>Your user name is too long.</h5><p>Your user name length must be between 1 and 20 characters.</p></div>}
                                           </div>
                                       </div>
                                     </div>
@@ -164,15 +164,15 @@ export default function EditUser() {
                                         <label className="display-6 mb-3">User first name:</label>
                                         <input type="text" className="mb-3 p-2 form-control" defaultValue={val.UserFN}{
                                             ...register("userFNUpd", {
-                                                minLength: 3, //Mennyi legyen?
-                                                maxLength: 20, //Mennyi legyen?
+                                                minLength: 3, 
+                                                maxLength: 20, 
                                             })
                                         }onChange={(e) => {
                                             setUserFNUpd(e.target.value);
                                         }}/>
                                       <div className="errordiv text-danger mb-2">
-                                        {errors?.userFNUpd?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
-                                        {errors?.userFNUpd?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 150 and 500 characters.</p></div>}
+                                        {errors?.userFNUpd?.type === "minLength" && <div><h5>Your first name is too short.</h5><p>Your first name length must be between 3 and 20 characters.</p></div>}
+                                        {errors?.userFNUpd?.type === "maxLength" && <div><h5>Your first name is too long.</h5><p>Your first name length must be between 3 and 20 characters.</p></div>}
                                       </div>
                                     </div>
                                   </div>
@@ -181,8 +181,8 @@ export default function EditUser() {
                                         <label className="display-6 mb-3">User second name:</label>
                                         <input type="text" className="mb-3 p-2 form-control" defaultValue={val.UserSN}{
                                             ...register("userSNUpd", {
-                                                minLength: 3, //Mennyi legyen?
-                                                maxLength: 20, //Mennyi legyen?
+                                                minLength: 3, 
+                                                maxLength: 20, 
                                             })
                                         }onChange={(e) => {
                                             setUserSNUpd(e.target.value);
@@ -201,12 +201,16 @@ export default function EditUser() {
                                         <label className="display-6 mb-3">User profile picture:</label>
                                         <input type="url" class="mb-3 p-2 form-control" defaultValue={val.UserPP}{
                                             ...register("userPPUpd", {
-                                              required: true,
+                                             
+                                              minLength: 10,
+                                              maxLength: 1000,
                                             })
                                         }onChange={(e) => {
                                             setUserPPUpd(e.target.value);
                                         }}/>
-                        
+                                         {errors?.userPPUpd?.type === "minLength" && <div><h5>The URL is too short.</h5><p>Your URL length must be between 10 and 1000 characters.</p></div>}
+                                        {errors?.userPPUpd?.type === "maxLength" && <div><h5>The URL is too long.</h5><p>Your URL length must be between 10 and 1000 characters.</p></div>}
+ 
                                       </div>
                                     </div>
                                   </div>
@@ -216,11 +220,24 @@ export default function EditUser() {
                                           <label className="display-6 mb-3">User email: </label>
                                           <input type="email" className="form-control p-2 mb-3" defaultValue={val.UserEmail}{
                                               ...register("userEmailUpd", {
-                                                  //vmi must contain @ ellenőrzés stb
+                                                required: false,
+                                                minLength: 12,
+                                                maxLength: 40,
+                                                pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+      
                                               })
                                           }onChange={(e) => {
                                               setUserEmailUpd(e.target.value);
                                           }}/>
+                                          {errors?.userEmailUpd?.type === "minLength" && <div><h5>Your email's length is too short.</h5><p>Your email must exceed 12 characters.</p></div>}
+                                          {errors?.userEmailUpd?.type === "maxLength" && <div><h5>Your email's length is too long.</h5><p>Your email must not exceed 40 characters.</p></div>}
+                                          {errors?.userEmailUpd?.type === "pattern" && <div><ul>
+                                                <li>Uppercase (A-Z) and lowercase (a-z) English letters</li>
+                                                <li>Digits (0-9)</li>
+                                                <li>Do not use any special characters</li>
+                                                <li>Character . ( period, dot or fullstop) provided that it is not the first or last character and it will not come one after the other</li>
+                                            </ul>
+                                        </div>}
                                       </div>
                                     </div>
                                   </div>
@@ -263,7 +280,7 @@ export default function EditUser() {
                                       </Button>
                                 
                                   </div>                 
-                              </div>   {/*Kell egybe ellenörző, küldő gomb vagy külön-külön ha nem megy egybe */}
+                              </div>   
                             </form>
                           </div>
                                   ) 

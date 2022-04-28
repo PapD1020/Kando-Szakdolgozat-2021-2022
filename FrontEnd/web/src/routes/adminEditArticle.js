@@ -149,14 +149,14 @@ export default function EditArticle() {
                                                     <label className="display-6 mb-3">Article type:</label>
                                                     <select id="types" className="form-control p-2 mb-3"{
                                                         ...register("articleTypeUpd", {
-                                                            required: true,
+                                                            required: false,
                                                         })
                                                     } onChange={(e) => {
                                                         setArticleTypeUpd(e.target.value);
                                                     }}>
                                                         <option defaultValue={val.ArticleType}>{val.ArticleType}</option>
                                                         <option value="Programming">Programming</option>
-                                                        <option value="Programming">Other</option>
+                                                        <option value="Other">Other</option>
                                                     </select>
                                                     
                                                 </div>
@@ -171,9 +171,9 @@ export default function EditArticle() {
                                                     <label className="display-6 mb-3">Article name:</label>
                                                     <input type="text" className="mb-3 p-2 form-control" defaultValue={val.ArticleName}{
                                                         ...register("articleNameUpd", {
-                                                            required: true,
+                                                            required: false,
                                                             minLength: 1,
-                                                            maxLength: 20
+                                                            maxLength: 30
                                                         })
                                                     } onChange={(e) => {
                                                         setArticleNameUpd(e.target.value);
@@ -182,8 +182,8 @@ export default function EditArticle() {
 
                                                 <div className="errordiv text-danger mb-2">
                                                     {errors?.articleNameUpd?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a name.</p></div>}
-                                                    {errors?.articleNameUpd?.type === "minLength" && <div><h5>Your article's name is too short.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
-                                                    {errors?.articleNameUpd?.type === "maxLength" && <div><h5>Your article's name is too long.</h5><p>Your article's name length must be between 6 and 20 characters.</p></div>}
+                                                    {errors?.articleNameUpd?.type === "minLength" && <div><h5>Your article's name is too short.</h5><p>Your article's name length must be between 1 and 30 characters.</p></div>}
+                                                    {errors?.articleNameUpd?.type === "maxLength" && <div><h5>Your article's name is too long.</h5><p>Your article's name length must be between 1 and 30 characters.</p></div>}
                                                     {errors?.articleNameUpd?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
                                                 </div>
                                             </div>
@@ -193,7 +193,7 @@ export default function EditArticle() {
                                                     <label className="display-6 mb-3">Article image:</label>
                                                     <input type="url" className="mb-3 p-2 form-control" defaultValue={val.ArticleImg}{
                                                         ...register("articleImgUpd", {
-                                                            required: true,
+                                                            required: false,
                                                             minLength: 1,
                                                             maxLength: 500
                                                         })
@@ -204,8 +204,8 @@ export default function EditArticle() {
 
                                                 <div className="errordiv text-danger mb-2">
                                                     {errors?.articleImgUpd?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a picture</p></div>}
-                                                    {errors?.articleImgUpd?.type === "minLength" && <div><h5>Your article's picture URL is too short.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
-                                                    {errors?.articleImgUpd?.type === "maxLength" && <div><h5>Your article's picture URL is too long.</h5><p>Your article's picture URL length must be between 150 and 500 characters.</p></div>}
+                                                    {errors?.articleImgUpd?.type === "minLength" && <div><h5>Your article's picture URL is too short.</h5><p>Your article's picture URL length must be between 1 and 500 characters.</p></div>}
+                                                    {errors?.articleImgUpd?.type === "maxLength" && <div><h5>Your article's picture URL is too long.</h5><p>Your article's picture URL length must be between 1 and 500 characters.</p></div>}
                                                 </div>
                                             </div>
                                         </div>
@@ -216,7 +216,7 @@ export default function EditArticle() {
                                                     <label className="display-5 mb-3 mt-3">Article small description:</label>
                                                     <textarea rows="3" className="mb-3 p-2 form-control" defaultValue={val.ArticleSmDescr}{
                                                         ...register("articleSmDescrUpd", {
-                                                            required: true,
+                                                            required: false,
                                                             minLength: 1,
                                                             maxLength: 100
                                                         })
@@ -231,8 +231,8 @@ export default function EditArticle() {
                                             <div className="col-sm-auto">
                                                 <div className="errordiv text-danger mb-2">
                                                     {errors?.articleSmDescrUpd?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a small description of your article.</p></div>}
-                                                    {errors?.articleSmDescrUpd?.type === "minLength" && <div><h5>Your article's small description is too short.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
-                                                    {errors?.articleSmDescrUpd?.type === "maxLength" && <div><h5>Your article's small description is too long.</h5><p>Your article's small description length must be between 8 and 100 characters.</p></div>}
+                                                    {errors?.articleSmDescrUpd?.type === "minLength" && <div><h5>Your article's small description is too short.</h5><p>Your article's small description length must be between 1 and 100 characters.</p></div>}
+                                                    {errors?.articleSmDescrUpd?.type === "maxLength" && <div><h5>Your article's small description is too long.</h5><p>Your article's small description length must be between 1 and 100 characters.</p></div>}
                                                     {errors?.articleSmDescrUpd?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
                                                 </div>
                                             </div>
@@ -259,8 +259,8 @@ export default function EditArticle() {
                                             <div className="col-sm-auto">
                                                 <div className="errordiv text-danger mb-2">
                                                     {errors?.articleMDescrUpd?.type === "required" && <div><h5>This field is required!</h5><p>Your article must have a main description of your article.</p></div>}
-                                                    {errors?.articleMDescrUpd?.type === "minLength" && <div><h5>Your article's main description is too short.</h5><p>Your article's main description length must be between 150 and 500 characters.</p></div>}
-                                                    {errors?.articleMDescrUpd?.type === "maxLength" && <div><h5>Your article's main description is too long.</h5><p>Your article's main description length must be between 150 and 500 characters.</p></div>}
+                                                    {errors?.articleMDescrUpd?.type === "minLength" && <div><h5>Your article's main description is too short.</h5><p>Your article's main description length must be between 3 and 500 characters.</p></div>}
+                                                    {errors?.articleMDescrUpd?.type === "maxLength" && <div><h5>Your article's main description is too long.</h5><p>Your article's main description length must be between 3 and 500 characters.</p></div>}
                                                     {errors?.articleMDescrUpd?.type === "pattern" && <div><h5>Forbidden character usage.</h5><p>You must use alphabetical characters only.</p></div>}
                                                 </div>
                                             </div>
